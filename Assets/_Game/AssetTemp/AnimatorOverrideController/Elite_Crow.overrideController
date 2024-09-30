@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Elite_Crow
+  m_Controller: {fileID: 9100000, guid: 09dd8bdf1a6b24847a017cca1a20968b, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 7c73a1814779f6e43a4527eec2fd8385, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b464c57f0a3c6a14285176c289bfc7f4, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 8d6ac5c0e167c71408e68b583e0bc1b2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 02fa28d578fa15544b834f81c8089a9e, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 96b6e4c1683eab8449203d941ef2c81d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 88ec958fc9c249445b16cd25fced57a8, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: a822449a40b0c7e4895ee10ef25f073d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 506577eef7a1c1c4c917c232693512aa, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 51d0e755088fafc48b35fde4921cfe9d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 4aec331e767f7e94e99c28035b7fc93d, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 1b4799aba869a9743a7a9060118143cc, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f9c4705b6c1950a40b0aa2b7625b8584, type: 2}
