@@ -24,8 +24,11 @@ public class Loading : MonoBehaviour
         {
             DOVirtual.DelayedCall(1f, () =>
             {
-                SceneController.Ins.ChangeScene("Home", () =>
+                SceneController.Ins.ChangeScene(Const.GAMEPLAY_SCENE, () =>
                 {
+                    UIManager.Ins.OpenUI<UIGamePlay>();
+                    LevelManager.Ins.OnLoadLevel();
+                    GameManager.Ins.ChangeState(GameState.GamePlay);
                 });
             });
         });

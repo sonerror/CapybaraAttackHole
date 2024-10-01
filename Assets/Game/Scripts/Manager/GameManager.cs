@@ -25,11 +25,12 @@ public class GameManager : Singleton<GameManager>
             () => (
             Ins != null
             && UIManager.Ins != null
+            && DataManager.Ins != null
             )
         );
         yield return new WaitForEndOfFrame();   
         isShowPopupStarter = true;
         UIManager.Ins.Oninit();
-
+        DataManager.Ins.LoadData();
     }
 }
