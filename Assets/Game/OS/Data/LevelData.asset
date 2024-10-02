@@ -15,11 +15,35 @@ MonoBehaviour:
   levels:
   - levelID: 0
     checkPoints:
-    - idCheckPoint: 0
+    - id: 0
       checkPoint: 50
-    - idCheckPoint: 1
+      scale: 0.3
+      speedMove: 2
+      offSet: {x: 0, y: 7, z: -7}
+      eulerAngles: {x: 35, y: 0, z: 0}
+    - id: 1
       checkPoint: 500
-    - idCheckPoint: 2
+      scale: 0.5
+      speedMove: 3
+      offSet: {x: 0, y: 11, z: -8}
+      eulerAngles: {x: 40, y: 0, z: 0}
+    - id: 2
       checkPoint: 1000
+      scale: 0.7
+      speedMove: 4
+      offSet: {x: 0, y: 14.5, z: -11}
+      eulerAngles: {x: 40, y: 0, z: 0}
+    - id: 3
+      checkPoint: 2000
+      scale: 0.9
+      speedMove: 6
+      offSet: {x: 0, y: 16, z: -12}
+      eulerAngles: {x: 45, y: 0, z: 0}
+    - id: 4
+      checkPoint: 3000
+      scale: 1.5
+      speedMove: 10
+      offSet: {x: 0, y: 20, z: -15}
+      eulerAngles: {x: 50, y: 0, z: 0}
   - levelID: 1
     checkPoints: []

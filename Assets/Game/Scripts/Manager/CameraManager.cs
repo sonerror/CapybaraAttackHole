@@ -1,12 +1,8 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum State
-{
-    MainMenu = 0,
-    GamePlay = 1,
-    Shop = 2,
-}
+
 public class CameraManager : Singleton<CameraManager>
 {
     [System.Serializable]
@@ -27,17 +23,17 @@ public class CameraManager : Singleton<CameraManager>
     private Vector3 _eulerAngles;
     [SerializeField] Vector3 offsetMax;
     [SerializeField] Vector3 offsetMin;
-    private State _state;
+    private GameState _state;
     public void Oninit()
     {
         _player = LevelManager.Ins.player;
-        ChangeStateCamera(State.MainMenu);
+        ChangeStateCamera(GameState.MainMenu);
         _offset = _targetOffset;
         _eulerAngles = _targetEulerAngles;
     }
     private void LateUpdate()
     {
-        if(_player != null)
+        if(_player != null && GameManager.Ins.gameState == GameState.GamePlay)
         {
             _offset = Vector3.Lerp(_offset, _targetOffset, _lerpTime * Time.deltaTime);
             transform.position = _player.transform.position + _offset;
@@ -49,23 +45,34 @@ public class CameraManager : Singleton<CameraManager>
     {
         _targetOffset = Vector3.Lerp(offsetMin, offsetMax, rate);
     }
-    public void ChangeStateCamera(State _state)
+    public void ChangeStateCamera(GameState _state)
     {
         this._state = _state;
         switch (this._state)
         {
-            case (State)0:
+            case GameState.MainMenu:
                 _targetOffset = _mainMenuData._offSetStruct;
                 _targetEulerAngles = _mainMenuData._eulerAnglesStruct;
                 break;
-            case State.GamePlay:
+            case GameState.GamePlay:
                 _targetOffset = _gamePlayData._offSetStruct;
                 _targetEulerAngles = _gamePlayData._eulerAnglesStruct;
                 break;
-            case State.Shop:
-                _targetOffset = _shopData._offSetStruct;
-                _targetEulerAngles = _shopData._eulerAnglesStruct;
-                break;
         }
+    }
+    public void SetTfCamera(Vector3 _offSetStruct, Vector3 _eulerAnglesStruct)
+    {
+        this._targetOffset = _offSetStruct;
+        this._targetEulerAngles = _eulerAnglesStruct;
+        Sequence cameraSequence = DOTween.Sequence();
+        cameraSequence.Join(this.transform.DOMove(_targetOffset, 0.3f).SetEase(Ease.InOutQuad));
+        cameraSequence.Join(this.transform.DORotate(_targetEulerAngles, 0.3f).SetEase(Ease.InOutQuad));
+    }
+    public void SetCameraHome()
+    {
+        _offset = Vector3.Lerp(_offset, _targetOffset, _lerpTime * Time.deltaTime);
+        transform.position = _player.transform.position + _offset;
+        _eulerAngles = Vector3.Lerp(_eulerAngles, _targetEulerAngles, _lerpTime * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(_eulerAngles);
     }
 }

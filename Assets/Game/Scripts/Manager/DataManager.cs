@@ -45,9 +45,15 @@ public class DataManager :   Singleton<DataManager>
 public class PlayerData
 {
     public int levelCurrent;
-
+    public int lvTime;
+    public int lvScale;
+    public int lvEx;
     public PlayerData()
     {
         levelCurrent = 0;
+        lvTime = 0;
+        lvScale = 0;
+        lvEx = 0;
     }
 }
+

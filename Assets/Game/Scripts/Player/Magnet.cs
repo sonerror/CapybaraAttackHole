@@ -14,7 +14,7 @@ public class Magnet : MonoBehaviour
         if (other.CompareTag(Const.TAG_ENEMY))
         {
             Enemy _target = other.GetComponentInParent<Enemy>();
-            if (LevelManager.Ins.player.score >= _target.score)
+            if (LevelManager.Ins.player.lvCurrent >= _target.lvCurrent)
             {
                 AddToBlackHole(_target);
             }
@@ -24,6 +24,7 @@ public class Magnet : MonoBehaviour
     {
         if (enemy != null)
         {
+            var lv = LevelManager.Ins.player;
             enemy.HideCollider(false);
             Sequence sequence = DOTween.Sequence();
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration)
@@ -33,8 +34,23 @@ public class Magnet : MonoBehaviour
             sequence.OnComplete(() =>
             {
                 Destroy(enemy.transform.gameObject);
-                LevelManager.Ins.player.RemoveTarget(enemy);
-                LevelManager.Ins.player.score += enemy.score;
+                lv.RemoveTarget(enemy);
+                lv.point += enemy.point;
+                lv.CheckPointUpLevel();
+                float root;
+                float target;
+                if (lv.lvCurrent > 0)
+                {
+                    target = lv.GetCheckPoint(lv.lvCurrent) - lv.GetCheckPoint(lv.lvCurrent - 1);
+                    root = lv.GetCheckPoint(lv.lvCurrent - 1);
+                }
+                else
+                {
+                    target = lv.GetCheckPoint(lv.lvCurrent);
+                    root = 0;
+                }
+                float detal = lv.point - root;
+                UIManager.Ins.GetUI<UIGamePlay>().SetProgressSpin((float)detal / target);
             });
         }
     }

@@ -9,9 +9,11 @@ public class Player : Character
     [SerializeField] private float rotateSpeed = 5f;
     public static Player Instance { get; private set; }
     public List<CheckPoint> checkPoints;
-    public int lvPlayer = 1;
+
     public bool isMove;
     public bool move = true;
+    public int lvTime;
+    public int lvEx;
     public void Start()
     {
         OnInit();
@@ -19,7 +21,21 @@ public class Player : Character
     public override void OnInit()
     {
         base.OnInit();
-      
+       
+        ChangeSpeed(1.4f);
+    }
+    public void SetScale(int _lvScale)
+    {
+        float scale = checkPoints.Find(x=> x.id == _lvScale).scale;
+        this.transform.localScale = new Vector3(1, 1, 1) * scale;
+    }
+    public void SetData(int _Lv,int _lvTime, int _lvEx)
+    {
+        this.lvCurrent = _Lv;
+        this.lvTime = _lvTime;
+        this.lvEx = _lvEx;
+        SetScale(lvCurrent);
+        OnInit();
     }
     public void GetDataLevel(List<CheckPoint> _checkPoint)
     {
@@ -51,5 +67,22 @@ public class Player : Character
     public void ChangeSpeed(float _speed)
     {
         moveSpeed = _speed;
+    }
+    public void CheckPointUpLevel()
+    {
+        var targetPont = checkPoints.Find(x => x.id == (lvCurrent));
+        if (lvCurrent <= checkPoints.Count && point >= targetPont.checkPoint)
+        {
+            Debug.LogError("isCheckPoint");
+            ChangeScale(targetPont.scale);
+            ChangeSpeed(targetPont.speedMove);
+            CameraManager.Ins.SetTfCamera(targetPont.offSet, targetPont.eulerAngles);
+            lvCurrent += 1;
+            UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
+        }
+    }
+    public float GetCheckPoint(int lv)
+    {
+        return checkPoints.Find(x => x.id == lv).checkPoint;
     }
 }

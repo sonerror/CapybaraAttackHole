@@ -19,6 +19,10 @@ public class LevelData
 [System.Serializable]
 public class CheckPoint
 {
-    public int idCheckPoint;
+    public int id;
     public float checkPoint;
+    public float scale;
+    public float speedMove;
+    public Vector3 offSet;
+    public Vector3 eulerAngles;
 }
