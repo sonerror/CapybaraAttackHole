@@ -15,6 +15,9 @@ public class LevelData
 {
     public int levelID;
     public List<CheckPoint> checkPoints; 
+    public Stage stage;
+    public int timer;
+    public Enemy boss;
 }
 [System.Serializable]
 public class CheckPoint
@@ -25,4 +28,5 @@ public class CheckPoint
     public float speedMove;
     public Vector3 offSet;
     public Vector3 eulerAngles;
+   
 }

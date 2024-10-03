@@ -29,8 +29,6 @@ public class Loading : MonoBehaviour
                     UIManager.Ins.OpenUI<UIHome>();
                     LevelManager.Ins.OnLoadLevel();
                     GameManager.Ins.ChangeState(GameState.MainMenu);
-                    CameraManager.Ins.ChangeStateCamera(GameState.MainMenu);
-                    CameraManager.Ins.SetCameraHome();
                 });
             });
         });

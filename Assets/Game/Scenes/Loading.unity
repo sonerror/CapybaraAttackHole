@@ -378,6 +378,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefabs: {fileID: 5177789325680853832, guid: 05b3d7f86fc99fc4aa98a516b6f67d26, type: 3}
   tfPlayer: {fileID: 1838132597}
+  tfStage: {fileID: 467043267}
+  tfBoss: {fileID: 733711342}
   levelData: {fileID: 11400000, guid: 535395a7156942242bac4f52d76bcf6c, type: 2}
   PointDatas:
     points:
@@ -395,6 +397,20 @@ MonoBehaviour:
       point: 6
     - id: 6
       point: 7
+  LevelEx:
+    levelBonusDataModels:
+    - id: 0
+      bonus: 1
+    - id: 1
+      bonus: 1.3
+    - id: 2
+      bonus: 1.5
+    - id: 3
+      bonus: 1.7
+    - id: 4
+      bonus: 2
+    - id: 5
+      bonus: 5
   LevelTime:
     levelBonusDataModels:
     - id: 0
@@ -407,9 +423,26 @@ MonoBehaviour:
       bonus: 0
     - id: 0
       bonus: 0
-  LevelEx:
-    levelBonusDataModels: []
+  floorBossPrefabs: {fileID: 2597985030068527147, guid: 3751b6a7a4920634f8cde03d8727db55, type: 3}
+  cameraPos: {x: 0.8, y: 103, z: -20}
+  cameraRotate: {x: 15, y: 0, z: 0}
+  enemyDatas:
+    enemyDataModels:
+    - id: 0
+      enemy: {fileID: 4537216577945808597, guid: 20531ac98aa7db54bb816198d5e8f111, type: 3}
+    - id: 1
+      enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
+    - id: 2
+      enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
+    - id: 3
+      enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
+    - id: 4
+      enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
   player: {fileID: 0}
+  stage: {fileID: 0}
+  floorBoss: {fileID: 0}
+  bossTimeUp: {fileID: 0}
+  historyMagnetics: 
 --- !u!1 &460583165
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,6 +493,37 @@ MonoBehaviour:
     lvTime: 0
     lvScale: 0
     lvEx: 0
+--- !u!1 &467043266
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 467043267}
+  m_Layer: 0
+  m_Name: Stage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &467043267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467043266}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2060344064}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &534301443
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,37 +710,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8979069003171332782, guid: 62f98fdd1df885047b788116e32eff41, type: 3}
   m_PrefabInstance: {fileID: 592822774}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &636423406
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 636423407}
-  m_Layer: 0
-  m_Name: StageManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &636423407
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636423406}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1837051142}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &686425417
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -787,6 +820,37 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5878776275478260292, guid: 6471cd5f9b17f004f9b372ba16c692ff, type: 3}
   m_PrefabInstance: {fileID: 686425417}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &733711341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 733711342}
+  m_Layer: 0
+  m_Name: Boss
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &733711342
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733711341}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2060344064}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &948127251
 GameObject:
   m_ObjectHideFlags: 0
@@ -1237,7 +1301,6 @@ Transform:
   - {fileID: 2093367055}
   - {fileID: 1285019726}
   - {fileID: 1319507142}
-  - {fileID: 636423407}
   - {fileID: 460583166}
   m_Father: {fileID: 2060344064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1371,6 +1434,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1838132597}
+  - {fileID: 467043267}
+  - {fileID: 733711342}
   - {fileID: 537674220}
   - {fileID: 1837051142}
   m_Father: {fileID: 0}

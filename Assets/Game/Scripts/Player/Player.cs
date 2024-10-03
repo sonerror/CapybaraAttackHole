@@ -1,4 +1,5 @@
 
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,27 +10,34 @@ public class Player : Character
     [SerializeField] private float rotateSpeed = 5f;
     public static Player Instance { get; private set; }
     public List<CheckPoint> checkPoints;
-
     public bool isMove;
     public bool move = true;
     public int lvTime;
     public int lvEx;
-    public void Start()
-    {
-        OnInit();
-    }
+   
     public override void OnInit()
     {
         base.OnInit();
-       
         ChangeSpeed(1.4f);
     }
     public void SetScale(int _lvScale)
     {
-        float scale = checkPoints.Find(x=> x.id == _lvScale).scale;
+        float scale = checkPoints.Find(x => x.id == _lvScale).scale;
         this.transform.localScale = new Vector3(1, 1, 1) * scale;
+        SetCamera(_lvScale);
     }
-    public void SetData(int _Lv,int _lvTime, int _lvEx)
+    public void SetScaleUpLevel(int _lvScale)
+    {
+        float targetScale = checkPoints.Find(x => x.id == _lvScale).scale;
+       ChangeScale(targetScale);
+        SetCamera(_lvScale);
+    }
+    public void SetCamera(int _levelCurrent)
+    {
+        var targetPont = checkPoints.Find(x => x.id == _levelCurrent);
+        CameraManager.Ins.SetTfCamera(targetPont.offSet, targetPont.eulerAngles);
+    }
+    public void SetData(int _Lv, int _lvTime, int _lvEx)
     {
         this.lvCurrent = _Lv;
         this.lvTime = _lvTime;
@@ -74,15 +82,27 @@ public class Player : Character
         if (lvCurrent <= checkPoints.Count && point >= targetPont.checkPoint)
         {
             Debug.LogError("isCheckPoint");
-            ChangeScale(targetPont.scale);
             ChangeSpeed(targetPont.speedMove);
             CameraManager.Ins.SetTfCamera(targetPont.offSet, targetPont.eulerAngles);
             lvCurrent += 1;
+            SetScaleUpLevel(lvCurrent);
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
         }
     }
     public float GetCheckPoint(int lv)
     {
         return checkPoints.Find(x => x.id == lv).checkPoint;
+    }
+    public float GetBonusEXP()
+    {
+        return LevelManager.Ins.levelEx.GetDataWithID(lvEx).bonus;
+    }
+    public void OnLose()
+    {
+
+    }
+    public void MoveToTfTarget(Transform tfTarget)
+    {
+        this.transform.DOMove(tfTarget.position,1f).SetEase(Ease.InOutQuad);
     }
 }

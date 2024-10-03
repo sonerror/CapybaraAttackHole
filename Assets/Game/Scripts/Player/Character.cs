@@ -20,7 +20,6 @@ public class Character : GameUnit
     public virtual void AddTarget(Character character)
     {
         this.listTarget.Add(character);
-
     }
     public virtual void RemoveTarget(Character character)
     {

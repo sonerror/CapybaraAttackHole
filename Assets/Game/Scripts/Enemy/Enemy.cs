@@ -6,6 +6,7 @@ public class Enemy : Character
 {
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private Renderer meshRenderer;
+    public Transform tfTarget;
     public void Start()
     {
         OnInit();
@@ -31,6 +32,10 @@ public class Enemy : Character
             materials.Add(mat);
             meshRenderer.materials = materials.ToArray();
         }
+    }
+    public void DesSpawm()
+    {
+        Destroy(this);
     }
     public void RemoveLastMat()
     {
