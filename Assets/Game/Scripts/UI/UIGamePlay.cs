@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 public class UIGamePlay : UICanvas
@@ -13,7 +14,7 @@ public class UIGamePlay : UICanvas
     [SerializeField] private Image imgProgress;
     [SerializeField] private GameObject objJoystick;
     [SerializeField] private GameObject objFire;
-
+    public ShootingController shootingController;
     public UIFollowPlayer uiFollow;
     public override void Setup()
     {
@@ -25,6 +26,7 @@ public class UIGamePlay : UICanvas
         SetProgressSpin(0);
         UpdateCountDownText();
         LevelManager.Ins.stage.IsCountDown(true);
+        SetActiveJoystick(true);
     }
     public void Update()
     {
@@ -35,10 +37,13 @@ public class UIGamePlay : UICanvas
         objJoystick.SetActive(active);
         uiFollow.gameObject.SetActive(active);
         ObjCountTime.SetActive(active);
+        objFire.SetActive(!active);
+        shootingController.spriteDown.gameObject.SetActive(active);
     }
     public void SetAtiveBtnShot()
     {
         objFire.SetActive(true);
+        shootingController.spriteDown.gameObject.SetActive(true);
     }
     public void ReLoadUIFollow()
     {

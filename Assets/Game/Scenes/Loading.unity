@@ -428,15 +428,15 @@ MonoBehaviour:
   cameraRotate: {x: 15, y: 0, z: 0}
   enemyDatas:
     enemyDataModels:
-    - id: 0
+    - poolType: 3
       enemy: {fileID: 4537216577945808597, guid: 20531ac98aa7db54bb816198d5e8f111, type: 3}
-    - id: 1
+    - poolType: 4
       enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
-    - id: 2
+    - poolType: 5
       enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
-    - id: 3
+    - poolType: 6
       enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
-    - id: 4
+    - poolType: 7
       enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
   player: {fileID: 0}
   stage: {fileID: 0}
@@ -1070,6 +1070,52 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1137424944
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1137424945}
+  - component: {fileID: 1137424946}
+  m_Layer: 0
+  m_Name: PoolController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1137424945
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137424944}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1837051142}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1137424946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137424944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5286cdab002c9404187bd576550b64d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pool: []
+  Particle: []
 --- !u!1 &1164690599
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,6 +1244,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1285019726}
+  - component: {fileID: 1285019727}
   m_Layer: 0
   m_Name: MaterialManager
   m_TagString: Untagged
@@ -1220,6 +1267,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1837051142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1285019727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285019725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deccfdbe658756e42bfb84900a4b7f03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderer: {r: 1, g: 1, b: 1, a: 0.12156863}
 --- !u!1 &1319507141
 GameObject:
   m_ObjectHideFlags: 0
@@ -1302,6 +1362,7 @@ Transform:
   - {fileID: 1285019726}
   - {fileID: 1319507142}
   - {fileID: 460583166}
+  - {fileID: 1137424945}
   m_Father: {fileID: 2060344064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1838132596

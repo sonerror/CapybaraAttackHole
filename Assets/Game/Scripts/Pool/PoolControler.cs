@@ -152,8 +152,16 @@ public enum ParticleType
 
 public enum PoolType
 {
-    None,
-    Player,
-    Enemy
+    None = 0,
+    Player = 1,
+    Enemy = 2,
+    Enemy_00 = 3,
+    Enemy_01 = 4,
+    Enemy_02 = 5,
+    Enemy_03 = 6,
+    Enemy_04 = 7,
+    Enemy_05 = 8,
+    Enemy_06 = 9,
+    Enemy_07 = 10
 }
 

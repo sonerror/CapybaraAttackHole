@@ -18,6 +18,7 @@ public class LevelData
     public Stage stage;
     public int timer;
     public Enemy boss;
+    public float pointBoss;
 }
 [System.Serializable]
 public class CheckPoint

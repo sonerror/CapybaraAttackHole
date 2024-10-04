@@ -33,8 +33,10 @@ public class LevelManager : Singleton<LevelManager>
     }
     public void OnLoadStage()
     {
-        stage = Instantiate(levelData.GetDataWithID(DataManager.Ins.playerData.levelCurrent).stage, tfStage);
-        stage.SetTimeData(levelData.GetDataWithID(DataManager.Ins.playerData.levelCurrent).timer);
+        int totalLevels = levelData.levels.Count;
+        int validLevelID = DataManager.Ins.playerData.levelCurrent % totalLevels;
+        stage = Instantiate(levelData.GetDataWithID(validLevelID).stage, tfStage);
+        stage.SetTimeData(levelData.GetDataWithID(validLevelID).timer);
     }
     public void OnLoadLevel()
     {
@@ -45,7 +47,9 @@ public class LevelManager : Singleton<LevelManager>
             var data = DataManager.Ins.playerData;
             player = Instantiate(playerPrefabs, tfPlayer);
             player.transform.position = new Vector3(0, 0, 0);
-            player.GetDataLevel(levelData.GetDataWithID(DataManager.Ins.playerData.levelCurrent).checkPoints);
+            int totalLevels = levelData.levels.Count;
+            int validLevelID = DataManager.Ins.playerData.levelCurrent % totalLevels;
+            player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
             Oninit();
             player.SetData(data.lvScale, data.lvTime, data.lvEx);
         }
@@ -69,22 +73,51 @@ public class LevelManager : Singleton<LevelManager>
             player.lvEx = data.lvEx;
         }
     }
-
+    public void ReLoad()
+    {
+        Destroy(floorBoss.gameObject);
+        Destroy(bossTimeUp.gameObject);
+        player.checkPoints.Clear();
+        Destroy(player.gameObject);
+    }
+    public void ReloadScene()
+    {
+        ReLoad();
+        DOVirtual.DelayedCall(0.1f, () =>
+        {
+            SceneController.Ins.ChangeScene(Const.GAMEPLAY_SCENE, () =>
+            {
+                UIManager.Ins.OpenUI<UIHome>();
+                LevelManager.Ins.OnLoadLevel();
+                GameManager.Ins.ChangeState(GameState.MainMenu);
+            });
+        });
+    }
     public void OnTimeUP()
     {
         UIManager.Ins.GetUI<UIGamePlay>().SetActiveJoystick(false);
         Vector3 targetPosition = new Vector3(0, 100, 0);
         Quaternion rotation = Quaternion.Euler(0, 45, 0);
         floorBoss = Instantiate(floorBossPrefabs, targetPosition, rotation);
-        bossTimeUp = Instantiate(levelData.GetDataWithID(DataManager.Ins.playerData.levelCurrent).boss, tfBoss);
-        bossTimeUp.transform.position = floorBoss.tfBoss.position;
-        bossTimeUp.transform.localScale = new Vector3(2,2,2);
-        player.transform.DOMove(floorBoss.targetPlayerMove.position, 0.2f).SetEase(Ease.InOutQuad).OnComplete(()=>{
-
-            stage.gameObject.SetActive(false);
+        player.transform.DOMove(floorBoss.targetPlayerMove.position, 0.2f).SetEase(Ease.InOutQuad).OnComplete(() =>
+        {
+            player.transform.rotation = Quaternion.Euler(0, 0, 0);
+            Destroy(stage.gameObject);
             GameManager.Ins.ChangeState(GameState.Finish);
-            CameraManager.Ins.SetTfCamera(cameraPos,cameraRotate);
+            CameraManager.Ins.SetTfCamera(cameraPos, cameraRotate);
             UIManager.Ins.GetUI<UIGamePlay>().SetAtiveBtnShot();
+            int totalLevels = levelData.levels.Count;
+            int validLevelID = DataManager.Ins.playerData.levelCurrent % totalLevels;
+            var boss = levelData.GetDataWithID(validLevelID);
+            bossTimeUp = Instantiate(boss.boss, tfBoss);
+            bossTimeUp.transform.position = floorBoss.tfBoss.position;
+            bossTimeUp.transform.rotation = Quaternion.Euler(0, 180, 0);
+            bossTimeUp.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            bossTimeUp.transform.DOScale(new Vector3(2, 2, 2), 1).SetEase(Ease.OutBounce).OnComplete(() =>
+            {
+                bossTimeUp.point = boss.pointBoss;
+
+            });
         });
     }
 }
@@ -111,13 +144,13 @@ public class EnemyData
     public List<EnemyDataModel> enemyDataModels;
     public EnemyDataModel GetDataWithID(int id)
     {
-        return enemyDataModels.Find(x => x.id == id);
+        return enemyDataModels.Find(x => (int)x.poolType == id);
     }
 }
 
 [System.Serializable]
 public class EnemyDataModel
 {
-    public int id;
+    public PoolType poolType;
     public Enemy enemy;
 }

@@ -9,27 +9,28 @@ public class Player : Character
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
     public static Player Instance { get; private set; }
-    public List<CheckPoint> checkPoints;
+    public List<CheckPoint> checkPoints = new List<CheckPoint>();
     public bool isMove;
     public bool move = true;
     public int lvTime;
     public int lvEx;
-   
+
     public override void OnInit()
     {
         base.OnInit();
-        ChangeSpeed(1.4f);
+        move = true;
     }
     public void SetScale(int _lvScale)
     {
-        float scale = checkPoints.Find(x => x.id == _lvScale).scale;
-        this.transform.localScale = new Vector3(1, 1, 1) * scale;
+        var data = checkPoints.Find(x => x.id == _lvScale);
+        this.transform.localScale = new Vector3(1, 1, 1) * data.scale;
         SetCamera(_lvScale);
+        ChangeSpeed(data.speedMove);
     }
     public void SetScaleUpLevel(int _lvScale)
     {
         float targetScale = checkPoints.Find(x => x.id == _lvScale).scale;
-       ChangeScale(targetScale);
+        ChangeScale(targetScale);
         SetCamera(_lvScale);
     }
     public void SetCamera(int _levelCurrent)
@@ -47,7 +48,7 @@ public class Player : Character
     }
     public void GetDataLevel(List<CheckPoint> _checkPoint)
     {
-        this.checkPoints = _checkPoint;
+        this.checkPoints = new List<CheckPoint>(_checkPoint);
     }
     void FixedUpdate()
     {
@@ -103,6 +104,6 @@ public class Player : Character
     }
     public void MoveToTfTarget(Transform tfTarget)
     {
-        this.transform.DOMove(tfTarget.position,1f).SetEase(Ease.InOutQuad);
+        this.transform.DOMove(tfTarget.position, 1f).SetEase(Ease.InOutQuad);
     }
 }

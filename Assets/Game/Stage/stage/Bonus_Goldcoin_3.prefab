@@ -73,12 +73,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3a0105fdfdd0648a8754e8bb280349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 2
+  poolType: 3
   listTarget: []
   point: 1
   lvCurrent: 0
   boxCollider: {fileID: 3485028461242243297}
   meshRenderer: {fileID: 3523562268486754716}
+  tfTarget: {fileID: 0}
 --- !u!1 &3508541173312438858
 GameObject:
   m_ObjectHideFlags: 0

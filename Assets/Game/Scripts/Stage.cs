@@ -25,9 +25,15 @@ public class Stage : MonoBehaviour
         }
         if (countDownTime < 0)
         {
-            LevelManager.Ins.OnTimeUP();
+            LevelManager.Ins.player.move = false;
             isCountDown = false;
+            StartCoroutine(IE_OnTimeUp());
         }
+    }
+    IEnumerator IE_OnTimeUp()
+    {
+        yield return new WaitForSeconds(2f);
+        LevelManager.Ins.OnTimeUP();
     }
     public void IsCountDown(bool isCount)
     {

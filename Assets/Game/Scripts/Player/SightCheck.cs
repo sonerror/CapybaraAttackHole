@@ -5,17 +5,20 @@ using UnityEngine;
 public class SightCheck : MonoBehaviour
 {
     [SerializeField] private Material material;
-   public Character Character;
+    public Character Character;
     private Dictionary<Enemy, Material> originalMaterials = new Dictionary<Enemy, Material>();
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(Const.TAG_ENEMY))
         {
             Enemy _target = other.GetComponentInParent<Enemy>();
-            if (!_target.isDead)
+            if (LevelManager.Ins.player.lvCurrent >= _target.lvCurrent)
             {
-                Character.AddTarget(_target);
-                _target.AddMat(material);
+                if (!_target.isDead)
+                {
+                    Character.AddTarget(_target);
+                    _target.AddMat(material);
+                }
             }
         }
     }
@@ -24,8 +27,14 @@ public class SightCheck : MonoBehaviour
         if (other.CompareTag(Const.TAG_ENEMY))
         {
             Enemy _target = other.GetComponentInParent<Enemy>();
-            Character.RemoveTarget(_target);
-            _target.RemoveLastMat();
+            if (LevelManager.Ins.player.lvCurrent >= _target.lvCurrent)
+            {
+                if (!_target.isDead)
+                {
+                    Character.RemoveTarget(_target);
+                    _target.RemoveLastMat();
+                }
+            }
         }
     }
 }

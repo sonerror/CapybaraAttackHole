@@ -178,8 +178,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3a0105fdfdd0648a8754e8bb280349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 2
+  poolType: 5
   listTarget: []
   point: 1
   lvCurrent: 2
   boxCollider: {fileID: 8536015604566466998}
+  meshRenderer: {fileID: 8561079949883760010}
+  tfTarget: {fileID: 0}

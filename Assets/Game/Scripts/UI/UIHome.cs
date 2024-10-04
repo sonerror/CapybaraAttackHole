@@ -8,8 +8,11 @@ public class UIHome : UICanvas
 {
     [SerializeField] private TextMeshProUGUI tmpLevelSize;
     [SerializeField] private TextMeshProUGUI tmpLevelExp;
+    
     public override void Open()
     {
+
+        UIManager.Ins.CloseAll();
         base.Open();
         UpdateUI();
     }

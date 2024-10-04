@@ -33,7 +33,12 @@ public class DataManager :   Singleton<DataManager>
         PlayerPrefs.SetString(PLAYER_DATA, json);
         Debug.Log("SAVE DATA");
     }
-
+    public void ResetData()
+    {
+        playerData.lvEx = 0;
+        playerData.lvScale = 0;
+        playerData.lvTime = 0;
+    }
     void FirstLoad()
     {
       

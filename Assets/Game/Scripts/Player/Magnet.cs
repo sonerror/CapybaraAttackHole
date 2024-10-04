@@ -18,7 +18,28 @@ public class Magnet : MonoBehaviour
             if (LevelManager.Ins.player.lvCurrent >= _target.lvCurrent)
             {
                 AddToBlackHole(_target);
-                LevelManager.Ins.historyMagnetics.Add(_target.lvCurrent);
+                LevelManager.Ins.historyMagnetics.Add((int)_target.poolType);
+            }
+            else
+            {
+                _target.ChangeColorTriggerEn();
+            }
+        }
+       
+    }
+    void OnTriggerExit(Collider other)
+    {
+        if (GameManager.Ins.gameState != GameState.GamePlay) return;
+        if (other.CompareTag(Const.TAG_ENEMY))
+        {
+            Enemy _target = other.GetComponentInParent<Enemy>();
+            if (LevelManager.Ins.player.lvCurrent >= _target.lvCurrent)
+            {
+                
+            }
+            else
+            {
+                _target.ChangeColorTriggerEX();
             }
         }
     }
