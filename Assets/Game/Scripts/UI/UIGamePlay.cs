@@ -10,12 +10,17 @@ public class UIGamePlay : UICanvas
 {
     [SerializeField] private TextMeshProUGUI tmpLevel;
     [SerializeField] private TextMeshProUGUI countTime;
+    [SerializeField] private TextMeshProUGUI countHpBoss;
     [SerializeField] private GameObject ObjCountTime;
+    [SerializeField] private GameObject ObjHpBoss;
     [SerializeField] private Image imgProgress;
+    [SerializeField] private Image imgProgressHpBoss;
     [SerializeField] private GameObject objJoystick;
     [SerializeField] private GameObject objFire;
+    private float HPBoss;
     public ShootingController shootingController;
     public UIFollowPlayer uiFollow;
+    public bool isCountdown;
     public override void Setup()
     {
         base.Setup();
@@ -27,10 +32,14 @@ public class UIGamePlay : UICanvas
         UpdateCountDownText();
         LevelManager.Ins.stage.IsCountDown(true);
         SetActiveJoystick(true);
+        isCountdown = true;
     }
     public void Update()
     {
-        UpdateCountDownText();
+        if (isCountdown)
+        {
+            UpdateCountDownText();
+        }
     }
     public void SetActiveJoystick(bool active)
     {
@@ -39,11 +48,15 @@ public class UIGamePlay : UICanvas
         ObjCountTime.SetActive(active);
         objFire.SetActive(!active);
         shootingController.spriteDown.gameObject.SetActive(active);
+        ObjHpBoss.SetActive(!active);
+        SetProgressHp(1);
+        isCountdown = active;
     }
     public void SetAtiveBtnShot()
     {
         objFire.SetActive(true);
         shootingController.spriteDown.gameObject.SetActive(true);
+        shootingController.UpdateUI();
     }
     public void ReLoadUIFollow()
     {
@@ -78,6 +91,19 @@ public class UIGamePlay : UICanvas
     }
     public void ShoterBoss()
     {
-       Debug.Log(LevelManager.Ins.historyMagnetics.Count);
+        Debug.Log(LevelManager.Ins.historyMagnetics.Count);
+    }
+    public void UIHPBoss()
+    {
+        SetProgressHp((float)LevelManager.Ins.bossTimeUp.point / HPBoss);
+    }
+    public void OninitHPBoss()
+    {
+        HPBoss = LevelManager.Ins.bossTimeUp.point;
+      
+    }
+    public void SetProgressHp(float amount)
+    {
+        imgProgressHpBoss.fillAmount = amount;
     }
 }

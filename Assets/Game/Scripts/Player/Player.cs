@@ -10,7 +10,6 @@ public class Player : Character
     [SerializeField] private float rotateSpeed = 5f;
     public static Player Instance { get; private set; }
     public List<CheckPoint> checkPoints = new List<CheckPoint>();
-    public bool isMove;
     public bool move = true;
     public int lvTime;
     public int lvEx;
@@ -46,6 +45,10 @@ public class Player : Character
         SetScale(lvCurrent);
         OnInit();
     }
+    private void SetTimeCount()
+    {
+
+    }
     public void GetDataLevel(List<CheckPoint> _checkPoint)
     {
         this.checkPoints = new List<CheckPoint>(_checkPoint);
@@ -61,7 +64,6 @@ public class Player : Character
         {
             if (Input.GetMouseButton(0) && JoystickControl.direct.sqrMagnitude > 0.001f)
             {
-                isMove = true;
                 Vector3 moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
                 rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
                 Vector3 direction = Vector3.RotateTowards(transform.forward, JoystickControl.direct, rotateSpeed * Time.deltaTime, 0.0f);

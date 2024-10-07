@@ -23,7 +23,7 @@ public class Stage : MonoBehaviour
         {
             countDownTime -= Time.deltaTime;
         }
-        if (countDownTime < 0)
+        if (countDownTime <= 0)
         {
             LevelManager.Ins.player.move = false;
             isCountDown = false;

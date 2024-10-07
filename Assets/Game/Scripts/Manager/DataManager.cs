@@ -43,8 +43,16 @@ public class DataManager :   Singleton<DataManager>
     {
       
     }
+    public void ChangeGold(int newGold)
+    {
+        playerData.gold += newGold;
+        if (playerData.gold < 0)
+        {
+            playerData.gold = 0;
+        }
+        EventManager.Invoke(EventType.Gold, playerData.gold);
+    }
 
-   
 }
 [System.Serializable]
 public class PlayerData
@@ -53,12 +61,14 @@ public class PlayerData
     public int lvTime;
     public int lvScale;
     public int lvEx;
+    public int gold;
     public PlayerData()
     {
         levelCurrent = 0;
         lvTime = 0;
         lvScale = 0;
         lvEx = 0;
+        gold = 1000;
     }
 }
 

@@ -19,6 +19,7 @@ public class LevelData
     public int timer;
     public Enemy boss;
     public float pointBoss;
+
 }
 [System.Serializable]
 public class CheckPoint
@@ -27,6 +28,7 @@ public class CheckPoint
     public float checkPoint;
     public float scale;
     public float speedMove;
+    public int price;
     public Vector3 offSet;
     public Vector3 eulerAngles;
    

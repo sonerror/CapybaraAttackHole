@@ -19,36 +19,42 @@ MonoBehaviour:
       checkPoint: 50
       scale: 0.1
       speedMove: 1.5
+      price: 50
       offSet: {x: 0, y: 4, z: -4}
       eulerAngles: {x: 35, y: 0, z: 0}
     - id: 1
       checkPoint: 200
       scale: 0.3
       speedMove: 2
+      price: 100
       offSet: {x: 0, y: 7, z: -7}
       eulerAngles: {x: 35, y: 0, z: 0}
     - id: 2
       checkPoint: 1000
       scale: 0.5
       speedMove: 3
+      price: 200
       offSet: {x: 0, y: 11, z: -8}
       eulerAngles: {x: 40, y: 0, z: 0}
     - id: 3
       checkPoint: 3000
       scale: 0.7
       speedMove: 4
+      price: 300
       offSet: {x: 0, y: 14.5, z: -11}
       eulerAngles: {x: 40, y: 0, z: 0}
     - id: 4
       checkPoint: 4000
       scale: 0.9
       speedMove: 6
+      price: 400
       offSet: {x: 0, y: 16, z: -12}
       eulerAngles: {x: 45, y: 0, z: 0}
     - id: 5
       checkPoint: 5000
       scale: 1.5
       speedMove: 10
+      price: 500
       offSet: {x: 0, y: 20, z: -15}
       eulerAngles: {x: 50, y: 0, z: 0}
     stage: {fileID: 6896487636182496520, guid: 0f7600fcd2d16a54e9c67a7dd48b74e5, type: 3}
@@ -61,39 +67,45 @@ MonoBehaviour:
       checkPoint: 50
       scale: 0.1
       speedMove: 1.5
+      price: 50
       offSet: {x: 0, y: 4, z: -4}
       eulerAngles: {x: 35, y: 0, z: 0}
     - id: 1
       checkPoint: 200
       scale: 0.3
       speedMove: 2
+      price: 100
       offSet: {x: 0, y: 7, z: -7}
       eulerAngles: {x: 35, y: 0, z: 0}
     - id: 2
       checkPoint: 1000
       scale: 0.5
       speedMove: 3
+      price: 200
       offSet: {x: 0, y: 11, z: -8}
       eulerAngles: {x: 40, y: 0, z: 0}
     - id: 3
       checkPoint: 3000
       scale: 0.7
       speedMove: 4
+      price: 300
       offSet: {x: 0, y: 14.5, z: -11}
       eulerAngles: {x: 40, y: 0, z: 0}
     - id: 4
       checkPoint: 4000
       scale: 0.9
       speedMove: 6
+      price: 400
       offSet: {x: 0, y: 16, z: -12}
       eulerAngles: {x: 45, y: 0, z: 0}
     - id: 5
       checkPoint: 5000
       scale: 1.5
       speedMove: 10
+      price: 500
       offSet: {x: 0, y: 20, z: -15}
       eulerAngles: {x: 50, y: 0, z: 0}
     stage: {fileID: 6896487636182496520, guid: 0f7600fcd2d16a54e9c67a7dd48b74e5, type: 3}
     timer: 30
     boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
-    pointBoss: 500
+    pointBoss: 1000

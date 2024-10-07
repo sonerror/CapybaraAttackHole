@@ -1,6 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,178 +8,218 @@ using UnityEngine.UI;
 public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private Sprite spriteUp;
-    private Sprite spriteCurrent;
-    public bool isShooting;
+    [SerializeField] private TextMeshProUGUI tmpCountShoot;
     public Image spriteDown;
 
-    public void Start()
+    private Sprite spriteCurrent;
+    private Coroutine shootingCoroutine;
+    public bool IsShooting { get; private set; }
+
+    private const int MaxBullets = 3;
+
+    private void Awake()
+    {
+        Initialize();
+    }
+
+    private void Start()
     {
         spriteCurrent = spriteDown.sprite;
+        LevelManager.Ins.isShoot = true;
     }
+
+    private void Initialize()
+    {
+        IsShooting = false;
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
-        isShooting = true;
         spriteDown.sprite = spriteUp;
+
+        if (LevelManager.Ins.isShoot && LevelManager.Ins.historyMagnetics.Count > 0)
+        {
+            IsShooting = true;
+        }
     }
+
     public void OnPointerUp(PointerEventData eventData)
     {
-        isShooting = false;
-        spriteDown.sprite = spriteCurrent;
-        LevelManager.Ins.bossTimeUp.CheckWinLose();
+        ResetShooting();
     }
-    void Update()
+
+    private void Update()
     {
-        if (isShooting)
+        if (LevelManager.Ins.bossTimeUp == null) return;
+
+        if (IsShooting)
         {
             OnShoot();
         }
+        if (LevelManager.Ins.bossTimeUp.point <= 0)
+        {
+            IsShooting = false;
+            LevelManager.Ins.isShoot = false;
+        }
     }
+
+    public void UpdateUI()
+    {
+        tmpCountShoot.text = LevelManager.Ins.historyMagnetics.Count.ToString();
+    }
+
     private void OnShoot()
     {
         var data = LevelManager.Ins;
-        Debug.LogError("Fire");
-        if (data.historyMagnetics.Count > 0)
-        {
-            if (data.bossTimeUp.point > 0)
-            {
-                int numberOfBullets = Mathf.Min(3, data.historyMagnetics.Count);
-                float spreadAngle = CalculateSpreadAngle(numberOfBullets);
-                Vector3 targetDirection = GetTargetDirection(data);
 
-                for (int i = 0; i < numberOfBullets; i++)
-                {
-                    ShootBullet(i, numberOfBullets, spreadAngle, targetDirection);
-                }
-            }
-            else
-            {
-                spriteDown.gameObject.SetActive(false);
-                isShooting = false;
-            }
-        }
-        else
+        if (data.historyMagnetics.Count == 0 || data.bossTimeUp.point <= 0)
         {
-            spriteDown.gameObject.SetActive(false);
-            isShooting = false;
+            HandleEndShooting();
+            return;
         }
 
+        ShootBullets(data);
     }
+    private void ShootBullets(LevelManager data)
+    {
+        int numberOfBullets = Mathf.Min(MaxBullets, data.historyMagnetics.Count);
+        float spreadAngle = CalculateSpreadAngle(numberOfBullets);
+        Vector3 targetDirection = GetTargetDirection(data);
 
-    /// <summary>
-    /// Tính toán góc bắn dựa trên số lượng đạn.
-    /// </summary>
+        for (int i = 0; i < numberOfBullets; i++)
+        {
+            ShootBullet(i, numberOfBullets, spreadAngle, targetDirection);
+        }
+    }
+    private void HandleEndShooting()
+    {
+        spriteDown.gameObject.SetActive(false);
+        IsShooting = false;
+    }
     private float CalculateSpreadAngle(int numberOfBullets)
     {
-        return Mathf.Lerp(30f, 60f, (float)numberOfBullets / 30f);
+        return Mathf.Lerp(30f, 60f, (float)numberOfBullets / MaxBullets);
     }
 
-    /// <summary>
-    /// Lấy hướng của mục tiêu dựa trên vị trí của người chơi và mục tiêu.
-    /// </summary>
     private Vector3 GetTargetDirection(LevelManager data)
     {
         return (data.bossTimeUp.tfTarget.position - data.player.transform.position).normalized;
     }
-
-    /// <summary>
-    /// Xử lý việc bắn một viên đạn.
-    /// </summary>
     private void ShootBullet(int index, int numberOfBullets, float spreadAngle, Vector3 targetDirection)
     {
         var data = LevelManager.Ins;
         float angle = CalculateAngleForBullet(index, numberOfBullets, spreadAngle);
         Vector3 bulletDirection = GetBulletDirection(angle, targetDirection);
-        int id = data.historyMagnetics[data.historyMagnetics.Count - 1];
+        int id = data.historyMagnetics[^1];
         var enemyShot = SimplePool.Spawn<Enemy>((PoolType)id);
-        SetupBulletTransform(enemyShot, bulletDirection);
+        SetupBulletTransform(enemyShot);
         Vector3[] path = GenerateBulletPath(bulletDirection);
         MoveBulletAlongPath(enemyShot, path);
         data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
+        if (data.historyMagnetics.Count<=0)
+        {
+            StartCoroutine(IE_ShowUILose());
+        }
+        UpdateUI();
     }
 
-    /// <summary>
-    /// Tính toán góc bắn cho mỗi viên đạn.
-    /// </summary>
     private float CalculateAngleForBullet(int index, int numberOfBullets, float spreadAngle)
     {
-        float startAngle = -spreadAngle / 2f;
-        return startAngle + (spreadAngle / numberOfBullets) * index;
+        return -spreadAngle / 2f + (spreadAngle / numberOfBullets) * index;
     }
 
-    /// <summary>
-    /// Lấy hướng bay của viên đạn dựa trên góc tính toán.
-    /// </summary>
     private Vector3 GetBulletDirection(float angle, Vector3 targetDirection)
     {
         Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.up);
         return rotation * targetDirection;
     }
 
-    /// <summary>
-    /// Thiết lập vị trí và kích thước của viên đạn.
-    /// </summary>
-    private void SetupBulletTransform(Enemy bullet, Vector3 bulletDirection)
+    private void SetupBulletTransform(Enemy bullet)
     {
-        var data = LevelManager.Ins;
-        bullet.transform.position = data.player.transform.position;
-        bullet.transform.localScale = new Vector3(2, 2, 2);  // Kích thước đạn
+        bullet.transform.position = LevelManager.Ins.player.transform.position;
+        bullet.transform.localScale = Vector3.one * 2;
     }
 
-    /// <summary>
-    /// Tạo ra đường bay cho viên đạn (theo dạng vòng cung).
-    /// </summary>
     private Vector3[] GenerateBulletPath(Vector3 bulletDirection)
     {
         var data = LevelManager.Ins;
+        Vector3 startPosition = data.player.transform.position;
+        Vector3 targetPosition = data.bossTimeUp.tfTarget.position;
+        float distance = Vector3.Distance(startPosition, targetPosition);
+
         return new Vector3[]
         {
-        data.player.transform.position + bulletDirection * 1 + new Vector3(0, Random.Range(1f, 2f), 0),
-        data.player.transform.position + bulletDirection * 2f + new Vector3(0, Random.Range(2f, 4f), 0),
-        data.bossTimeUp.tfTarget.position
+            GetBulletPathPoint(startPosition, bulletDirection, 1f, Random.Range(2f, 3f)),
+            GetBulletPathPoint(startPosition, bulletDirection, distance / 2f, Random.Range(3f, 5f)),
+            GetBulletPathPoint(targetPosition, bulletDirection, 0f, Random.Range(-0.5f, 0.5f))
         };
     }
 
-    /// <summary>
-    /// Di chuyển viên đạn theo đường bay đã tạo.
-    /// </summary>
+    private Vector3 GetBulletPathPoint(Vector3 basePosition, Vector3 bulletDirection, float distance, float yOffset)
+    {
+        return basePosition + bulletDirection * distance + new Vector3(0, yOffset, Random.Range(-1f, 1f));
+    }
+
     private void MoveBulletAlongPath(Enemy bullet, Vector3[] path)
     {
-        bullet.transform.DOPath(path, 2f, PathType.CatmullRom)
+        bullet.transform.DOPath(path, 0.5f, PathType.CatmullRom)
             .SetEase(Ease.InOutQuad)
-            .OnComplete(() =>
-            {
-                SimplePool.Despawn(bullet);
-                Debug.LogError("Hit");
-                LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.GetBonusEXP();
-            });
+            .OnComplete(() => SimplePool.Despawn(bullet));
+        HandleBulletComplete(bullet);
+    }
+    IEnumerator IE_UpdateUI()
+    {
+        yield return new WaitForSeconds(0.5f);
+        UIManager.Ins.GetUI<UIGamePlay>().UIHPBoss();
+    }
+    private void HandleBulletComplete(Enemy bullet)
+    {
+        LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.GetBonusEXP();
+        UIManager.Ins.GetUI<UIGamePlay>().UIHPBoss();
+        if (LevelManager.Ins.bossTimeUp.point <= 0)
+        {
+            HandleBossDefeated();
+        }
+        if (LevelManager.Ins.historyMagnetics.Count == 0)
+        {
+            StartCoroutine(IE_ShowUILose());
+        }
     }
 
-    /// <summary>
-    /// Xử lý khi trò chơi kết thúc (thắng hoặc thua).
-    /// </summary>
-    private void HandleEndGameCondition(LevelManager data)
+    private void HandleBossDefeated()
     {
-        if (data.bossTimeUp.point > 0)
+        LevelManager.Ins.isShoot = false;
+
+        if (LevelManager.Ins.isCont)
         {
-            Debug.LogError("Lose");
+            LevelManager.Ins.isCont = false;
+            DataManager.Ins.playerData.levelCurrent += 1;
+            DataManager.Ins.ResetData();
         }
-        else
-        {
-            Debug.LogError("Win");
-        }
-    }
-    public void OnLoadStage()
-    {
-        LevelManager.Ins.ReLoad();
-        DOVirtual.DelayedCall(1f, () =>
-        {
-            SceneController.Ins.ChangeScene(Const.GAMEPLAY_SCENE, () =>
-            {
-                UIManager.Ins.OpenUI<UIHome>();
-                LevelManager.Ins.OnLoadLevel();
-                GameManager.Ins.ChangeState(GameState.MainMenu);
-            });
-        });
+        StartCoroutine(IE_ShowUIWin());
     }
 
+    private void ResetShooting()
+    {
+        spriteDown.sprite = spriteCurrent;
+        IsShooting = false;
+
+        if (shootingCoroutine != null)
+        {
+            StopCoroutine(shootingCoroutine);
+            shootingCoroutine = null;
+        }
+    }
+
+    private IEnumerator IE_ShowUIWin()
+    {
+        yield return new WaitForSeconds(1f);
+        UIManager.Ins.OpenUI<PopupWin>();
+    }
+
+    private IEnumerator IE_ShowUILose()
+    {
+        yield return new WaitForSeconds(1f);
+        UIManager.Ins.OpenUI<PopupLose>();
+    }
 }
