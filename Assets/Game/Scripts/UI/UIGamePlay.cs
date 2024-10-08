@@ -10,7 +10,7 @@ public class UIGamePlay : UICanvas
 {
     [SerializeField] private TextMeshProUGUI tmpLevel;
     [SerializeField] private TextMeshProUGUI countTime;
-    [SerializeField] private TextMeshProUGUI countHpBoss;
+    [SerializeField] private TextMeshProUGUI tmpPercentHpBoss;
     [SerializeField] private GameObject ObjCountTime;
     [SerializeField] private GameObject ObjHpBoss;
     [SerializeField] private Image imgProgress;
@@ -105,5 +105,7 @@ public class UIGamePlay : UICanvas
     public void SetProgressHp(float amount)
     {
         imgProgressHpBoss.fillAmount = amount;
+        float percentHP = amount * 100f;
+        tmpPercentHpBoss.text = percentHP.ToString("F1") + "%";
     }
 }
