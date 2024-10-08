@@ -53,7 +53,7 @@ public class Player : Character
     {
         this.checkPoints = new List<CheckPoint>(_checkPoint);
     }
-    private void FixedUpdate()
+    private void Update()
     {
         Vector3 inputDirection = GetInputDirection();
         if (inputDirection.sqrMagnitude > 0.001f)
@@ -66,21 +66,30 @@ public class Player : Character
     {
         Vector3 moveDirection = Vector3.zero;
 
-/*#if UNITY_EDITOR || UNITY_STANDALONE
-        if (Input.GetMouseButton(0))
+        /*#if UNITY_EDITOR || UNITY_STANDALONE
+                if (Input.GetMouseButton(0))
+                {
+                    moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+                }
+        #elif UNITY_IOS || UNITY_ANDROID
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+                }
+            }
+        #endif*/
+
+        if (Input.touchCount > 0)
         {
-            moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Moved)
+            {
+                moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+            }
         }
-#elif UNITY_IOS || UNITY_ANDROID*/
-    if (Input.touchCount > 0)
-    {
-        Touch touch = Input.GetTouch(0);
-        if (touch.phase == TouchPhase.Moved)
-        {
-            moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
-        }
-    }
-/*#endif*/
 
         return moveDirection;
     }
@@ -89,7 +98,7 @@ public class Player : Character
     {
         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
 
-        rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.deltaTime);
         Vector3 direction = Vector3.RotateTowards(transform.forward, moveDirection, rotateSpeed * Time.deltaTime, 0.0f);
         transform.rotation = Quaternion.LookRotation(direction);
     }
