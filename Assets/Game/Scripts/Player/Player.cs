@@ -1,4 +1,4 @@
-
+﻿
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,24 +53,47 @@ public class Player : Character
     {
         this.checkPoints = new List<CheckPoint>(_checkPoint);
     }
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        Move();
-    }
-    private void Move()
-    {
-        if (GameManager.Ins.gameState != GameState.GamePlay) return;
-        if (move)
+        Vector3 inputDirection = GetInputDirection();
+        if (inputDirection.sqrMagnitude > 0.001f)
         {
-            if (Input.GetMouseButton(0) && JoystickControl.direct.sqrMagnitude > 0.001f)
-            {
-                Vector3 moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
-                rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
-                Vector3 direction = Vector3.RotateTowards(transform.forward, JoystickControl.direct, rotateSpeed * Time.deltaTime, 0.0f);
-                transform.rotation = Quaternion.LookRotation(direction);
-            }
+            Move(inputDirection);
         }
     }
+
+    private Vector3 GetInputDirection()
+    {
+        Vector3 moveDirection = Vector3.zero;
+
+/*#if UNITY_EDITOR || UNITY_STANDALONE
+        if (Input.GetMouseButton(0))
+        {
+            moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+        }
+#elif UNITY_IOS || UNITY_ANDROID*/
+    if (Input.touchCount > 0)
+    {
+        Touch touch = Input.GetTouch(0);
+        if (touch.phase == TouchPhase.Moved)
+        {
+            moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+        }
+    }
+/*#endif*/
+
+        return moveDirection;
+    }
+
+    private void Move(Vector3 moveDirection)
+    {
+        if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
+
+        rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
+        Vector3 direction = Vector3.RotateTowards(transform.forward, moveDirection, rotateSpeed * Time.deltaTime, 0.0f);
+        transform.rotation = Quaternion.LookRotation(direction);
+    }
+
     private void StopMove()
     {
         move = false;
