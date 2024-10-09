@@ -1,9 +1,7 @@
-using CW.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 public class UIGamePlay : UICanvas
@@ -33,6 +31,7 @@ public class UIGamePlay : UICanvas
         LevelManager.Ins.stage.IsCountDown(true);
         SetActiveJoystick(true);
         isCountdown = true;
+        shootingController.imgTotal.SetActive(false);
     }
     public void Update()
     {
@@ -57,6 +56,7 @@ public class UIGamePlay : UICanvas
         objFire.SetActive(true);
         shootingController.spriteDown.gameObject.SetActive(true);
         shootingController.UpdateUI();
+        shootingController.imgTotal.SetActive(true);
     }
     public void ReLoadUIFollow()
     {
@@ -88,6 +88,14 @@ public class UIGamePlay : UICanvas
             secondString = "0" + secondString;
         }
         countTime.text = minuteString + ":" + secondString;
+        if (currentTime <= 6)
+        {
+            countTime.color = Color.red;
+        }
+        else
+        {
+            countTime.color = Color.black;
+        }
     }
     public void ShoterBoss()
     {
@@ -100,12 +108,16 @@ public class UIGamePlay : UICanvas
     public void OninitHPBoss()
     {
         HPBoss = LevelManager.Ins.bossTimeUp.point;
-      
+
     }
     public void SetProgressHp(float amount)
     {
         imgProgressHpBoss.fillAmount = amount;
         float percentHP = amount * 100f;
+        if (percentHP <= 0)
+        {
+            percentHP = 0;
+        }
         tmpPercentHpBoss.text = percentHP.ToString("F1") + "%";
     }
 }

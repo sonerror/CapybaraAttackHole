@@ -14670,8 +14670,10 @@ MonoBehaviour:
   moveSpeed: 5
   rotateSpeed: 10
   checkPoints: []
-  isMove: 0
   move: 1
+  lvTime: 0
+  lvEx: 0
+  mouth: {fileID: 2234629285008797538}
 --- !u!54 &6251590212042850037
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19467,8 +19469,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pullForce: 10
-  pullDuration: 0.1
   blackHoleCenter: {fileID: 8327819784849442812}
+  rotationSpeed: 360
 --- !u!1 &3242233603631467532
 GameObject:
   m_ObjectHideFlags: 0
@@ -19588,8 +19590,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pullForce: 10
-  pullDuration: 0.1
   blackHoleCenter: {fileID: 8327819784849442812}
+  rotationSpeed: 360
 --- !u!1 &3534898320628987715
 GameObject:
   m_ObjectHideFlags: 0
@@ -19852,8 +19854,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pullForce: 10
-  pullDuration: 0.1
   blackHoleCenter: {fileID: 8327819784849442812}
+  rotationSpeed: 360
 --- !u!1 &4860926301104523445
 GameObject:
   m_ObjectHideFlags: 0

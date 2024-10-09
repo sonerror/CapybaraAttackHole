@@ -5,9 +5,6 @@ using UnityEngine;
 public class LevelManager : Singleton<LevelManager>
 {
     [SerializeField] private Player playerPrefabs;
-    [SerializeField] private Transform tfPlayer;
-    [SerializeField] private Transform tfStage;
-    [SerializeField] private Transform tfBoss;
     [SerializeField] private LevelDatas levelData;
     public LevelDatas _levelData => levelData;
     [SerializeField] private PointData PointDatas;
@@ -48,7 +45,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         int totalLevels = levelData.levels.Count;
         int validLevelID = DataManager.Ins.playerData.levelCurrent % totalLevels;
-        stage = Instantiate(levelData.GetDataWithID(validLevelID).stage, tfStage);
+        stage = Instantiate(levelData.GetDataWithID(validLevelID).stage);
         SetTimeCount();
     }
 
@@ -66,7 +63,7 @@ public class LevelManager : Singleton<LevelManager>
     private void InstantiatePlayer()
     {
         var data = DataManager.Ins.playerData;
-        player = Instantiate(playerPrefabs, tfPlayer);
+        player = Instantiate(playerPrefabs);
         player.transform.position = Vector3.zero;
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
@@ -116,14 +113,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public void ReLoad()
     {
-        Destroy(floorBoss?.gameObject);
-        Destroy(bossTimeUp?.gameObject);
         player.checkPoints.Clear();
-        Destroy(player.gameObject);
-        if (stage != null)
-        {
-            Destroy(stage?.gameObject);
-        }
     }
 
     public void ReloadScene()
@@ -173,7 +163,6 @@ public class LevelManager : Singleton<LevelManager>
         player.transform.rotation = Quaternion.identity;
         Destroy(stage.gameObject);
         GameManager.Ins.ChangeState(GameState.Finish);
-        UIManager.Ins.GetUI<UIGamePlay>().SetAtiveBtnShot();
         int totalLevels = levelData.levels.Count;
         int validLevelID = DataManager.Ins.playerData.levelCurrent % totalLevels;
         var boss = levelData.GetDataWithID(validLevelID);
@@ -182,7 +171,7 @@ public class LevelManager : Singleton<LevelManager>
 
     private void SpawnBoss(LevelData bossData)
     {
-        bossTimeUp = Instantiate(bossData.boss, tfBoss);
+        bossTimeUp = Instantiate(bossData.boss);
         bossTimeUp.transform.position = floorBoss.tfBoss.position;
         bossTimeUp.transform.rotation = Quaternion.Euler(0, 180, 0);
         bossTimeUp.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
@@ -192,6 +181,8 @@ public class LevelManager : Singleton<LevelManager>
             .OnComplete(() =>
             {
                 UIManager.Ins.GetUI<UIGamePlay>().OninitHPBoss();
+                CameraManager.Ins.SetCameraFBoss();
+                UIManager.Ins.GetUI<UIGamePlay>().SetAtiveBtnShot();
             });
     }
 }

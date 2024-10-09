@@ -13,6 +13,10 @@ public class CameraManager : Singleton<CameraManager>
     private Vector3 _eulerAngles;
     [SerializeField] Vector3 offsetMax;
     [SerializeField] Vector3 offsetMin;
+
+
+    [SerializeField] private Vector3 _offsetFBoss;
+    [SerializeField] private Vector3 _eulerAnglesFBoss;
     public void Oninit()
     {
         _player = LevelManager.Ins.player;
@@ -46,5 +50,9 @@ public class CameraManager : Singleton<CameraManager>
         Sequence cameraSequence = DOTween.Sequence();
         cameraSequence.Join(this.transform.DOMove(_targetOffset, 0.3f).SetEase(Ease.InOutQuad));
         cameraSequence.Join(this.transform.DORotate(_targetEulerAngles, 0.3f).SetEase(Ease.InOutQuad));
+    }
+    public void SetCameraFBoss()
+    {
+        SetTfCamera(_offsetFBoss, _eulerAnglesFBoss);
     }
 }

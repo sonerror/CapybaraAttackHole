@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -11,11 +12,12 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     [SerializeField] private TextMeshProUGUI tmpCountShoot;
     public Image spriteDown;
 
+    public GameObject imgTotal;
     private Sprite spriteCurrent;
     private Coroutine shootingCoroutine;
     public bool IsShooting { get; private set; }
 
-    private const int MaxBullets = 3;
+    private const int MaxBullets = 10;
 
     private void Awake()
     {
@@ -80,6 +82,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
         ShootBullets(data);
     }
+
     private void ShootBullets(LevelManager data)
     {
         int numberOfBullets = Mathf.Min(MaxBullets, data.historyMagnetics.Count);
@@ -91,11 +94,13 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
             ShootBullet(i, numberOfBullets, spreadAngle, targetDirection);
         }
     }
+
     private void HandleEndShooting()
     {
         spriteDown.gameObject.SetActive(false);
         IsShooting = false;
     }
+
     private float CalculateSpreadAngle(int numberOfBullets)
     {
         return Mathf.Lerp(30f, 60f, (float)numberOfBullets / MaxBullets);
@@ -105,6 +110,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     {
         return (data.bossTimeUp.tfTarget.position - data.player.transform.position).normalized;
     }
+
     private void ShootBullet(int index, int numberOfBullets, float spreadAngle, Vector3 targetDirection)
     {
         var data = LevelManager.Ins;
@@ -113,14 +119,18 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         int id = data.historyMagnetics[^1];
         var enemyShot = SimplePool.Spawn<Enemy>((PoolType)id);
         SetupBulletTransform(enemyShot);
-        Vector3[] path = GenerateBulletPath(bulletDirection);
-        MoveBulletAlongPath(enemyShot, path);
-        data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
-        if (data.historyMagnetics.Count<=0)
+        enemyShot.transform.DOMove(LevelManager.Ins.player.mouth.transform.position, 0.1f).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
-            StartCoroutine(IE_ShowUILose());
-        }
-        UpdateUI();
+            Vector3[] path = GenerateBulletPath(bulletDirection);
+            MoveBulletAlongPath(enemyShot, path);
+
+            data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
+            if (data.historyMagnetics.Count <= 0)
+            {
+                StartCoroutine(IE_ShowUILose());
+            }
+            UpdateUI();
+        });
     }
 
     private float CalculateAngleForBullet(int index, int numberOfBullets, float spreadAngle)
@@ -143,47 +153,50 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     private Vector3[] GenerateBulletPath(Vector3 bulletDirection)
     {
         var data = LevelManager.Ins;
-        Vector3 startPosition = data.player.transform.position;
+        Vector3 startPosition = data.player.mouth.position;
         Vector3 targetPosition = data.bossTimeUp.tfTarget.position;
-        float distance = Vector3.Distance(startPosition, targetPosition);
+        Vector3 apexPoint = startPosition + bulletDirection * 2f + Vector3.up * Random.Range(2f, 6f);
+
+        apexPoint += new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
 
         return new Vector3[]
         {
-            GetBulletPathPoint(startPosition, bulletDirection, 1f, Random.Range(2f, 3f)),
-            GetBulletPathPoint(startPosition, bulletDirection, distance / 2f, Random.Range(3f, 5f)),
-            GetBulletPathPoint(targetPosition, bulletDirection, 0f, Random.Range(-0.5f, 0.5f))
+            startPosition,
+            apexPoint,
+            targetPosition
         };
-    }
-
-    private Vector3 GetBulletPathPoint(Vector3 basePosition, Vector3 bulletDirection, float distance, float yOffset)
-    {
-        return basePosition + bulletDirection * distance + new Vector3(0, yOffset, Random.Range(-1f, 1f));
     }
 
     private void MoveBulletAlongPath(Enemy bullet, Vector3[] path)
     {
-        bullet.transform.DOPath(path, 0.5f, PathType.CatmullRom)
+        bullet.transform.DOPath(path, 1f, PathType.CatmullRom)
             .SetEase(Ease.InOutQuad)
             .OnComplete(() => SimplePool.Despawn(bullet));
         HandleBulletComplete(bullet);
     }
-    IEnumerator IE_UpdateUI()
+
+    IEnumerator IE_UpdateUI(UnityAction unityAction)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.8f);
         UIManager.Ins.GetUI<UIGamePlay>().UIHPBoss();
+        unityAction.Invoke();
     }
+
     private void HandleBulletComplete(Enemy bullet)
     {
         LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.GetBonusEXP();
-        UIManager.Ins.GetUI<UIGamePlay>().UIHPBoss();
-        if (LevelManager.Ins.bossTimeUp.point <= 0)
+        StartCoroutine(IE_UpdateUI(() =>
         {
-            HandleBossDefeated();
-        }
-        if (LevelManager.Ins.historyMagnetics.Count == 0)
-        {
-            StartCoroutine(IE_ShowUILose());
-        }
+            if (LevelManager.Ins.bossTimeUp.point <= 0)
+            {
+                HandleBossDefeated();
+            }
+            if (LevelManager.Ins.historyMagnetics.Count == 0)
+            {
+                StartCoroutine(IE_ShowUILose());
+            }
+        }));
+       
     }
 
     private void HandleBossDefeated()
@@ -213,13 +226,13 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private IEnumerator IE_ShowUIWin()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         UIManager.Ins.OpenUI<PopupWin>();
     }
 
     private IEnumerator IE_ShowUILose()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         UIManager.Ins.OpenUI<PopupLose>();
     }
 }

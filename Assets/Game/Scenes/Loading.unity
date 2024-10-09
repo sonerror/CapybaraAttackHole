@@ -671,6 +671,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 537674220}
     m_Modifications:
+    - target: {fileID: 1769839378837207915, guid: 62f98fdd1df885047b788116e32eff41, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 2052526472506441311, guid: 62f98fdd1df885047b788116e32eff41, type: 3}
       propertyPath: m_Name
       value: Canvas - Transition
@@ -981,7 +985,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
 --- !u!114 &948127255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1248,7 +1252,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
 --- !u!114 &1164690603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1419,8 +1423,8 @@ Transform:
   - {fileID: 534301444}
   - {fileID: 390685368}
   - {fileID: 2093367055}
-  - {fileID: 1285019726}
   - {fileID: 1319507142}
+  - {fileID: 1285019726}
   - {fileID: 460583166}
   - {fileID: 1137424945}
   m_Father: {fileID: 2060344064}

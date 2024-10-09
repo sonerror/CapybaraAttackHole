@@ -1,21 +1,28 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Magnet : MonoBehaviour
 {
-    [SerializeField] private float pullForce;
-    [SerializeField] private float pullDuration = 2f;
+    [SerializeField] private float pullForce = 5f;
     [SerializeField] private Transform blackHoleCenter;
+    [SerializeField] private float rotationSpeed = 360f;
+
+    private Player player;
+    private float pullDuration;
+
+    void Start()
+    {
+        player = LevelManager.Ins.player;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (GameManager.Ins.gameState != GameState.GamePlay) return;
+
         if (other.CompareTag(Const.TAG_ENEMY))
         {
             Enemy _target = other.GetComponentInParent<Enemy>();
-            if (LevelManager.Ins.player.lvCurrent >= _target.lvCurrent)
+            if (player.lvCurrent >= _target.lvCurrent)
             {
                 AddToBlackHole(_target);
                 LevelManager.Ins.historyMagnetics.Add((int)_target.poolType);
@@ -25,56 +32,45 @@ public class Magnet : MonoBehaviour
                 _target.ChangeColorTriggerEn();
             }
         }
-       
     }
-    void OnTriggerExit(Collider other)
-    {
-        if (GameManager.Ins.gameState != GameState.GamePlay) return;
-        if (other.CompareTag(Const.TAG_ENEMY))
-        {
-            Enemy _target = other.GetComponentInParent<Enemy>();
-            if (LevelManager.Ins.player.lvCurrent >= _target.lvCurrent)
-            {
-                
-            }
-            else
-            {
-                _target.ChangeColorTriggerEX();
-            }
-        }
-    }
+
     public void AddToBlackHole(Enemy enemy)
     {
         if (enemy != null)
         {
-            var lv = LevelManager.Ins.player;
-            float bonus = lv.GetBonusEXP();
-            float root;
-            float target;
+            pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
+            float bonus = player.GetBonusEXP();
             enemy.HideCollider(false);
             Sequence sequence = DOTween.Sequence();
-            sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InQuad));
-            sequence.Join(enemy.transform.DOScale(new Vector3(1, 1, 1) * 0.3f, pullDuration).SetEase(Ease.InQuad));
-            sequence.OnComplete(() =>
-            {
-                Destroy(enemy.transform.gameObject);
-                lv.RemoveTarget(enemy);
-                float bonusEx = enemy.point * bonus;
-                lv.point += bonusEx;
-                lv.CheckPointUpLevel();
-                if (lv.lvCurrent > 0)
+
+            sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
+                .Join(enemy.transform.DOScale(Vector3.one * 0.3f, pullDuration / 2).SetEase(Ease.InExpo))
+                .Append(enemy.transform.DOScale(Vector3.zero, pullDuration / 2).SetEase(Ease.InExpo))
+                .OnComplete(() =>
                 {
-                    target = lv.GetCheckPoint(lv.lvCurrent) - lv.GetCheckPoint(lv.lvCurrent - 1);
-                    root = lv.GetCheckPoint(lv.lvCurrent - 1);
-                }
-                else
-                {
-                    target = lv.GetCheckPoint(lv.lvCurrent);
-                    root = 0;
-                }
-                float detal = lv.point - root;
-                UIManager.Ins.GetUI<UIGamePlay>().SetProgressSpin((float)detal / target);
-            });
+                    Destroy(enemy.gameObject);
+                    player.RemoveTarget(enemy);
+                    player.point += enemy.point * bonus;
+                    player.CheckPointUpLevel();
+                    UpdateUIProgress(player);
+                });
         }
+    }
+
+    private void UpdateUIProgress(Player lv)
+    {
+        float target, root;
+        if (lv.lvCurrent > 0)
+        {
+            target = lv.GetCheckPoint(lv.lvCurrent) - lv.GetCheckPoint(lv.lvCurrent - 1);
+            root = lv.GetCheckPoint(lv.lvCurrent - 1);
+        }
+        else
+        {
+            target = lv.GetCheckPoint(lv.lvCurrent);
+            root = 0;
+        }
+        float detal = lv.point - root;
+        UIManager.Ins.GetUI<UIGamePlay>().SetProgressSpin(detal / target);
     }
 }

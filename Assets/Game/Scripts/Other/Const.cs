@@ -9,4 +9,6 @@ public class Const
     public const string LOADING_SCENE = "Loading";
     public const string TAG_ENEMY = "Enemy";
     public const string TAG_PLAYER = "Player";
+    public const float PULLDURATIONMIN = 0.1f;
+    public const float PULLDURATIONMAX = 0.2f;
 }

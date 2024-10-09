@@ -68,7 +68,7 @@ public class PlayerData
         lvTime = 0;
         lvScale = 0;
         lvEx = 0;
-        gold = 1000;
+        gold = 10000;
     }
 }
 

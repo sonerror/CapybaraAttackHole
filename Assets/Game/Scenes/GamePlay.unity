@@ -365,6 +365,8 @@ MonoBehaviour:
   _player: {fileID: 0}
   offsetMax: {x: 0, y: 0, z: 0}
   offsetMin: {x: 0, y: 0, z: 0}
+  _offsetFBoss: {x: 0.8279112, y: 110.9482, z: -22.81936}
+  _eulerAnglesFBoss: {x: 35.248, y: 0, z: 0}
 --- !u!4 &1660099835
 Transform:
   m_ObjectHideFlags: 0
