@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,14 +9,13 @@ public class Player : Character
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
     public static Player Instance { get; private set; }
-
-    private Dictionary<int, CheckPoint> checkPointDict = new Dictionary<int, CheckPoint>();
     public List<CheckPoint> checkPoints = new List<CheckPoint>();
     public bool move = true;
     public int lvTime;
     public int lvEx;
     public Transform mouth;
     private Vector3 lastInputDirection;
+    private Quaternion targetRotation;
 
     public override void OnInit()
     {
@@ -25,35 +25,33 @@ public class Player : Character
 
     public void SetScale(int _lvScale)
     {
-        if (checkPointDict.TryGetValue(_lvScale, out var data))
-        {
-            transform.localScale = Vector3.one * data.scale;
-            ChangeSpeed(data.speedMove);
-            SetCamera(_lvScale);
-        }
+        var data = GetCheckPointData(_lvScale);
+        this.transform.localScale = new Vector3(1, 1, 1) * data.scale;
+        SetCamera(_lvScale);
+        ChangeSpeed(data.speedMove);
     }
 
     public void SetScaleUpLevel(int _lvScale)
     {
-        SetScale(_lvScale);
+        float targetScale = GetCheckPointData(_lvScale).scale;
+        ChangeScale(targetScale);
+        SetCamera(_lvScale);
     }
 
     public void GetDataLevel(List<CheckPoint> _checkPoint)
     {
-        checkPoints = _checkPoint;
-        checkPointDict.Clear();
-        foreach (var cp in checkPoints)
-        {
-            checkPointDict[cp.id] = cp;
-        }
+        this.checkPoints = new List<CheckPoint>(_checkPoint);
+    }
+
+    private CheckPoint GetCheckPointData(int id)
+    {
+        return checkPoints.Find(x => x.id == id);
     }
 
     public void SetCamera(int _levelCurrent)
     {
-        if (checkPointDict.TryGetValue(_levelCurrent, out var targetPoint))
-        {
-            CameraManager.Ins.SetTfCamera(targetPoint.offSet, targetPoint.eulerAngles);
-        }
+        var targetPoint = GetCheckPointData(_levelCurrent);
+        CameraManager.Ins.SetTfCamera(targetPoint.offSet, targetPoint.eulerAngles);
     }
 
     public void SetData(int _Lv, int _lvTime, int _lvEx)
@@ -85,7 +83,6 @@ public class Player : Character
     {
         rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
 
-        // Chỉ cần hướng tới moveDirection nếu nó không phải là zero
         if (moveDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
@@ -127,7 +124,7 @@ public class Player : Character
         {
             Debug.LogError("isCheckPoint");
             ChangeSpeed(targetPoint.speedMove);
-            SetCamera(lvCurrent);
+            CameraManager.Ins.SetTfCamera(targetPoint.offSet, targetPoint.eulerAngles);
             lvCurrent += 1;
             SetScaleUpLevel(lvCurrent);
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
@@ -146,18 +143,10 @@ public class Player : Character
 
     public void OnLose()
     {
-        // Handle losing state if needed
     }
 
     public void MoveToTfTarget(Transform tfTarget)
     {
         this.transform.DOMove(tfTarget.position, 1f).SetEase(Ease.InOutQuad);
     }
-
-    private CheckPoint GetCheckPointData(int id)
-    {
-        checkPointDict.TryGetValue(id, out var checkpoint);
-        return checkpoint;
-    }
 }
-
