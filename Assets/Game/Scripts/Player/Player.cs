@@ -77,29 +77,21 @@ public class Player : Character
         Debug.LogError("targetCheckPoint: " + targetCheckPoint);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
-
         Vector3 currentInputDirection = GetInputDirection();
         if (currentInputDirection.sqrMagnitude > 0.001f)
         {
             if (currentInputDirection != inputDirection)
             {
                 inputDirection = currentInputDirection;
+                Move(inputDirection, inputDirection);
             }
         }
         else
         {
             StopMovement();
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (move && inputDirection.sqrMagnitude > 0.001f)
-        {
-            Move(inputDirection, inputDirection);
         }
     }
 
