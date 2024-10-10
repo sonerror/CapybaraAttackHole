@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,11 +29,6 @@ public class LevelManager : Singleton<LevelManager>
     public List<int> historyMagnetics = new List<int>();
     public bool isCont;
     public bool isCountTime;
-    private void Awake()
-    {
-        OnInit();
-    }
-
     public void OnInit()
     {
         CameraManager.Ins.Oninit();
@@ -59,17 +55,16 @@ public class LevelManager : Singleton<LevelManager>
             OnInit();
         }
     }
-
     private void InstantiatePlayer()
     {
         var data = DataManager.Ins.playerData;
         player = Instantiate(playerPrefabs);
         player.transform.position = Vector3.zero;
+        CameraManager.Ins.SetData();
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
     }
-
     public LevelBonusDataModel GetDataTimeCountWithId(int id)
     {
         return levelTime.levelBonusDataModels?.Find(x => x.id == id);

@@ -1,5 +1,4 @@
-﻿
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,14 +7,18 @@ public class Player : Character
     [SerializeField] private Rigidbody rb;
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
-    public static Player Instance { get; private set; }
+    private Quaternion targetRotation;
+    private Vector3 inputDirection = Vector3.zero;
+    private Vector3 lastPosition = Vector3.zero;  // Để theo dõi vị trí cũ, giúp phát hiện thay đổi nhỏ
     public List<CheckPoint> checkPoints = new List<CheckPoint>();
+
     public bool move = true;
     public int lvTime;
     public int lvEx;
     public Transform mouth;
-    private Vector3 lastInputDirection;
-    private Quaternion targetRotation;
+
+    public float targetCheckPoint;
+    public float durProgress;
 
     public override void OnInit()
     {
@@ -29,6 +32,7 @@ public class Player : Character
         this.transform.localScale = new Vector3(1, 1, 1) * data.scale;
         SetCamera(_lvScale);
         ChangeSpeed(data.speedMove);
+        SetTargetCheckPoint();
     }
 
     public void SetScaleUpLevel(int _lvScale)
@@ -63,30 +67,62 @@ public class Player : Character
         OnInit();
     }
 
+    private void SetTargetCheckPoint()
+    {
+        targetCheckPoint = GetCheckPointData(lvCurrent).checkPoint;
+        if (lvCurrent > 0)
+        {
+            durProgress = GetCheckPointData(lvCurrent - 1).checkPoint;
+        }
+        Debug.LogError("targetCheckPoint: " + targetCheckPoint);
+    }
+
     private void Update()
     {
         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
 
-        Vector3 inputDirection = GetInputDirection();
-        lastInputDirection = inputDirection.sqrMagnitude > 0.001f ? inputDirection : Vector3.zero;
+        Vector3 currentInputDirection = GetInputDirection();
+        if (currentInputDirection.sqrMagnitude > 0.001f)
+        {
+            if (currentInputDirection != inputDirection)
+            {
+                inputDirection = currentInputDirection;
+            }
+        }
+        else
+        {
+            StopMovement();
+        }
     }
 
     private void FixedUpdate()
     {
-        if (GameManager.Ins.gameState == GameState.GamePlay && move && lastInputDirection.sqrMagnitude > 0.001f)
+        if (move && inputDirection.sqrMagnitude > 0.001f)
         {
-            Move(lastInputDirection);
+            Move(inputDirection, inputDirection);
         }
     }
 
-    private void Move(Vector3 moveDirection)
+    private void Move(Vector3 moveDirection, Vector3 rotationDir)
     {
-        rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
+        Vector3 targetPosition = rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
+        rb.MovePosition(targetPosition);
+        TF.position = rb.position;
+        Rotate(rotationDir);
+    }
 
-        if (moveDirection != Vector3.zero)
+    private void StopMovement()
+    {
+        inputDirection = Vector3.zero;
+        rb.velocity = Vector3.zero; 
+    }
+
+    private void Rotate(Vector3 rotationDir)
+    {
+        if (rotationDir != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime * 100f);
+            targetRotation = Quaternion.LookRotation(rotationDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
         }
     }
 
@@ -97,18 +133,23 @@ public class Player : Character
 #if UNITY_EDITOR || UNITY_STANDALONE
         if (Input.GetMouseButton(0))
         {
-            moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+            if (JoystickControl.direct.sqrMagnitude > 0.001f)
+            {
+                moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+            }
         }
+
 #elif UNITY_IOS || UNITY_ANDROID
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Moved)
+            if (touch.phase == TouchPhase.Moved && JoystickControl.direct.sqrMagnitude > 0.001f)
             {
                 moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
             }
         }
 #endif
+
         return moveDirection.normalized;
     }
 
@@ -119,13 +160,17 @@ public class Player : Character
 
     public void CheckPointUpLevel()
     {
-        var targetPoint = GetCheckPointData(lvCurrent);
-        if (lvCurrent < checkPoints.Count && point >= targetPoint.checkPoint)
+        if (lvCurrent < checkPoints.Count && point >= targetCheckPoint)
         {
-            Debug.LogError("isCheckPoint");
+            lvCurrent += 1;
+            var targetPoint = GetCheckPointData(lvCurrent);
+            targetCheckPoint = targetPoint.checkPoint;
+            if (lvCurrent > 0)
+            {
+                durProgress = GetCheckPointData(lvCurrent - 1).checkPoint;
+            }
             ChangeSpeed(targetPoint.speedMove);
             CameraManager.Ins.SetTfCamera(targetPoint.offSet, targetPoint.eulerAngles);
-            lvCurrent += 1;
             SetScaleUpLevel(lvCurrent);
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
         }

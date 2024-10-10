@@ -6,14 +6,8 @@ public class Magnet : MonoBehaviour
     [SerializeField] private float pullForce = 5f;
     [SerializeField] private Transform blackHoleCenter;
     [SerializeField] private float rotationSpeed = 360f;
-
-    private Player player;
+    [SerializeField] private Player player;
     private float pullDuration;
-
-    void Start()
-    {
-        player = LevelManager.Ins.player;
-    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -42,13 +36,12 @@ public class Magnet : MonoBehaviour
             float bonus = player.GetBonusEXP();
             enemy.HideCollider(false);
             Sequence sequence = DOTween.Sequence();
-
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
                 .Join(enemy.transform.DOScale(Vector3.one * 0.3f, pullDuration / 2).SetEase(Ease.InExpo))
                 .Append(enemy.transform.DOScale(Vector3.zero, pullDuration / 2).SetEase(Ease.InExpo))
                 .OnComplete(() =>
                 {
-                    Destroy(enemy.gameObject);
+                    SimplePool.Despawn(enemy);
                     player.RemoveTarget(enemy);
                     player.point += enemy.point * bonus;
                     player.CheckPointUpLevel();
@@ -56,18 +49,17 @@ public class Magnet : MonoBehaviour
                 });
         }
     }
-
     private void UpdateUIProgress(Player lv)
     {
         float target, root;
         if (lv.lvCurrent > 0)
         {
-            target = lv.GetCheckPoint(lv.lvCurrent) - lv.GetCheckPoint(lv.lvCurrent - 1);
-            root = lv.GetCheckPoint(lv.lvCurrent - 1);
+            target = lv.targetCheckPoint - lv.durProgress;
+            root = lv.durProgress;
         }
         else
         {
-            target = lv.GetCheckPoint(lv.lvCurrent);
+            target = lv.targetCheckPoint;
             root = 0;
         }
         float detal = lv.point - root;

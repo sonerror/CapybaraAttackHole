@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class SightCheck : MonoBehaviour
 {
-    [SerializeField] private Material material;
+    /*[SerializeField] private Material material;
     public Character Character;
-    private Dictionary<Enemy, Material> originalMaterials = new Dictionary<Enemy, Material>();
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(Const.TAG_ENEMY))
@@ -36,5 +35,5 @@ public class SightCheck : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 }

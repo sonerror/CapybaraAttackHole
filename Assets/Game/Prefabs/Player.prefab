@@ -14626,7 +14626,7 @@ GameObject:
   m_Component:
   - component: {fileID: 348646482054573324}
   - component: {fileID: 5177789325680853832}
-  - component: {fileID: 6251590212042850037}
+  - component: {fileID: 7837406793968987828}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -14666,7 +14666,7 @@ MonoBehaviour:
   listTarget: []
   point: 1
   lvCurrent: 0
-  rb: {fileID: 6251590212042850037}
+  rb: {fileID: 7837406793968987828}
   moveSpeed: 5
   rotateSpeed: 10
   checkPoints: []
@@ -14674,7 +14674,9 @@ MonoBehaviour:
   lvTime: 0
   lvEx: 0
   mouth: {fileID: 2234629285008797538}
---- !u!54 &6251590212042850037
+  targetCheckPoint: 0
+  durProgress: 0
+--- !u!54 &7837406793968987828
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14699,8 +14701,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
-  m_CollisionDetection: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!1 &2670346607045244261
 GameObject:
   m_ObjectHideFlags: 0
@@ -19471,6 +19473,7 @@ MonoBehaviour:
   pullForce: 10
   blackHoleCenter: {fileID: 8327819784849442812}
   rotationSpeed: 360
+  player: {fileID: 5177789325680853832}
 --- !u!1 &3242233603631467532
 GameObject:
   m_ObjectHideFlags: 0
@@ -19592,6 +19595,7 @@ MonoBehaviour:
   pullForce: 10
   blackHoleCenter: {fileID: 8327819784849442812}
   rotationSpeed: 360
+  player: {fileID: 5177789325680853832}
 --- !u!1 &3534898320628987715
 GameObject:
   m_ObjectHideFlags: 0
@@ -19658,8 +19662,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 080edc0d7ec276645918afec392333f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 0b704602326e91a4f8d87cede62a40ef, type: 2}
-  Character: {fileID: 5177789325680853832}
 --- !u!1 &3809180734267698899
 GameObject:
   m_ObjectHideFlags: 0
@@ -19856,6 +19858,7 @@ MonoBehaviour:
   pullForce: 10
   blackHoleCenter: {fileID: 8327819784849442812}
   rotationSpeed: 360
+  player: {fileID: 5177789325680853832}
 --- !u!1 &4860926301104523445
 GameObject:
   m_ObjectHideFlags: 0

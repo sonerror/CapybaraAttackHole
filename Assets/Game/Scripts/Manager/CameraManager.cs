@@ -19,9 +19,12 @@ public class CameraManager : Singleton<CameraManager>
     [SerializeField] private Vector3 _eulerAnglesFBoss;
     public void Oninit()
     {
-        _player = LevelManager.Ins.player;
         this._offset = _targetOffset;
         this._eulerAngles =_targetEulerAngles;
+    }
+    public void SetData()
+    {
+        _player = LevelManager.Ins.player;
     }
     private void LateUpdate()
     {

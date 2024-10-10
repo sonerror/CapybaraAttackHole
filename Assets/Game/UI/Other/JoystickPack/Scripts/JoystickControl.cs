@@ -7,9 +7,6 @@ public class JoystickControl : MonoBehaviour
     public static Vector3 direct;
 
     private Vector3 screen;
-
-    private Vector3 MousePosition => Input.mousePosition - screen / 2;
-
     private Vector3 startPoint;
     private Vector3 updatePoint;
 
@@ -21,7 +18,6 @@ public class JoystickControl : MonoBehaviour
 
     private bool active;
 
-    // Start is called before the first frame update
     void Awake()
     {
         screen.x = Screen.width;
@@ -33,12 +29,12 @@ public class JoystickControl : MonoBehaviour
         active = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (active)
         {
-            updatePoint = MousePosition;
+            updatePoint = Input.mousePosition - screen / 2;
+
             joystickControl.anchoredPosition = Vector3.ClampMagnitude((updatePoint - startPoint), magnitude) + startPoint;
 
             direct = (updatePoint - startPoint).normalized;
@@ -49,7 +45,7 @@ public class JoystickControl : MonoBehaviour
 
     public void ButtonDown()
     {
-        startPoint = MousePosition;
+        startPoint = Input.mousePosition - screen / 2; 
         joystickBG.anchoredPosition = startPoint;
         joystickPanel.SetActive(true);
         active = true;
@@ -61,7 +57,6 @@ public class JoystickControl : MonoBehaviour
         direct = Vector3.zero;
         active = false;
     }
-
 
     private void OnDisable()
     {

@@ -125,8 +125,10 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
             MoveBulletAlongPath(enemyShot, path);
 
             data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
-            if (data.historyMagnetics.Count <= 0)
+            if (data.historyMagnetics.Count <= 0 && data.bossTimeUp.point > 0)
             {
+                HandleEndShooting();
+
                 StartCoroutine(IE_ShowUILose());
             }
             UpdateUI();
@@ -191,12 +193,12 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
             {
                 HandleBossDefeated();
             }
-            if (LevelManager.Ins.historyMagnetics.Count == 0)
+            if (LevelManager.Ins.historyMagnetics.Count <= 0 && LevelManager.Ins.bossTimeUp.point > 0)
             {
                 StartCoroutine(IE_ShowUILose());
             }
         }));
-       
+
     }
 
     private void HandleBossDefeated()
