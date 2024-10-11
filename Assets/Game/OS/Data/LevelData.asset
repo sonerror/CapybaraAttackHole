@@ -57,7 +57,7 @@ MonoBehaviour:
       price: 500
       offSet: {x: 0, y: 20, z: -15}
       eulerAngles: {x: 50, y: 0, z: 0}
-    stage: {fileID: 6896487636182496520, guid: 595efa210aa49974a9e326a6b91bd746, type: 3}
+    stage: {fileID: 6896487636182496520, guid: 0f7600fcd2d16a54e9c67a7dd48b74e5, type: 3}
     timer: 30
     boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
     pointBoss: 500

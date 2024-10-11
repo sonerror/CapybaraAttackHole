@@ -9,20 +9,27 @@ public class PopupLose : UICanvas
 {
     [SerializeField] private ParticleImage confesti;
     [SerializeField] private Transform tfStart;
+    private bool isClick;
     public override void Open()
     {
         UIManager.Ins.CloseAll();
         base.Open();
         confesti.gameObject.transform.position = tfStart.position;
         confesti.gameObject.SetActive(false);
+        isClick = true;
     }
+
     public void BtnHome()
     {
-        CollectGold(1, 20, () =>
+        if(isClick)
         {
-            confesti.gameObject.SetActive(false);
-            LevelManager.Ins.ReloadScene();
-        });
+            isClick = false;
+            CollectGold(1, 20, () =>
+            {
+                confesti.gameObject.SetActive(false);
+                LevelManager.Ins.ReloadScene();
+            });
+        }
     }
   
     private void CollectGold(int multiplier, int amount, UnityAction OnComplete = null)

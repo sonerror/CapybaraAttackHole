@@ -59,7 +59,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         var data = DataManager.Ins.playerData;
         player = Instantiate(playerPrefabs);
-        player.transform.position = Vector3.zero;
+        player.transform.position = new Vector3(0,0.01f,0);
         CameraManager.Ins.SetData();
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
@@ -129,6 +129,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         if (historyMagnetics.Count > 0)
         {
+            StopAllCoroutines();
             UIManager.Ins.GetUI<UIGamePlay>().SetActiveJoystick(false);
             SpawnFloorBoss();
         }
@@ -136,8 +137,14 @@ public class LevelManager : Singleton<LevelManager>
         {
             UIManager.Ins.OpenUI<PopupLose>();
         }
+        StartCoroutine(IE_DespawnEnemy());
     }
-
+    IEnumerator IE_DespawnEnemy()
+    {
+        yield return new WaitForSeconds(1f);
+        EnemyManager.Ins.DespawnEnemy();
+        EnemyManager.Ins.ResetEnemes();
+    }
     private void SpawnFloorBoss()
     {
         Vector3 targetPosition = new Vector3(0, 100, 0);

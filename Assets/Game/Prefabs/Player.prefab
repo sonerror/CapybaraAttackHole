@@ -14666,7 +14666,6 @@ MonoBehaviour:
   listTarget: []
   point: 1
   lvCurrent: 0
-  rb: {fileID: 7837406793968987828}
   moveSpeed: 5
   rotateSpeed: 10
   checkPoints: []
@@ -14701,7 +14700,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!1 &2670346607045244261
 GameObject:
@@ -22581,7 +22580,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8896085343251523279
 Transform:
   m_ObjectHideFlags: 0
@@ -30056,7 +30055,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3643699263825582466
 Transform:
   m_ObjectHideFlags: 0

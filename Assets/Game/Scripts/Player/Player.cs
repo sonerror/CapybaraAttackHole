@@ -1,17 +1,16 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : Character
 {
-    [SerializeField] private Rigidbody rb;
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
     private Quaternion targetRotation;
     private Vector3 inputDirection = Vector3.zero;
-    private Vector3 lastPosition = Vector3.zero;  // Để theo dõi vị trí cũ, giúp phát hiện thay đổi nhỏ
+    private bool isCreateEnemy;
     public List<CheckPoint> checkPoints = new List<CheckPoint>();
-
     public bool move = true;
     public int lvTime;
     public int lvEx;
@@ -20,10 +19,12 @@ public class Player : Character
     public float targetCheckPoint;
     public float durProgress;
 
+
     public override void OnInit()
     {
         base.OnInit();
         move = true;
+        isCreateEnemy = true;
     }
 
     public void SetScale(int _lvScale)
@@ -77,17 +78,41 @@ public class Player : Character
         Debug.LogError("targetCheckPoint: " + targetCheckPoint);
     }
 
-    private void FixedUpdate()
+    /* private void FixedUpdate()
+     {
+         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
+         Vector3 currentInputDirection = GetInputDirection();
+         if (currentInputDirection.sqrMagnitude > 0.001f)
+         {
+             if (currentInputDirection != inputDirection)
+             {
+                 inputDirection = currentInputDirection;
+                 Move(inputDirection, inputDirection);
+             }
+         }
+         else
+         {
+             StopMovement();
+         }
+     }
+
+     private void Move(Vector3 moveDirection, Vector3 rotationDir)
+     {
+         Vector3 targetPosition = rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
+         rb.MovePosition(targetPosition);
+         TF.position = rb.position;
+         Rotate(rotationDir);
+     }
+ */
+    private void Update()
     {
         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
+
         Vector3 currentInputDirection = GetInputDirection();
         if (currentInputDirection.sqrMagnitude > 0.001f)
         {
-            if (currentInputDirection != inputDirection)
-            {
-                inputDirection = currentInputDirection;
-                Move(inputDirection, inputDirection);
-            }
+            inputDirection = currentInputDirection;
+            Move(inputDirection);
         }
         else
         {
@@ -95,34 +120,37 @@ public class Player : Character
         }
     }
 
-    private void Move(Vector3 moveDirection, Vector3 rotationDir)
+    private void Move(Vector3 dir)
     {
-        Vector3 targetPosition = rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(targetPosition);
-        TF.position = rb.position;
-        Rotate(rotationDir);
+        transform.Translate(dir * moveSpeed * Time.deltaTime, Space.World);
+        Rotate(dir);
     }
 
     private void StopMovement()
     {
         inputDirection = Vector3.zero;
-        rb.velocity = Vector3.zero; 
     }
 
+    /* private void Rotate(Vector3 rotationDir)//sang 11
+     {
+         if (rotationDir != Vector3.zero)
+         {
+             targetRotation = Quaternion.LookRotation(rotationDir);
+             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
+         }
+     }*/
     private void Rotate(Vector3 rotationDir)
     {
         if (rotationDir != Vector3.zero)
         {
             targetRotation = Quaternion.LookRotation(rotationDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
         }
     }
 
     private Vector3 GetInputDirection()
     {
         Vector3 moveDirection = Vector3.zero;
-
-#if UNITY_EDITOR || UNITY_STANDALONE
         if (Input.GetMouseButton(0))
         {
             if (JoystickControl.direct.sqrMagnitude > 0.001f)
@@ -130,17 +158,25 @@ public class Player : Character
                 moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
             }
         }
+        /*#if UNITY_EDITOR || UNITY_STANDALONE
+                if (Input.GetMouseButton(0))
+                {
+                    if (JoystickControl.direct.sqrMagnitude > 0.001f)
+                    {
+                        moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+                    }
+                }
 
-#elif UNITY_IOS || UNITY_ANDROID
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Moved && JoystickControl.direct.sqrMagnitude > 0.001f)
-            {
-                moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
-            }
-        }
-#endif
+        #elif UNITY_IOS || UNITY_ANDROID
+                if (Input.touchCount > 0)
+                {
+                    Touch touch = Input.GetTouch(0);
+                    if (touch.phase == TouchPhase.Moved && JoystickControl.direct.sqrMagnitude > 0.001f)
+                    {
+                        moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
+                    }
+                }
+        #endif*/
 
         return moveDirection.normalized;
     }
@@ -166,8 +202,21 @@ public class Player : Character
             SetScaleUpLevel(lvCurrent);
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
         }
+        CheckSpanEnemy();
     }
-
+    public void CheckSpanEnemy()
+    {
+        if (isCreateEnemy && lvCurrent >= 3)
+        {
+            isCreateEnemy = false;
+            StartCoroutine(IE_DelaySpawn());
+        }
+    }
+    IEnumerator IE_DelaySpawn()
+    {
+        yield return new WaitForSeconds(0.5f);
+        EnemyManager.Ins.SpawmEnemy();
+    }
     public float GetCheckPoint(int lv)
     {
         return GetCheckPointData(lv).checkPoint;

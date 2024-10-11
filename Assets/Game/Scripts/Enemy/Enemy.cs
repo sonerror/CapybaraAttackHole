@@ -1,36 +1,106 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class Enemy : Character
 {
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private Renderer meshRenderer;
+    [SerializeField] public NavMeshAgent agent;
+    [SerializeField] public Animator animator;
     private Color orColor;
-    public Transform tfTarget;
+    string currentAnim;
 
+    public Transform tfTarget;
+    public bool isCanMove;
+    public float wanderTimer;
+    public float wanderRadius;
     public void Start()
     {
         OnInit();
-        orColor = GetComponentInChildren<MeshRenderer>().material.color;
+        if (orColor != null)
+        {
+            orColor = GetComponentInChildren<MeshRenderer>().material.color;
+        }
     }
     public override void OnInit()
     {
         base.OnInit();
         isDead = false;
     }
+    #region
+/*    void Update()
+    {
+        if (currentState != null)
+        {
+            currentState.OnExecute(this);
+        }
+    }
+    public void ChangeState(IState<Enemy> state)
+    {
+        if (currentState != null)
+        {
+            currentState.OnExit(this);
+        }
+        currentState = state;
+        if (currentState != null)
+        {
+            currentState.OnEnter(this);
+        }
+    }
+    public void Moving()
+    {
+        agent.enabled = true;
+        timer += Time.deltaTime;
+        if (timer >= wanderTimer)
+        {
+            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+            agent.SetDestination(newPos);
+            timer = 0;
+        }
+        if (IsDestination())
+        {
+            ChangeState(new IdleState());
+        }
+    }
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
+    {
+        Vector3 randDirection = Random.insideUnitSphere * dist;
+        randDirection += origin;
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+        return navHit.position;
+    }
+    bool IsDestination() => Vector3.Distance(transform.position, nextPoint) - Mathf.Abs(transform.position.y - nextPoint.y) < 0.1f;
+
+    public void OnMoveStop()
+    {
+        agent.enabled = false;
+    }
+*/
+
+
+    #endregion
     public void ChangeColorTriggerEn()
     {
         meshRenderer.material.color = MaterialManager.Ins.Setmat();
     }
-
+    public void ChangeAnim(string animName)
+    {
+        if (currentAnim != animName)
+        {
+            animator.ResetTrigger(animName);
+            currentAnim = animName;
+            animator.SetTrigger(currentAnim);
+        }
+    }
     public void ChangeColorTriggerEX()
     {
         meshRenderer.material.color = orColor;
     }
-
-  
-
     public void SetPoint(int lv)
     {
         point = LevelManager.Ins.pointData.GetDataWithID(lv).point;
@@ -63,7 +133,6 @@ public class Enemy : Character
             }
         }
     }
-
     public void Despawn()
     {
         Destroy(gameObject);

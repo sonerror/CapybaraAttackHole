@@ -9,12 +9,14 @@ public class PopupWin : UICanvas
 {
     [SerializeField] private ParticleImage confesti;
     [SerializeField] private Transform tfStart;
+    private bool isClick;
     public override void Open()
     {
         UIManager.Ins.CloseAll();
         base.Open();
         confesti.gameObject.transform.position = tfStart.position;
         confesti.gameObject.SetActive(false);
+        isClick = true;
     }
     private void LoadUI()
     {
@@ -22,10 +24,15 @@ public class PopupWin : UICanvas
     }
     public void BtnHome()
     {
-        CollectGold(1, 20, () =>
+        if(isClick)
         {
-            LevelManager.Ins.ReloadScene();
-        });
+            isClick = false;
+            CollectGold(1, 20, () =>
+            {
+                LevelManager.Ins.ReloadScene();
+            });
+        }
+       
     }
     private void CollectGold(int multiplier, int amount, UnityAction OnComplete = null)
     {

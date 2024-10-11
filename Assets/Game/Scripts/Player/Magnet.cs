@@ -1,4 +1,7 @@
 using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class Magnet : MonoBehaviour
@@ -26,6 +29,14 @@ public class Magnet : MonoBehaviour
                 _target.ChangeColorTriggerEn();
             }
         }
+        if (other.CompareTag(Const.TAG_ENEMY_MACHINE))
+        {
+            EnemyMachine _target = other.GetComponentInParent<EnemyMachine>();
+            if (player.lvCurrent >= _target.lvCurrent)
+            {
+                AddToBlackHole1(_target);
+            }
+        }
     }
 
     public void AddToBlackHole(Enemy enemy)
@@ -48,6 +59,31 @@ public class Magnet : MonoBehaviour
                     UpdateUIProgress(player);
                 });
         }
+    }
+
+    public void AddToBlackHole1(EnemyMachine enemy)
+    {
+        if (enemy != null)
+        {
+            pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
+            float bonus = player.GetBonusEXP();
+             enemy.HideCollider(false);
+            Sequence sequence = DOTween.Sequence();
+            sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
+                .Join(enemy.transform.DOScale(Vector3.one * 0.3f, pullDuration / 2).SetEase(Ease.InExpo))
+                .Append(enemy.transform.DOScale(Vector3.zero, pullDuration / 2).SetEase(Ease.InExpo))
+                .OnComplete(() =>
+                {
+                    SimplePool.Despawn(enemy);
+                    EnemyManager.Ins.Enemies.Remove(enemy);
+                    StartCoroutine(IE_DelaySpawn());
+                });
+        }
+    }
+    IEnumerator IE_DelaySpawn()
+    {
+        yield return new WaitForSeconds(0.5f);
+        EnemyManager.Ins.SpawmEnemy();
     }
     private void UpdateUIProgress(Player lv)
     {
