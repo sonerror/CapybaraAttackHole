@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Player : Character
 {
@@ -10,6 +11,8 @@ public class Player : Character
     private Quaternion targetRotation;
     private Vector3 inputDirection = Vector3.zero;
     private bool isCreateEnemy;
+    private bool isMagnetic;
+
     public List<CheckPoint> checkPoints = new List<CheckPoint>();
     public bool move = true;
     public int lvTime;
@@ -18,13 +21,15 @@ public class Player : Character
 
     public float targetCheckPoint;
     public float durProgress;
-
+    public Transform playerSkill;
+    public Transform blackHoleCenter;
 
     public override void OnInit()
     {
         base.OnInit();
         move = true;
         isCreateEnemy = true;
+        isMagnetic = true;
     }
 
     public void SetScale(int _lvScale)
@@ -188,6 +193,7 @@ public class Player : Character
 
     public void CheckPointUpLevel()
     {
+        CheckTurnOnSkill();
         if (lvCurrent < checkPoints.Count && point >= targetCheckPoint)
         {
             lvCurrent += 1;
@@ -201,6 +207,7 @@ public class Player : Character
             CameraManager.Ins.SetTfCamera(targetPoint.offSet, targetPoint.eulerAngles);
             SetScaleUpLevel(lvCurrent);
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
+            isMagnetic = true;
         }
         CheckSpanEnemy();
     }
@@ -211,6 +218,23 @@ public class Player : Character
             isCreateEnemy = false;
             StartCoroutine(IE_DelaySpawn());
         }
+    }
+    public void CheckTurnOnSkill()
+    {
+        if (isMagnetic && lvCurrent >= 1)
+        {
+            float targetSkill = (targetCheckPoint * 2) / 3;
+            if (point >= targetSkill)
+            {
+                isMagnetic = false;
+                StartCoroutine(IE_Spawn());
+            }
+        }
+    }
+    IEnumerator IE_Spawn()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SkillManager.Ins.SpawnObjMagnet();
     }
     IEnumerator IE_DelaySpawn()
     {

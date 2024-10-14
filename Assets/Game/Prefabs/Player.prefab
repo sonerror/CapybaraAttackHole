@@ -14675,6 +14675,8 @@ MonoBehaviour:
   mouth: {fileID: 2234629285008797538}
   targetCheckPoint: 0
   durProgress: 0
+  playerSkill: {fileID: 5746069660865254334}
+  blackHoleCenter: {fileID: 8327819784849442812}
 --- !u!54 &7837406793968987828
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19469,10 +19471,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74f1ea1f18d63a4eb2d9cf49088a66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolType: 0
   pullForce: 10
-  blackHoleCenter: {fileID: 8327819784849442812}
   rotationSpeed: 360
   player: {fileID: 5177789325680853832}
+  blackHoleCenter: {fileID: 8327819784849442812}
 --- !u!1 &3242233603631467532
 GameObject:
   m_ObjectHideFlags: 0
@@ -19591,10 +19594,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74f1ea1f18d63a4eb2d9cf49088a66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolType: 0
   pullForce: 10
-  blackHoleCenter: {fileID: 8327819784849442812}
   rotationSpeed: 360
   player: {fileID: 5177789325680853832}
+  blackHoleCenter: {fileID: 8327819784849442812}
 --- !u!1 &3534898320628987715
 GameObject:
   m_ObjectHideFlags: 0
@@ -19692,6 +19696,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4302141126938913066}
   m_LocalEulerAnglesHint: {x: -137.20856, y: 88.70432, z: -47.201267}
+--- !u!1 &4148150355009596262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5746069660865254334}
+  m_Layer: 0
+  m_Name: TfSkill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5746069660865254334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4148150355009596262}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8357545011520652980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4211542116619382750
 GameObject:
   m_ObjectHideFlags: 0
@@ -19854,10 +19889,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74f1ea1f18d63a4eb2d9cf49088a66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolType: 0
   pullForce: 10
-  blackHoleCenter: {fileID: 8327819784849442812}
   rotationSpeed: 360
   player: {fileID: 5177789325680853832}
+  blackHoleCenter: {fileID: 8327819784849442812}
 --- !u!1 &4860926301104523445
 GameObject:
   m_ObjectHideFlags: 0
@@ -30038,6 +30074,7 @@ Transform:
   - {fileID: 6321473835801066963}
   - {fileID: 3643699263825582466}
   - {fileID: 568395556802968517}
+  - {fileID: 5746069660865254334}
   m_Father: {fileID: 348646482054573324}
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
 --- !u!1 &8174979727595146989

@@ -162,6 +162,8 @@ public enum PoolType
     Enemy_04 = 7,
     Enemy_05 = 8,
     Enemy_06 = 9,
-    Enemy_07 = 10
+    Enemy_07 = 10,
+    ObjMagnet = 100
+
 }
 

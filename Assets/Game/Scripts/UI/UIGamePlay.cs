@@ -12,6 +12,7 @@ public class UIGamePlay : UICanvas
     [SerializeField] private GameObject ObjCountTime;
     [SerializeField] private GameObject ObjHpBoss;
     [SerializeField] private Image imgProgress;
+    [SerializeField] private Image imgProgressSkill;
     [SerializeField] private Image imgProgressHpBoss;
     [SerializeField] private GameObject objJoystick;
     [SerializeField] private GameObject objFire;
@@ -27,6 +28,7 @@ public class UIGamePlay : UICanvas
     {
         base.Open();
         SetProgressSpin(0);
+        SetProgressSkill(0);
         UpdateCountDownText();
         LevelManager.Ins.stage.IsCountDown(true);
         SetActiveJoystick(true);
@@ -71,6 +73,10 @@ public class UIGamePlay : UICanvas
     public void SetProgressSpin(float amount)
     {
         imgProgress.fillAmount = amount;
+    }
+    public void SetProgressSkill(float amount)
+    {
+        imgProgressSkill.fillAmount = amount;
     }
     private void UpdateCountDownText()
     {

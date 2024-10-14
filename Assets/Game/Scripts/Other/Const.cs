@@ -12,4 +12,6 @@ public class Const
     public const string TAG_PLAYER = "Player";
     public const float PULLDURATIONMIN = 0.1f;
     public const float PULLDURATIONMAX = 0.2f;
+    public const int ROTATETIME = 3;
+    public const float SPEEDROTATE = 500f;
 }

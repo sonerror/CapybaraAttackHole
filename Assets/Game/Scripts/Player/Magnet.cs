@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class Magnet : MonoBehaviour
+public class Magnet : GameUnit
 {
     [SerializeField] private float pullForce = 5f;
-    [SerializeField] private Transform blackHoleCenter;
     [SerializeField] private float rotationSpeed = 360f;
-    [SerializeField] private Player player;
+    public Player player;
     private float pullDuration;
+    public Transform blackHoleCenter;
 
-    void OnTriggerEnter(Collider other)
+    public virtual void OnTriggerEnter(Collider other)
     {
         if (GameManager.Ins.gameState != GameState.GamePlay) return;
 
@@ -67,7 +67,7 @@ public class Magnet : MonoBehaviour
         {
             pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
             float bonus = player.GetBonusEXP();
-             enemy.HideCollider(false);
+            enemy.HideCollider(false);
             Sequence sequence = DOTween.Sequence();
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
                 .Join(enemy.transform.DOScale(Vector3.one * 0.3f, pullDuration / 2).SetEase(Ease.InExpo))
@@ -77,6 +77,7 @@ public class Magnet : MonoBehaviour
                     SimplePool.Despawn(enemy);
                     EnemyManager.Ins.Enemies.Remove(enemy);
                     StartCoroutine(IE_DelaySpawn());
+
                 });
         }
     }
@@ -100,5 +101,11 @@ public class Magnet : MonoBehaviour
         }
         float detal = lv.point - root;
         UIManager.Ins.GetUI<UIGamePlay>().SetProgressSpin(detal / target);
+        if (lv.lvCurrent >= 1)
+        {
+            float targetSkill = (target * 2) / 3;
+            UIManager.Ins.GetUI<UIGamePlay>().SetProgressSkill(detal / targetSkill);
+        }
     }
+
 }

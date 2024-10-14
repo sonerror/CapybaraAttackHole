@@ -59,12 +59,15 @@ public class LevelManager : Singleton<LevelManager>
     {
         var data = DataManager.Ins.playerData;
         player = Instantiate(playerPrefabs);
-        player.transform.position = new Vector3(0,0.01f,0);
+        player.transform.position = new Vector3(-12.5317345f, -0.0198045969f, -29.4787655f);
+       
         CameraManager.Ins.SetData();
+      
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
     }
+   
     public LevelBonusDataModel GetDataTimeCountWithId(int id)
     {
         return levelTime.levelBonusDataModels?.Find(x => x.id == id);
