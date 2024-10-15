@@ -2,24 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class UIFollowPlayer : MonoBehaviour
 {
     [SerializeField] private RectTransform rectTransform;
-    [SerializeField] private TextMeshProUGUI tmp;
-    [SerializeField] private Vector3 offset;
+    [SerializeField] private Transform targetTransform;
     [SerializeField] private float speed;
+    [SerializeField] private Vector2 offset;
+    [SerializeField] private Canvas canvas;
     private Vector3 targetPosition;
-    private Transform targetTransform;
-    public void Oninit()
-    {
-       // targetTransform = LevelManager.Ins.player.transform;
-    }
+
     void LateUpdate()
     {
-        if (GameManager.Ins.gameState == GameState.GamePlay)
+        if (GameManager.Ins.gameState == GameState.GamePlay && targetTransform != null)
         {
-            rectTransform.position = Vector3.Lerp(rectTransform.position, targetPosition, speed * Time.deltaTime);
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(targetTransform.position);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvas.GetComponent<RectTransform>(), screenPosition, canvas.worldCamera, out Vector2 localPos);
+            rectTransform.localPosition = localPos + offset;
+
         }
     }
+
+    public void SetTargetTransform(Transform targetTF)
+    {
+        targetTransform = targetTF;
+    }
+
+
 }

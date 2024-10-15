@@ -13,5 +13,6 @@ public class Const
     public const float PULLDURATIONMIN = 0.1f;
     public const float PULLDURATIONMAX = 0.2f;
     public const int ROTATETIME = 3;
+    public const float CAMERADISTANCE = 0.3f;
     public const float SPEEDROTATE = 500f;
 }

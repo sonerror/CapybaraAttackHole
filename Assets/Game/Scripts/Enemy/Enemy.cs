@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class Enemy : Character
 {
-    [SerializeField] private BoxCollider boxCollider;
+    [SerializeField] private Collider boxCollider;
     [SerializeField] private Renderer meshRenderer;
     [SerializeField] public NavMeshAgent agent;
     [SerializeField] public Animator animator;
@@ -32,55 +32,55 @@ public class Enemy : Character
         isDead = false;
     }
     #region
-/*    void Update()
-    {
-        if (currentState != null)
+    /*    void Update()
         {
-            currentState.OnExecute(this);
+            if (currentState != null)
+            {
+                currentState.OnExecute(this);
+            }
         }
-    }
-    public void ChangeState(IState<Enemy> state)
-    {
-        if (currentState != null)
+        public void ChangeState(IState<Enemy> state)
         {
-            currentState.OnExit(this);
+            if (currentState != null)
+            {
+                currentState.OnExit(this);
+            }
+            currentState = state;
+            if (currentState != null)
+            {
+                currentState.OnEnter(this);
+            }
         }
-        currentState = state;
-        if (currentState != null)
+        public void Moving()
         {
-            currentState.OnEnter(this);
+            agent.enabled = true;
+            timer += Time.deltaTime;
+            if (timer >= wanderTimer)
+            {
+                Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+                agent.SetDestination(newPos);
+                timer = 0;
+            }
+            if (IsDestination())
+            {
+                ChangeState(new IdleState());
+            }
         }
-    }
-    public void Moving()
-    {
-        agent.enabled = true;
-        timer += Time.deltaTime;
-        if (timer >= wanderTimer)
+        public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
         {
-            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-            agent.SetDestination(newPos);
-            timer = 0;
+            Vector3 randDirection = Random.insideUnitSphere * dist;
+            randDirection += origin;
+            NavMeshHit navHit;
+            NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+            return navHit.position;
         }
-        if (IsDestination())
-        {
-            ChangeState(new IdleState());
-        }
-    }
-    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
-    {
-        Vector3 randDirection = Random.insideUnitSphere * dist;
-        randDirection += origin;
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
-        return navHit.position;
-    }
-    bool IsDestination() => Vector3.Distance(transform.position, nextPoint) - Mathf.Abs(transform.position.y - nextPoint.y) < 0.1f;
+        bool IsDestination() => Vector3.Distance(transform.position, nextPoint) - Mathf.Abs(transform.position.y - nextPoint.y) < 0.1f;
 
-    public void OnMoveStop()
-    {
-        agent.enabled = false;
-    }
-*/
+        public void OnMoveStop()
+        {
+            agent.enabled = false;
+        }
+    */
 
 
     #endregion
@@ -108,7 +108,10 @@ public class Enemy : Character
 
     public void HideCollider(bool isActive)
     {
-        boxCollider.enabled = isActive;
+        if (boxCollider != null)
+        {
+            boxCollider.enabled = isActive;
+        }
     }
 
     public void AddMat(Material mat)

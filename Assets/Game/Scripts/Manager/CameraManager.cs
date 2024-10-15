@@ -2,60 +2,32 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class CameraManager : Singleton<CameraManager>
 {
-    [SerializeField] private float _lerpTime = 10f;
-    [SerializeField] private Player _player;
-    private Vector3 _targetOffset;
-    private Vector3 _offset;
-    private Vector3 _targetEulerAngles;
-    private Vector3 _eulerAngles;
-    [SerializeField] Vector3 offsetMax;
-    [SerializeField] Vector3 offsetMin;
-
-
-    [SerializeField] private Vector3 _offsetFBoss;
-    [SerializeField] private Vector3 _eulerAnglesFBoss;
-    public void Oninit()
+    public Player player;
+    public CinemachineVirtualCamera virtualCamera;
+    private CinemachineFramingTransposer framingTransposer;
+    private void Start()
     {
-        this._offset = _targetOffset;
-        this._eulerAngles =_targetEulerAngles;
+        framingTransposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
     }
-    public void SetData()
+    public void SetData( Player _player)
     {
-        _player = LevelManager.Ins.player;
+        player = _player;
+        virtualCamera.Follow = player.transform;
     }
-    private void LateUpdate()
+    public void AdjustCameraDistance(float newDistance)
     {
-        if (_player != null && GameManager.Ins.gameState == GameState.GamePlay)
+        if (framingTransposer != null)
         {
-            _offset = Vector3.Lerp(_offset, _targetOffset, _lerpTime * Time.deltaTime);
-            transform.position = _player.transform.position + _offset;
-            _eulerAngles = Vector3.Lerp(_eulerAngles, _targetEulerAngles, _lerpTime * Time.deltaTime);
-            transform.rotation = Quaternion.Euler(_eulerAngles);
+            framingTransposer.m_CameraDistance = newDistance;
         }
     }
-    public void SetRateOffset(float rate)
+    public void SetTransform()
     {
-        _targetOffset = Vector3.Lerp(offsetMin, offsetMax, rate);
-    }
-    public void SetTFStart()
-    {
-        var data = LevelManager.Ins.player.checkPoints.Find(x => x.id == _player.lvCurrent);
-        this._targetOffset = data.offSet;
-        this._targetEulerAngles = data.eulerAngles;
-    }
-    public void SetTfCamera(Vector3 _offSetStruct, Vector3 _eulerAnglesStruct)
-    {
-        this._targetOffset = _offSetStruct;
-        this._targetEulerAngles = _eulerAnglesStruct;
-        Sequence cameraSequence = DOTween.Sequence();
-        cameraSequence.Join(this.transform.DOMove(_targetOffset, 0.3f).SetEase(Ease.InOutQuad));
-        cameraSequence.Join(this.transform.DORotate(_targetEulerAngles, 0.3f).SetEase(Ease.InOutQuad));
-    }
-    public void SetCameraFBoss()
-    {
-        SetTfCamera(_offsetFBoss, _eulerAnglesFBoss);
+        virtualCamera.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        AdjustCameraDistance(0.6f);
     }
 }

@@ -60,8 +60,7 @@ public class Player : Character
 
     public void SetCamera(int _levelCurrent)
     {
-        var targetPoint = GetCheckPointData(_levelCurrent);
-        CameraManager.Ins.SetTfCamera(targetPoint.offSet, targetPoint.eulerAngles);
+        CameraManager.Ins.AdjustCameraDistance((_levelCurrent + 1) * Const.CAMERADISTANCE);
     }
 
     public void SetData(int _Lv, int _lvTime, int _lvEx)
@@ -82,33 +81,6 @@ public class Player : Character
         }
         Debug.LogError("targetCheckPoint: " + targetCheckPoint);
     }
-
-    /* private void FixedUpdate()
-     {
-         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
-         Vector3 currentInputDirection = GetInputDirection();
-         if (currentInputDirection.sqrMagnitude > 0.001f)
-         {
-             if (currentInputDirection != inputDirection)
-             {
-                 inputDirection = currentInputDirection;
-                 Move(inputDirection, inputDirection);
-             }
-         }
-         else
-         {
-             StopMovement();
-         }
-     }
-
-     private void Move(Vector3 moveDirection, Vector3 rotationDir)
-     {
-         Vector3 targetPosition = rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
-         rb.MovePosition(targetPosition);
-         TF.position = rb.position;
-         Rotate(rotationDir);
-     }
- */
     private void Update()
     {
         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
@@ -135,15 +107,6 @@ public class Player : Character
     {
         inputDirection = Vector3.zero;
     }
-
-    /* private void Rotate(Vector3 rotationDir)//sang 11
-     {
-         if (rotationDir != Vector3.zero)
-         {
-             targetRotation = Quaternion.LookRotation(rotationDir);
-             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.fixedDeltaTime);
-         }
-     }*/
     private void Rotate(Vector3 rotationDir)
     {
         if (rotationDir != Vector3.zero)
@@ -163,26 +126,6 @@ public class Player : Character
                 moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
             }
         }
-        /*#if UNITY_EDITOR || UNITY_STANDALONE
-                if (Input.GetMouseButton(0))
-                {
-                    if (JoystickControl.direct.sqrMagnitude > 0.001f)
-                    {
-                        moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
-                    }
-                }
-
-        #elif UNITY_IOS || UNITY_ANDROID
-                if (Input.touchCount > 0)
-                {
-                    Touch touch = Input.GetTouch(0);
-                    if (touch.phase == TouchPhase.Moved && JoystickControl.direct.sqrMagnitude > 0.001f)
-                    {
-                        moveDirection = new Vector3(JoystickControl.direct.x, 0, JoystickControl.direct.z);
-                    }
-                }
-        #endif*/
-
         return moveDirection.normalized;
     }
 
@@ -204,7 +147,6 @@ public class Player : Character
                 durProgress = GetCheckPointData(lvCurrent - 1).checkPoint;
             }
             ChangeSpeed(targetPoint.speedMove);
-            CameraManager.Ins.SetTfCamera(targetPoint.offSet, targetPoint.eulerAngles);
             SetScaleUpLevel(lvCurrent);
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
             isMagnetic = true;

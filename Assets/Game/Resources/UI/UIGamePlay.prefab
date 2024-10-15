@@ -1019,6 +1019,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7288226681211729422, guid: 5a89e7e559b31ba4b82724a7c72b22d3, type: 3}
+      propertyPath: speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7288226681211729422, guid: 5a89e7e559b31ba4b82724a7c72b22d3, type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 724841982106467081}
+    - target: {fileID: 7288226681211729422, guid: 5a89e7e559b31ba4b82724a7c72b22d3, type: 3}
+      propertyPath: offset.y
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 8007726992056006817, guid: 5a89e7e559b31ba4b82724a7c72b22d3, type: 3}
       propertyPath: m_Name
       value: Progresslevel

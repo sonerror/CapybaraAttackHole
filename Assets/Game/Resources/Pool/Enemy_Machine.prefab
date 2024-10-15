@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81521fb6a84582845a14010c4dadc734, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 2
+  poolType: 200
   listTarget: []
   point: 1
   lvCurrent: 0

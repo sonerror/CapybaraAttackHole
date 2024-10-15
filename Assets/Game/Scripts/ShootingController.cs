@@ -149,7 +149,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     private void SetupBulletTransform(Enemy bullet)
     {
         bullet.transform.position = LevelManager.Ins.player.transform.position;
-        bullet.transform.localScale = Vector3.one * 2;
+        bullet.transform.localScale = LevelManager.Ins.player.transform.localScale / 5;
     }
 
     private Vector3[] GenerateBulletPath(Vector3 bulletDirection)

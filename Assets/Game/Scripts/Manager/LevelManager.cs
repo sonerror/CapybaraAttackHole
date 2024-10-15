@@ -31,7 +31,6 @@ public class LevelManager : Singleton<LevelManager>
     public bool isCountTime;
     public void OnInit()
     {
-        CameraManager.Ins.Oninit();
         isShoot = true;
         isCont = true;
         isCountTime = false;
@@ -59,10 +58,10 @@ public class LevelManager : Singleton<LevelManager>
     {
         var data = DataManager.Ins.playerData;
         player = Instantiate(playerPrefabs);
-        player.transform.position = new Vector3(-12.5317345f, -0.0198045969f, -29.4787655f);
-       
-        CameraManager.Ins.SetData();
-      
+        player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
+        //player.transform.position = new Vector3(0,0,0);
+        player.transform.rotation = Quaternion.Euler(0, 180, 0);
+        CameraManager.Ins.SetData(player);
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
@@ -185,8 +184,8 @@ public class LevelManager : Singleton<LevelManager>
             .SetEase(Ease.OutBounce)
             .OnComplete(() =>
             {
+                CameraManager.Ins.SetTransform();
                 UIManager.Ins.GetUI<UIGamePlay>().OninitHPBoss();
-                CameraManager.Ins.SetCameraFBoss();
                 UIManager.Ins.GetUI<UIGamePlay>().SetAtiveBtnShot();
             });
     }

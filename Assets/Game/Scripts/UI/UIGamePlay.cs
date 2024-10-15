@@ -23,6 +23,8 @@ public class UIGamePlay : UICanvas
     public override void Setup()
     {
         base.Setup();
+        uiFollow.SetTargetTransform(LevelManager.Ins.player.transform);
+
     }
     public override void Open()
     {
@@ -63,7 +65,6 @@ public class UIGamePlay : UICanvas
     public void ReLoadUIFollow()
     {
         uiFollow.gameObject.SetActive(true);
-        uiFollow.Oninit();
         ReLoadUI();
     }
     public void ReLoadUI()

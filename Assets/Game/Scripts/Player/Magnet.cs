@@ -48,8 +48,8 @@ public class Magnet : GameUnit
             enemy.HideCollider(false);
             Sequence sequence = DOTween.Sequence();
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
-                .Join(enemy.transform.DOScale(Vector3.one * 0.3f, pullDuration / 2).SetEase(Ease.InExpo))
-                .Append(enemy.transform.DOScale(Vector3.zero, pullDuration / 2).SetEase(Ease.InExpo))
+                .Join(enemy.transform.DOScale(Vector3.zero, pullDuration).SetEase(Ease.InExpo))
+                //.Append(enemy.transform.DOScale(Vector3.zero, pullDuration / 2).SetEase(Ease.InExpo))
                 .OnComplete(() =>
                 {
                     SimplePool.Despawn(enemy);

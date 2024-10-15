@@ -14667,7 +14667,7 @@ MonoBehaviour:
   point: 1
   lvCurrent: 0
   moveSpeed: 5
-  rotateSpeed: 10
+  rotateSpeed: 12
   checkPoints: []
   move: 1
   lvTime: 0

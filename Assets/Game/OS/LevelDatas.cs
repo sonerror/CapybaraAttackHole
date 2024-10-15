@@ -14,7 +14,7 @@ public class LevelDatas : ScriptableObject
 public class LevelData
 {
     public int levelID;
-    public List<CheckPoint> checkPoints; 
+    public List<CheckPoint> checkPoints;
     public Stage stage;
     public int timer;
     public Enemy boss;
@@ -29,7 +29,5 @@ public class CheckPoint
     public float scale;
     public float speedMove;
     public int price;
-    public Vector3 offSet;
-    public Vector3 eulerAngles;
-   
+    //public float cameraDistance;
 }
