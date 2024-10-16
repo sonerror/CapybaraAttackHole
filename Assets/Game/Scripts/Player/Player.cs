@@ -8,7 +8,8 @@ public class Player : Character
 {
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
-    private Quaternion targetRotation;
+    [SerializeField] private Collider colliderPlayer;
+   private Quaternion targetRotation;
     private Vector3 inputDirection = Vector3.zero;
     private bool isCreateEnemy;
     private bool isMagnetic;
@@ -23,7 +24,7 @@ public class Player : Character
     public float durProgress;
     public Transform playerSkill;
     public Transform blackHoleCenter;
-
+    
     public override void OnInit()
     {
         base.OnInit();
@@ -31,7 +32,13 @@ public class Player : Character
         isCreateEnemy = true;
         isMagnetic = true;
     }
-
+    public void HideColliderPlayer(bool isEnabled)
+    {
+        if (colliderPlayer != null)
+        {
+            colliderPlayer.enabled = isEnabled;
+        }
+    }
     public void SetScale(int _lvScale)
     {
         var data = GetCheckPointData(_lvScale);
@@ -151,7 +158,7 @@ public class Player : Character
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
             isMagnetic = true;
         }
-        CheckSpanEnemy();
+        //CheckSpanEnemy();
     }
     public void CheckSpanEnemy()
     {

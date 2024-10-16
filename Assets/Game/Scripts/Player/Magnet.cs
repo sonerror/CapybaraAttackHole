@@ -49,7 +49,6 @@ public class Magnet : GameUnit
             Sequence sequence = DOTween.Sequence();
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
                 .Join(enemy.transform.DOScale(Vector3.zero, pullDuration).SetEase(Ease.InExpo))
-                //.Append(enemy.transform.DOScale(Vector3.zero, pullDuration / 2).SetEase(Ease.InExpo))
                 .OnComplete(() =>
                 {
                     SimplePool.Despawn(enemy);
@@ -76,8 +75,6 @@ public class Magnet : GameUnit
                 {
                     SimplePool.Despawn(enemy);
                     EnemyManager.Ins.Enemies.Remove(enemy);
-                    StartCoroutine(IE_DelaySpawn());
-
                 });
         }
     }

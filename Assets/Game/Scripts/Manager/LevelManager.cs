@@ -59,14 +59,13 @@ public class LevelManager : Singleton<LevelManager>
         var data = DataManager.Ins.playerData;
         player = Instantiate(playerPrefabs);
         player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
-        //player.transform.position = new Vector3(0,0,0);
         player.transform.rotation = Quaternion.Euler(0, 180, 0);
         CameraManager.Ins.SetData(player);
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
     }
-   
+
     public LevelBonusDataModel GetDataTimeCountWithId(int id)
     {
         return levelTime.levelBonusDataModels?.Find(x => x.id == id);
@@ -152,19 +151,32 @@ public class LevelManager : Singleton<LevelManager>
         Vector3 targetPosition = new Vector3(0, 100, 0);
         Quaternion rotation = Quaternion.Euler(0, 45, 0);
         floorBoss = Instantiate(floorBossPrefabs, targetPosition, rotation);
-        MovePlayerToBoss();
+        StartCoroutine(IE_MovePlayerToBoss(floorBoss.targetPlayerMove));
     }
-
-    private void MovePlayerToBoss()
+    IEnumerator IE_MovePlayerToBoss(Transform tf)
     {
-        player.transform.DOMove(floorBoss.targetPlayerMove.position, 0.2f)
-            .SetEase(Ease.InOutQuad)
-            .OnComplete(SetupBossFight);
-    }
-
-    private void SetupBossFight()
-    {
+        yield return new WaitForSeconds(0.2f);
+        CameraManager.Ins.virtualCamera.enabled = false;
         player.transform.rotation = Quaternion.identity;
+        player.transform.DOMove(new Vector3(player.transform.position.x, player.transform.position.y + 3, player.transform.position.z), 1f)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                player.HideColliderPlayer(false);
+                player.transform.DOMove(new Vector3(tf.position.x, tf.position.y + player.transform.localScale.y * 5f, tf.position.z), 0.2f)
+                .SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    player.HideColliderPlayer(true);
+                    CameraManager.Ins.virtualCamera.enabled = true;
+                    CameraManager.Ins.SetTransform();
+                    StartCoroutine(IE_SetupBossFight());
+                });
+            });
+    }
+    IEnumerator IE_SetupBossFight()
+    {
+        yield return new WaitForSeconds(1f);
         Destroy(stage.gameObject);
         GameManager.Ins.ChangeState(GameState.Finish);
         int totalLevels = levelData.levels.Count;
@@ -176,7 +188,8 @@ public class LevelManager : Singleton<LevelManager>
     private void SpawnBoss(LevelData bossData)
     {
         bossTimeUp = Instantiate(bossData.boss);
-        bossTimeUp.transform.position = floorBoss.tfBoss.position;
+        Vector3 tf = CalculateNewPosition(Camera.main.transform.position, player.transform.position, 15);
+        bossTimeUp.transform.position = new Vector3(tf.x, 100f, tf.z);
         bossTimeUp.transform.rotation = Quaternion.Euler(0, 180, 0);
         bossTimeUp.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         bossTimeUp.point = bossData.pointBoss;
@@ -184,10 +197,17 @@ public class LevelManager : Singleton<LevelManager>
             .SetEase(Ease.OutBounce)
             .OnComplete(() =>
             {
-                CameraManager.Ins.SetTransform();
+
                 UIManager.Ins.GetUI<UIGamePlay>().OninitHPBoss();
                 UIManager.Ins.GetUI<UIGamePlay>().SetAtiveBtnShot();
             });
+    }
+    Vector3 CalculateNewPosition(Vector3 from, Vector3 to, float distance)
+    {
+        Vector3 direction = to - from;
+        direction.Normalize();
+        Vector3 newPosition = from + direction * distance;
+        return newPosition;
     }
 }
 

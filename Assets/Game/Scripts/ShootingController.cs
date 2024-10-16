@@ -11,8 +11,8 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     [SerializeField] private Sprite spriteUp;
     [SerializeField] private TextMeshProUGUI tmpCountShoot;
     public Image spriteDown;
-
     public GameObject imgTotal;
+
     private Sprite spriteCurrent;
     private Coroutine shootingCoroutine;
     public bool IsShooting { get; private set; }
@@ -58,6 +58,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         {
             OnShoot();
         }
+
         if (LevelManager.Ins.bossTimeUp.point <= 0)
         {
             IsShooting = false;
@@ -87,11 +88,16 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     {
         int numberOfBullets = Mathf.Min(MaxBullets, data.historyMagnetics.Count);
         float spreadAngle = CalculateSpreadAngle(numberOfBullets);
-        Vector3 targetDirection = GetTargetDirection(data);
 
         for (int i = 0; i < numberOfBullets; i++)
         {
-            ShootBullet(i, numberOfBullets, spreadAngle, targetDirection);
+            Vector3 randomOffset = Random.insideUnitSphere * 0.3f;
+            Vector3 startPosition = LevelManager.Ins.player.transform.position + randomOffset;
+
+            float angle = CalculateAngleForBullet(i, numberOfBullets, spreadAngle);
+            Vector3 direction = GetBulletDirection(angle, GetTargetDirection(data));
+
+            ShootBullet(startPosition, direction);
         }
     }
 
@@ -103,41 +109,13 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private float CalculateSpreadAngle(int numberOfBullets)
     {
-        return Mathf.Lerp(30f, 60f, (float)numberOfBullets / MaxBullets);
-    }
-
-    private Vector3 GetTargetDirection(LevelManager data)
-    {
-        return (data.bossTimeUp.tfTarget.position - data.player.transform.position).normalized;
-    }
-
-    private void ShootBullet(int index, int numberOfBullets, float spreadAngle, Vector3 targetDirection)
-    {
-        var data = LevelManager.Ins;
-        float angle = CalculateAngleForBullet(index, numberOfBullets, spreadAngle);
-        Vector3 bulletDirection = GetBulletDirection(angle, targetDirection);
-        int id = data.historyMagnetics[^1];
-        var enemyShot = SimplePool.Spawn<Enemy>((PoolType)id);
-        SetupBulletTransform(enemyShot);
-        enemyShot.transform.DOMove(LevelManager.Ins.player.mouth.transform.position, 0.1f).SetEase(Ease.InOutQuad).OnComplete(() =>
-        {
-            Vector3[] path = GenerateBulletPath(bulletDirection);
-            MoveBulletAlongPath(enemyShot, path);
-
-            data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
-            if (data.historyMagnetics.Count <= 0 && data.bossTimeUp.point > 0)
-            {
-                HandleEndShooting();
-
-                StartCoroutine(IE_ShowUILose());
-            }
-            UpdateUI();
-        });
+        return Mathf.Lerp(15f, 60f, (float)numberOfBullets / MaxBullets);
     }
 
     private float CalculateAngleForBullet(int index, int numberOfBullets, float spreadAngle)
     {
-        return -spreadAngle / 2f + (spreadAngle / numberOfBullets) * index;
+        if (numberOfBullets == 1) return 0;
+        return -spreadAngle / 2f + (spreadAngle / (numberOfBullets - 1)) * index;
     }
 
     private Vector3 GetBulletDirection(float angle, Vector3 targetDirection)
@@ -146,59 +124,63 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         return rotation * targetDirection;
     }
 
-    private void SetupBulletTransform(Enemy bullet)
+    private Vector3 GetTargetDirection(LevelManager data)
     {
-        bullet.transform.position = LevelManager.Ins.player.transform.position;
-        bullet.transform.localScale = LevelManager.Ins.player.transform.localScale / 5;
+        return (data.bossTimeUp.tfTarget.position - data.player.transform.position).normalized;
     }
 
-    private Vector3[] GenerateBulletPath(Vector3 bulletDirection)
+    private void ShootBullet(Vector3 startPosition, Vector3 direction)
     {
         var data = LevelManager.Ins;
-        Vector3 startPosition = data.player.mouth.position;
+        int id = data.historyMagnetics[^1];
+        var enemyShot = SimplePool.Spawn<Enemy>((PoolType)id);
+        /*enemyShot.transform.position = startPosition;
+        enemyShot.transform.localScale = Vector3.one * 0.6f;
+
         Vector3 targetPosition = data.bossTimeUp.tfTarget.position;
-        Vector3 apexPoint = startPosition + bulletDirection * 2f + Vector3.up * Random.Range(2f, 6f);
+        Vector3 apexPoint = CalculateApex(startPosition, targetPosition);
 
-        apexPoint += new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+        enemyShot.transform
+            .DOPath(new Vector3[] { startPosition, apexPoint, targetPosition }, 1.5f, PathType.CatmullRom)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() => HandleBulletComplete(enemyShot));*/
+        enemyShot.transform.position = data.player.transform.position;
+        enemyShot.transform.localScale = data.player.transform.localScale*12;
+        data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
+        UpdateUI();
 
-        return new Vector3[]
+        if (data.historyMagnetics.Count <= 0 && data.bossTimeUp.point > 0)
         {
-            startPosition,
-            apexPoint,
-            targetPosition
-        };
+            HandleEndShooting();
+            StartCoroutine(IE_ShowUILose());
+        }
     }
 
-    private void MoveBulletAlongPath(Enemy bullet, Vector3[] path)
+    private Vector3 CalculateApex(Vector3 start, Vector3 target)
     {
-        bullet.transform.DOPath(path, 1f, PathType.CatmullRom)
-            .SetEase(Ease.InOutQuad)
-            .OnComplete(() => SimplePool.Despawn(bullet));
-        HandleBulletComplete(bullet);
-    }
-
-    IEnumerator IE_UpdateUI(UnityAction unityAction)
-    {
-        yield return new WaitForSeconds(0.8f);
-        UIManager.Ins.GetUI<UIGamePlay>().UIHPBoss();
-        unityAction.Invoke();
+        Vector3 midPoint = (start + target) / 2;
+        midPoint += Vector3.up * Random.Range(2f, 4f);
+        return midPoint;
     }
 
     private void HandleBulletComplete(Enemy bullet)
     {
         LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.GetBonusEXP();
+
         StartCoroutine(IE_UpdateUI(() =>
         {
             if (LevelManager.Ins.bossTimeUp.point <= 0)
             {
                 HandleBossDefeated();
             }
+
             if (LevelManager.Ins.historyMagnetics.Count <= 0 && LevelManager.Ins.bossTimeUp.point > 0)
             {
                 StartCoroutine(IE_ShowUILose());
             }
         }));
 
+        SimplePool.Despawn(bullet);
     }
 
     private void HandleBossDefeated()
@@ -211,6 +193,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
             DataManager.Ins.playerData.levelCurrent += 1;
             DataManager.Ins.ResetData();
         }
+
         StartCoroutine(IE_ShowUIWin());
     }
 
@@ -229,12 +212,19 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     private IEnumerator IE_ShowUIWin()
     {
         yield return new WaitForSeconds(2f);
-        UIManager.Ins.OpenUI<PopupWin>();
+        UIManager.Ins.OpenUI<PopupReward>().Oninit(true);
     }
 
     private IEnumerator IE_ShowUILose()
     {
         yield return new WaitForSeconds(2f);
-        UIManager.Ins.OpenUI<PopupLose>();
+        UIManager.Ins.OpenUI<PopupReward>().Oninit(false);
+    }
+
+    private IEnumerator IE_UpdateUI(UnityAction unityAction)
+    {
+        yield return new WaitForSeconds(0.8f);
+        UIManager.Ins.GetUI<UIGamePlay>().UIHPBoss();
+        unityAction.Invoke();
     }
 }

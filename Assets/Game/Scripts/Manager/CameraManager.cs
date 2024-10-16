@@ -13,7 +13,7 @@ public class CameraManager : Singleton<CameraManager>
     {
         framingTransposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
     }
-    public void SetData( Player _player)
+    public void SetData(Player _player)
     {
         player = _player;
         virtualCamera.Follow = player.transform;
@@ -25,9 +25,17 @@ public class CameraManager : Singleton<CameraManager>
             framingTransposer.m_CameraDistance = newDistance;
         }
     }
+    public Vector3 SetTFCamera()
+    {
+        return virtualCamera.transform.position;
+    }
+    public void AdjustCamera(Vector3 targetRotation, float duration)
+    {
+        virtualCamera.gameObject.transform
+            .DORotate(targetRotation, duration, RotateMode.FastBeyond360);
+    }
     public void SetTransform()
     {
-        virtualCamera.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        AdjustCameraDistance(0.6f);
+        AdjustCamera(new Vector3(10f, 3.5f, 0f), 1f);
     }
 }
