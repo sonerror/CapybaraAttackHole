@@ -45,6 +45,7 @@ public class DataManager :   Singleton<DataManager>
     }
     public void ChangeGold(int newGold)
     {
+        Debug.Log(newGold + " new Gold");
         playerData.gold += newGold;
         if (playerData.gold < 0)
         {

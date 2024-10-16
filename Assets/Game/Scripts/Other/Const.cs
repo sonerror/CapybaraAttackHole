@@ -15,4 +15,6 @@ public class Const
     public const int ROTATETIME = 3;
     public const float CAMERADISTANCE = 0.3f;
     public const float SPEEDROTATE = 500f;
+    public const int BONUSWIN = 500;
+    public const int BONUSLOSE = 200;
 }

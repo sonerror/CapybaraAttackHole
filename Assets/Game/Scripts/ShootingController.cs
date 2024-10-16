@@ -212,13 +212,15 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     private IEnumerator IE_ShowUIWin()
     {
         yield return new WaitForSeconds(2f);
-        UIManager.Ins.OpenUI<PopupReward>().Oninit(true);
+        UIManager.Ins.OpenUI<PopupReward>();
+        UIManager.Ins.GetUI<PopupReward>().Oninit(true);
     }
 
     private IEnumerator IE_ShowUILose()
     {
         yield return new WaitForSeconds(2f);
-        UIManager.Ins.OpenUI<PopupReward>().Oninit(false);
+        UIManager.Ins.OpenUI<PopupReward>();
+        UIManager.Ins.GetUI<PopupReward>().Oninit(false);
     }
 
     private IEnumerator IE_UpdateUI(UnityAction unityAction)
