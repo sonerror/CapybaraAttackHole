@@ -17,4 +17,5 @@ public class Const
     public const float SPEEDROTATE = 500f;
     public const int BONUSWIN = 500;
     public const int BONUSLOSE = 200;
+    public const int BONUSADS = 500;
 }

@@ -24,6 +24,7 @@ public class Player : Character
     public float durProgress;
     public Transform playerSkill;
     public Transform blackHoleCenter;
+    public float bonusGlod;
     
     public override void OnInit()
     {
@@ -67,7 +68,9 @@ public class Player : Character
 
     public void SetCamera(int _levelCurrent)
     {
-        CameraManager.Ins.AdjustCameraDistance((_levelCurrent + 1) * Const.CAMERADISTANCE);
+        CameraManager.Ins.AdjustCameraDistanceSmooth(GetCheckPointData(_levelCurrent).cameraDistance,0.5f);
+       // CameraManager.Ins.AdjustCameraDistance(GetCheckPointData(_levelCurrent).cameraDistance);
+
     }
 
     public void SetData(int _Lv, int _lvTime, int _lvEx)
@@ -155,10 +158,15 @@ public class Player : Character
             }
             ChangeSpeed(targetPoint.speedMove);
             SetScaleUpLevel(lvCurrent);
+            SetDataBonusGold();
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
             isMagnetic = true;
         }
-        //CheckSpanEnemy();
+    }
+    public void SetDataBonusGold()
+    {
+        bonusGlod = GetBonusEXP();
+        Debug.Log("Set" + GetBonusEXP());
     }
     public void CheckSpanEnemy()
     {

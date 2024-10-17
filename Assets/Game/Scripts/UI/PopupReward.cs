@@ -13,11 +13,12 @@ public class PopupReward : UICanvas
     [SerializeField] private UIGoldReward uIGold;
     [SerializeField] private ParticleImage confesti;
     [SerializeField] private Transform tfStart;
-    [SerializeField] private PinResult pinResult;
+    [SerializeField] private RotatePin rotatePin;
     private bool isClick;
     public bool isWin;
     private float multiplier;
     private int amountBonus;
+
     public override void Open()
     {
         base.Open();
@@ -36,7 +37,6 @@ public class PopupReward : UICanvas
                 LevelManager.Ins.ReloadScene();
             });
         }
-
     }
     private void CollectGold(float multiplier, int amount, UnityAction OnComplete = null)
     {
@@ -65,12 +65,12 @@ public class PopupReward : UICanvas
             amountBonus = Const.BONUSLOSE;
         }
         uIGold.SetData(amountBonus);
-
+        rotatePin.Oninit(amountBonus);
     }
     public void PlayAnim()
     {
-        animDollSpin.enabled = true;
         animDollSpin.Play("Doll_Spin");
+        animDollSpin.speed = 1;
     }
     public void BtnNoThanks()
     {
@@ -80,37 +80,12 @@ public class PopupReward : UICanvas
     public void BtnAds()
     {
         StopAnim();
-        RectTransform rectTfPin = pinResult.GetRectTF();
-        multiplier = SetMultiplier(rectTfPin.rotation.z);
-        Debug.LogError(SetMultiplier(multiplier));
-        Debug.LogError(rectTfPin.rotation.z);
+        multiplier = rotatePin.index;
+        Debug.Log(multiplier);
         BtnHome(multiplier, amountBonus);
     }
     public void StopAnim()
     {
-        animDollSpin.enabled = false;
-    }
-    private float SetMultiplier(float _multiplier)
-    {
-        float index = 1.5f;
-        switch (_multiplier)
-        {
-            case >= -95f and < -70f:
-                index = 3f;
-                break;
-            case >= -70f and < -35f:
-                index = 2.5f;
-                break;
-            case >= -35f and <= 38.5f:
-                index = 2f;
-                break;
-            case > 38.5f and <= 95f:
-                index = 1.5f;
-                break;
-            default:
-                index = 1.5f;
-                break;
-        }
-        return index;
+        animDollSpin.speed = 0;
     }
 }

@@ -14667,7 +14667,7 @@ MonoBehaviour:
   point: 1
   lvCurrent: 0
   moveSpeed: 5
-  rotateSpeed: 16
+  rotateSpeed: 14
   colliderPlayer: {fileID: 7140001645459568001}
   checkPoints: []
   move: 1
@@ -14678,6 +14678,7 @@ MonoBehaviour:
   durProgress: 0
   playerSkill: {fileID: 5746069660865254334}
   blackHoleCenter: {fileID: 8327819784849442812}
+  bonusGlod: 0
 --- !u!54 &7837406793968987828
 Rigidbody:
   m_ObjectHideFlags: 0

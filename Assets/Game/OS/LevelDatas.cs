@@ -29,5 +29,5 @@ public class CheckPoint
     public float scale;
     public float speedMove;
     public int price;
-    //public float cameraDistance;
+    public float cameraDistance;
 }

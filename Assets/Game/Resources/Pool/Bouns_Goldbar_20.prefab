@@ -128,10 +128,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3a0105fdfdd0648a8754e8bb280349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 5
+  poolType: 4
   listTarget: []
   point: 1
   lvCurrent: 2
   boxCollider: {fileID: 0}
   meshRenderer: {fileID: 0}
+  agent: {fileID: 0}
+  animator: {fileID: 0}
   tfTarget: {fileID: 0}
+  isCanMove: 0
+  wanderTimer: 0
+  wanderRadius: 0

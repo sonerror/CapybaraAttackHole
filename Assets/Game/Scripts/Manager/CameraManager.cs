@@ -20,9 +20,18 @@ public class CameraManager : Singleton<CameraManager>
     }
     public void AdjustCameraDistance(float newDistance)
     {
-        if (framingTransposer != null)
+        if (framingTransposer != null && framingTransposer.m_CameraDistance != newDistance)
         {
             framingTransposer.m_CameraDistance = newDistance;
+        }
+    }
+    public void AdjustCameraDistanceSmooth(float newDistance, float duration)
+    {
+        if (framingTransposer != null)
+        {
+            DOTween.To(() => framingTransposer.m_CameraDistance,
+                       x => framingTransposer.m_CameraDistance = x,
+                       newDistance, duration);
         }
     }
     public Vector3 SetTFCamera()

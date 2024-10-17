@@ -165,6 +165,5 @@ public enum PoolType
     Enemy_07 = 10,
     ObjMagnet = 100,
     Enemy_Machine = 200
-
 }
 

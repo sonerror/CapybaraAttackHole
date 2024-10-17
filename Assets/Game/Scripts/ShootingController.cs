@@ -165,7 +165,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private void HandleBulletComplete(Enemy bullet)
     {
-        LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.GetBonusEXP();
+        LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.bonusGlod;
 
         StartCoroutine(IE_UpdateUI(() =>
         {

@@ -64,6 +64,7 @@ public class LevelManager : Singleton<LevelManager>
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
+        SetEX();
     }
 
     public LevelBonusDataModel GetDataTimeCountWithId(int id)
@@ -89,9 +90,18 @@ public class LevelManager : Singleton<LevelManager>
 
     public void UpLVBonusExp()
     {
-        UpdateLevelBonus(ref DataManager.Ins.playerData.lvEx, player.lvEx, levelEx);
+        var data = DataManager.Ins.playerData;
+        if (data.lvEx < levelEx.levelBonusDataModels.Count - 1)
+        {
+            data.lvEx++;
+            player.lvEx = data.lvEx;
+            player.bonusGlod = levelEx.levelBonusDataModels.Find(x => x.id == data.lvEx).bonus;
+        }
     }
-
+    public void SetEX()
+    {
+        player.SetDataBonusGold();
+    }
     public void UpLVBonusTime()
     {
         UpdateLevelBonus(ref DataManager.Ins.playerData.lvTime, player.lvTime, levelTime);
@@ -103,7 +113,7 @@ public class LevelManager : Singleton<LevelManager>
         if (levelData < bonusData.levelBonusDataModels.Count - 1)
         {
             levelData++;
-            playerLevel = levelData;
+            playerLevel++;
         }
     }
 
@@ -158,7 +168,9 @@ public class LevelManager : Singleton<LevelManager>
         yield return new WaitForSeconds(0.2f);
         CameraManager.Ins.virtualCamera.enabled = false;
         player.transform.rotation = Quaternion.identity;
-        player.transform.DOMove(new Vector3(player.transform.position.x, player.transform.position.y + 3, player.transform.position.z), 1f)
+        float distance = Vector3.Distance(Camera.main.transform.position, player.transform.position);
+        Vector3 maxPosition = GetMaxVisiblePosition(Camera.main, distance);
+        player.transform.DOMove(new Vector3(player.transform.position.x, maxPosition.y, player.transform.position.z), 0.6f)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
@@ -174,6 +186,15 @@ public class LevelManager : Singleton<LevelManager>
                 });
             });
     }
+    public Vector3 GetMaxVisiblePosition(Camera camera, float distance)
+    {
+        float aspect = camera.aspect;
+        float verticalFOV = camera.fieldOfView * Mathf.Deg2Rad;
+        float frustumHeight = 2f * distance * Mathf.Tan(verticalFOV / 2f);
+        float frustumWidth = frustumHeight * aspect;
+        return new Vector3(frustumWidth / 2f, frustumHeight / 2f, distance);
+    }
+
     IEnumerator IE_SetupBossFight()
     {
         yield return new WaitForSeconds(1f);

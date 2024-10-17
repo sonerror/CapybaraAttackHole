@@ -44,7 +44,7 @@ public class Magnet : GameUnit
         if (enemy != null)
         {
             pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
-            float bonus = player.GetBonusEXP();
+            float bonus = player.bonusGlod;
             enemy.HideCollider(false);
             Sequence sequence = DOTween.Sequence();
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
@@ -65,7 +65,6 @@ public class Magnet : GameUnit
         if (enemy != null)
         {
             pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
-            float bonus = player.GetBonusEXP();
             enemy.HideCollider(false);
             Sequence sequence = DOTween.Sequence();
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
