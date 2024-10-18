@@ -25,7 +25,7 @@ public class Player : Character
     public Transform playerSkill;
     public Transform blackHoleCenter;
     public float bonusGlod;
-    
+    public Transform tfCenter;
     public override void OnInit()
     {
         base.OnInit();
@@ -122,7 +122,11 @@ public class Player : Character
         if (rotationDir != Vector3.zero)
         {
             targetRotation = Quaternion.LookRotation(rotationDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                rotateSpeed * Time.deltaTime * 75f
+            );
         }
     }
 

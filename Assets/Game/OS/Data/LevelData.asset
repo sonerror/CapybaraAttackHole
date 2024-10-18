@@ -16,84 +16,82 @@ MonoBehaviour:
   - levelID: 0
     checkPoints:
     - id: 0
-      checkPoint: 180
+      checkPoint: 140
       scale: 0.005
-      speedMove: 0.1
+      speedMove: 0.12
       price: 50
       cameraDistance: 0.3
     - id: 1
-      checkPoint: 500
+      checkPoint: 300
       scale: 0.01
-      speedMove: 0.16
+      speedMove: 0.2
       price: 100
       cameraDistance: 0.7
     - id: 2
       checkPoint: 1000
       scale: 0.05
-      speedMove: 0.32
+      speedMove: 0.4
       price: 200
       cameraDistance: 1.2
     - id: 3
-      checkPoint: 3000
+      checkPoint: 3500
       scale: 0.09
-      speedMove: 0.64
+      speedMove: 0.8
       price: 300
       cameraDistance: 1.7
     - id: 4
-      checkPoint: 4000
+      checkPoint: 6000
       scale: 0.1
-      speedMove: 1.28
+      speedMove: 1.5
       price: 400
       cameraDistance: 2.2
     - id: 5
-      checkPoint: 5000
+      checkPoint: 10000
       scale: 0.2
-      speedMove: 2.56
+      speedMove: 2.5
       price: 500
       cameraDistance: 3.5
     stage: {fileID: -1606745078943789629, guid: 8f88eadf265f0384e901ba782e8a0df5, type: 3}
-    timer: 30
     boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
-    pointBoss: 500
+    pointBoss: 2000
   - levelID: 1
     checkPoints:
     - id: 0
-      checkPoint: 50
-      scale: 0.1
-      speedMove: 1.5
+      checkPoint: 140
+      scale: 0.005
+      speedMove: 0.12
       price: 50
-      cameraDistance: 0
+      cameraDistance: 0.3
     - id: 1
-      checkPoint: 200
-      scale: 0.3
-      speedMove: 2
+      checkPoint: 300
+      scale: 0.01
+      speedMove: 0.2
       price: 100
-      cameraDistance: 0
+      cameraDistance: 0.7
     - id: 2
       checkPoint: 1000
-      scale: 0.5
-      speedMove: 3
+      scale: 0.05
+      speedMove: 0.4
       price: 200
-      cameraDistance: 0
+      cameraDistance: 1.2
     - id: 3
-      checkPoint: 3000
-      scale: 0.7
-      speedMove: 4
+      checkPoint: 3500
+      scale: 0.09
+      speedMove: 0.8
       price: 300
-      cameraDistance: 0
+      cameraDistance: 1.7
     - id: 4
-      checkPoint: 4000
-      scale: 0.9
-      speedMove: 6
+      checkPoint: 6000
+      scale: 0.1
+      speedMove: 1.5
       price: 400
-      cameraDistance: 0
+      cameraDistance: 2.2
     - id: 5
-      checkPoint: 5000
-      scale: 1.5
-      speedMove: 10
+      checkPoint: 10000
+      scale: 0.2
+      speedMove: 2.5
       price: 500
-      cameraDistance: 0
-    stage: {fileID: 6896487636182496520, guid: 0f7600fcd2d16a54e9c67a7dd48b74e5, type: 3}
-    timer: 30
+      cameraDistance: 3.5
+    stage: {fileID: -1606745078943789629, guid: 8f88eadf265f0384e901ba782e8a0df5, type: 3}
     boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
-    pointBoss: 1000
+    pointBoss: 10000

@@ -26,17 +26,14 @@ public class PopupReward : UICanvas
         confesti.gameObject.transform.position = tfStart.position;
         confesti.gameObject.SetActive(false);
         isClick = true;
+        Debug.Log("Open");
     }
     public void BtnHome(float multiplier, int amount)
     {
-        if (isClick)
+        CollectGold(multiplier, amount, () =>
         {
-            isClick = false;
-            CollectGold(multiplier, amount, () =>
-            {
-                LevelManager.Ins.ReloadScene();
-            });
-        }
+            LevelManager.Ins.ReloadScene();
+        });
     }
     private void CollectGold(float multiplier, int amount, UnityAction OnComplete = null)
     {
@@ -46,7 +43,7 @@ public class PopupReward : UICanvas
         DOVirtual.DelayedCall(1.3f, () =>
         {
             DataManager.Ins.ChangeGold((int)(amount * multiplier));
-            DOVirtual.DelayedCall(1.3f, () =>
+            DOVirtual.DelayedCall(1.5f, () =>
             {
                 confesti.gameObject.SetActive(false);
                 OnComplete?.Invoke();
@@ -74,15 +71,25 @@ public class PopupReward : UICanvas
     }
     public void BtnNoThanks()
     {
-        StopAnim();
-        BtnHome(1, amountBonus);
+        if (isClick)
+        {
+            isClick = false;
+            Debug.Log("NoThank");
+            StopAnim();
+            BtnHome(1, amountBonus);
+        }
     }
     public void BtnAds()
     {
-        StopAnim();
-        multiplier = rotatePin.index;
-        Debug.Log(multiplier);
-        BtnHome(multiplier, amountBonus);
+        if (isClick)
+        {
+            isClick = false;
+
+            StopAnim();
+            multiplier = rotatePin.index;
+            BtnHome(multiplier, amountBonus);
+        }
+
     }
     public void StopAnim()
     {

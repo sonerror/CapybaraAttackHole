@@ -15,14 +15,12 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private Sprite spriteCurrent;
     private Coroutine shootingCoroutine;
-    public bool IsShooting { get; private set; }
-
     private const int MaxBullets = 10;
+    private float multi;
+    public bool IsShooting { get; private set; }
+    public bool endShoot;
 
-    private void Awake()
-    {
-        Initialize();
-    }
+    private void Awake() => Initialize();
 
     private void Start()
     {
@@ -33,72 +31,92 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     private void Initialize()
     {
         IsShooting = false;
+        endShoot = false;
     }
-
+    public void ResetBool()
+    {
+        IsShooting = false;
+        endShoot = false;
+    }
     public void OnPointerDown(PointerEventData eventData)
     {
         spriteDown.sprite = spriteUp;
-
         if (LevelManager.Ins.isShoot && LevelManager.Ins.historyMagnetics.Count > 0)
-        {
             IsShooting = true;
-        }
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        ResetShooting();
-    }
+    public void OnPointerUp(PointerEventData eventData) => ResetShooting();
 
     private void Update()
     {
-        if (LevelManager.Ins.bossTimeUp == null) return;
-
-        if (IsShooting)
-        {
-            OnShoot();
-        }
-
-        if (LevelManager.Ins.bossTimeUp.point <= 0)
-        {
-            IsShooting = false;
-            LevelManager.Ins.isShoot = false;
-        }
+        var data = LevelManager.Ins;
+        if (data.bossTimeUp == null || endShoot) return;
+        if (IsShooting) OnShoot();
+        if (data.bossTimeUp.point <= 0) IsShooting = data.isShoot = false;
     }
 
-    public void UpdateUI()
-    {
-        tmpCountShoot.text = LevelManager.Ins.historyMagnetics.Count.ToString();
-    }
+    public void UpdateUI() => tmpCountShoot.text = LevelManager.Ins.historyMagnetics.Count.ToString();
 
     private void OnShoot()
     {
         var data = LevelManager.Ins;
-
         if (data.historyMagnetics.Count == 0 || data.bossTimeUp.point <= 0)
-        {
             HandleEndShooting();
-            return;
-        }
-
-        ShootBullets(data);
+        else
+            ShootBullets(data);
     }
 
     private void ShootBullets(LevelManager data)
     {
-        int numberOfBullets = Mathf.Min(MaxBullets, data.historyMagnetics.Count);
-        float spreadAngle = CalculateSpreadAngle(numberOfBullets);
-
-        for (int i = 0; i < numberOfBullets; i++)
+        int bulletsToShoot = Mathf.Min(MaxBullets, data.historyMagnetics.Count);
+        for (int i = 0; i < bulletsToShoot; i++)
         {
-            Vector3 randomOffset = Random.insideUnitSphere * 0.3f;
-            Vector3 startPosition = LevelManager.Ins.player.transform.position + randomOffset;
-
-            float angle = CalculateAngleForBullet(i, numberOfBullets, spreadAngle);
-            Vector3 direction = GetBulletDirection(angle, GetTargetDirection(data));
-
-            ShootBullet(startPosition, direction);
+            Vector3 target = data.bossTimeUp.tfTarget.position + Random.insideUnitSphere * 0.3f;
+            ShootBullet(target);
         }
+    }
+
+    private void ShootBullet(Vector3 targetPosition)
+    {
+        var data = LevelManager.Ins;
+        int id = data.historyMagnetics[^1];
+        var enemyShot = SimplePool.Spawn<Enemy>((PoolType)id);
+
+        enemyShot.HideCollider(false);
+        enemyShot.transform.position = data.player.tfCenter.position;
+        enemyShot.transform.localScale = Vector3.zero;
+        multi = data.player.lvCurrent < 2 ? 20 : 12;
+
+        Vector3 targetPos = data.player.mouth.position;
+        DOTween.Sequence()
+            .Join(enemyShot.transform.DOScale(new Vector3(1,1,1) /*data.player.transform.localScale * multi*/, 0.25f).SetEase(Ease.Linear))
+            .Join(enemyShot.transform.DOMove(targetPos, 0.25f).SetEase(Ease.Linear))
+            .OnComplete(() => OnBulletReachTarget(enemyShot, targetPos, targetPosition));
+
+        data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
+        UpdateUI();
+    }
+
+    private void OnBulletReachTarget(Enemy bullet, Vector3 startPos, Vector3 targetPos)
+    {
+        Vector3 apex = (startPos + targetPos) / 2 + Vector3.up * Random.Range(-1f, 3f);
+        bullet.transform.DOPath(new[] { startPos, apex, targetPos }, 1.5f, PathType.CatmullRom)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() => HandleBulletComplete(bullet));
+    }
+
+    private void HandleBulletComplete(Enemy bullet)
+    {
+        LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.bonusGlod;
+        SimplePool.Despawn(bullet);
+
+        StartCoroutine(IE_UpdateUI(() =>
+        {
+            if (LevelManager.Ins.bossTimeUp.point <= 0 && endShoot)
+                HandleBossDefeated();
+            else if (LevelManager.Ins.historyMagnetics.Count <= 0 && !endShoot)
+                StartCoroutine(IE_ShowUILose());
+        }));
     }
 
     private void HandleEndShooting()
@@ -107,93 +125,15 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         IsShooting = false;
     }
 
-    private float CalculateSpreadAngle(int numberOfBullets)
-    {
-        return Mathf.Lerp(15f, 60f, (float)numberOfBullets / MaxBullets);
-    }
-
-    private float CalculateAngleForBullet(int index, int numberOfBullets, float spreadAngle)
-    {
-        if (numberOfBullets == 1) return 0;
-        return -spreadAngle / 2f + (spreadAngle / (numberOfBullets - 1)) * index;
-    }
-
-    private Vector3 GetBulletDirection(float angle, Vector3 targetDirection)
-    {
-        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.up);
-        return rotation * targetDirection;
-    }
-
-    private Vector3 GetTargetDirection(LevelManager data)
-    {
-        return (data.bossTimeUp.tfTarget.position - data.player.transform.position).normalized;
-    }
-
-    private void ShootBullet(Vector3 startPosition, Vector3 direction)
-    {
-        var data = LevelManager.Ins;
-        int id = data.historyMagnetics[^1];
-        var enemyShot = SimplePool.Spawn<Enemy>((PoolType)id);
-        /*enemyShot.transform.position = startPosition;
-        enemyShot.transform.localScale = Vector3.one * 0.6f;
-
-        Vector3 targetPosition = data.bossTimeUp.tfTarget.position;
-        Vector3 apexPoint = CalculateApex(startPosition, targetPosition);
-
-        enemyShot.transform
-            .DOPath(new Vector3[] { startPosition, apexPoint, targetPosition }, 1.5f, PathType.CatmullRom)
-            .SetEase(Ease.OutQuad)
-            .OnComplete(() => HandleBulletComplete(enemyShot));*/
-        enemyShot.transform.position = data.player.transform.position;
-        enemyShot.transform.localScale = data.player.transform.localScale*12;
-        data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
-        UpdateUI();
-
-        if (data.historyMagnetics.Count <= 0 && data.bossTimeUp.point > 0)
-        {
-            HandleEndShooting();
-            StartCoroutine(IE_ShowUILose());
-        }
-    }
-
-    private Vector3 CalculateApex(Vector3 start, Vector3 target)
-    {
-        Vector3 midPoint = (start + target) / 2;
-        midPoint += Vector3.up * Random.Range(2f, 4f);
-        return midPoint;
-    }
-
-    private void HandleBulletComplete(Enemy bullet)
-    {
-        LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.bonusGlod;
-
-        StartCoroutine(IE_UpdateUI(() =>
-        {
-            if (LevelManager.Ins.bossTimeUp.point <= 0)
-            {
-                HandleBossDefeated();
-            }
-
-            if (LevelManager.Ins.historyMagnetics.Count <= 0 && LevelManager.Ins.bossTimeUp.point > 0)
-            {
-                StartCoroutine(IE_ShowUILose());
-            }
-        }));
-
-        SimplePool.Despawn(bullet);
-    }
-
     private void HandleBossDefeated()
     {
         LevelManager.Ins.isShoot = false;
-
         if (LevelManager.Ins.isCont)
         {
             LevelManager.Ins.isCont = false;
-            DataManager.Ins.playerData.levelCurrent += 1;
+            DataManager.Ins.playerData.levelCurrent++;
             DataManager.Ins.ResetData();
         }
-
         StartCoroutine(IE_ShowUIWin());
     }
 
@@ -211,16 +151,16 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private IEnumerator IE_ShowUIWin()
     {
+        endShoot = true;
         yield return new WaitForSeconds(2f);
-        UIManager.Ins.OpenUI<PopupReward>();
-        UIManager.Ins.GetUI<PopupReward>().Oninit(true);
+        UIManager.Ins.OpenUI<PopupReward>().Oninit(true);
     }
 
     private IEnumerator IE_ShowUILose()
     {
+        endShoot = true;
         yield return new WaitForSeconds(2f);
-        UIManager.Ins.OpenUI<PopupReward>();
-        UIManager.Ins.GetUI<PopupReward>().Oninit(false);
+        UIManager.Ins.OpenUI<PopupReward>().Oninit(false);
     }
 
     private IEnumerator IE_UpdateUI(UnityAction unityAction)

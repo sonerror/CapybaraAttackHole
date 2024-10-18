@@ -482,15 +482,23 @@ MonoBehaviour:
   enemyDatas:
     enemyDataModels:
     - poolType: 3
-      enemy: {fileID: 4537216577945808597, guid: 20531ac98aa7db54bb816198d5e8f111, type: 3}
+      enemy: {fileID: 653856259928987750, guid: ae42ef202bb179e4bb0054818f92edf5, type: 3}
     - poolType: 4
-      enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
+      enemy: {fileID: 5062361101085479125, guid: 28c75aa42a28d3242af55047e091106a, type: 3}
     - poolType: 5
-      enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
+      enemy: {fileID: 8729865370307067313, guid: 4ebd9a590e3048b47a488695dc2c034d, type: 3}
     - poolType: 6
-      enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
+      enemy: {fileID: 9097909378778403732, guid: 8c000a9a6079a6547aed2681356fd99f, type: 3}
     - poolType: 7
-      enemy: {fileID: 215901460414385918, guid: 1919da06abadf144194d720cddb68d53, type: 3}
+      enemy: {fileID: 6428779014886630063, guid: 4c8da4748e22b7c4fb4d62dc0d364119, type: 3}
+    - poolType: 8
+      enemy: {fileID: 1525849584368518464, guid: a8609a048af99fa4ea9cdefd20c0eb5f, type: 3}
+    - poolType: 9
+      enemy: {fileID: 942477698932415197, guid: 0972c3058a37f5847966a099e09e1c45, type: 3}
+    - poolType: 10
+      enemy: {fileID: 1000415594321273623, guid: 011bb83871e50b14687e9ec9a6f4bd57, type: 3}
+    - poolType: 11
+      enemy: {fileID: 4693742873232372650, guid: a6c71290aa3d5f449afc0349ce715880, type: 3}
   player: {fileID: 0}
   stage: {fileID: 0}
   floorBoss: {fileID: 0}
@@ -680,6 +688,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1164690600}
     m_Modifications:
+    - target: {fileID: 1724928938561769244, guid: 62f98fdd1df885047b788116e32eff41, type: 3}
+      propertyPath: m_SortingOrder
+      value: 998
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724928938561769244, guid: 62f98fdd1df885047b788116e32eff41, type: 3}
+      propertyPath: m_OverrideSorting
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1769839378837207915, guid: 62f98fdd1df885047b788116e32eff41, type: 3}
       propertyPath: m_BlockingMask.m_Bits
       value: 55

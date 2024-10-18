@@ -29,6 +29,7 @@ public class LevelManager : Singleton<LevelManager>
     public List<int> historyMagnetics = new List<int>();
     public bool isCont;
     public bool isCountTime;
+  
     public void OnInit()
     {
         isShoot = true;
@@ -218,9 +219,7 @@ public class LevelManager : Singleton<LevelManager>
             .SetEase(Ease.OutBounce)
             .OnComplete(() =>
             {
-
-                UIManager.Ins.GetUI<UIGamePlay>().OninitHPBoss();
-                UIManager.Ins.GetUI<UIGamePlay>().SetAtiveBtnShot();
+                UIManager.Ins.GetUI<UIGamePlay>().SetUIFloorBoss();
             });
     }
     Vector3 CalculateNewPosition(Vector3 from, Vector3 to, float distance)

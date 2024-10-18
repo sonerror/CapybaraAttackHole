@@ -36,6 +36,7 @@ public class UIGamePlay : UICanvas
         SetActiveJoystick(true);
         isCountdown = true;
         shootingController.imgTotal.SetActive(false);
+        HideProHPBoss(false);
     }
     public void Update()
     {
@@ -51,9 +52,20 @@ public class UIGamePlay : UICanvas
         ObjCountTime.SetActive(active);
         objFire.SetActive(!active);
         shootingController.spriteDown.gameObject.SetActive(active);
-        ObjHpBoss.SetActive(!active);
         SetProgressHp(1);
         isCountdown = active;
+    }
+    public void HideProHPBoss(bool active)
+    {
+        ObjHpBoss.SetActive(active);
+
+    }
+
+    public void SetUIFloorBoss()
+    {
+        HideProHPBoss(true);
+        OninitHPBoss();
+        SetAtiveBtnShot();
     }
     public void SetAtiveBtnShot()
     {
@@ -61,6 +73,7 @@ public class UIGamePlay : UICanvas
         shootingController.spriteDown.gameObject.SetActive(true);
         shootingController.UpdateUI();
         shootingController.imgTotal.SetActive(true);
+        shootingController.ResetBool();
     }
     public void ReLoadUIFollow()
     {

@@ -16,7 +16,6 @@ public class LevelData
     public int levelID;
     public List<CheckPoint> checkPoints;
     public Stage stage;
-    public int timer;
     public Enemy boss;
     public float pointBoss;
 

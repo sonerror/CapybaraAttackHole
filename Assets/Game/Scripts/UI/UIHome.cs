@@ -12,7 +12,7 @@ public class UIHome : UICanvas
     [SerializeField] private TextMeshProUGUI tmpPriceLevelExp;
     [SerializeField] private TextMeshProUGUI tmpLevelTime;
     [SerializeField] private TextMeshProUGUI tmpPriceLevelTime;
-
+    private int maxlvUp = 3;
     public override void Open()
     {
 
@@ -26,22 +26,27 @@ public class UIHome : UICanvas
         UIManager.Ins.OpenUI<UIGamePlay>();
         GameManager.Ins.ChangeState(GameState.GamePlay);
         UIManager.Ins.GetUI<UIGamePlay>().ReLoadUIFollow();
-     
+
 
     }
     public void BtnUpScale()
     {
+        
         var data = DataManager.Ins.playerData;
-        int totalLevels = LevelManager.Ins._levelData.levels.Count;
-        int validLevelID = data.levelCurrent % totalLevels;
-        if (data.lvScale < LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints.Count - 1)
+        if(data.lvScale < maxlvUp)
         {
-            int price = LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints[data.lvScale].price;
-            if (data.gold >= price)
+            int totalLevels = LevelManager.Ins._levelData.levels.Count;
+            int validLevelID = data.levelCurrent % totalLevels;
+            if (data.lvScale < LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints.Count - 1)
             {
-                LevelManager.Ins.UpDataScale();
-                UpdateUIBtnScale();
-                DataManager.Ins.ChangeGold(-price);
+                int price = LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints[data.lvScale].price;
+                if (data.gold >= price)
+                {
+                    LevelManager.Ins.UpDataScale();
+                    UpdateUIBtnScale();
+                    DataManager.Ins.ChangeGold(-price);
+
+                }
             }
         }
     }
@@ -80,7 +85,7 @@ public class UIHome : UICanvas
         int validLevelID = data.levelCurrent % totalLevels;
         tmpLevelSize.text = $"Size LV: {data.lvScale + 1}";
         Debug.LogError(data.lvScale + " " + (LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints.Count - 1));
-        if (data.lvScale >= LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints.Count - 1)
+        if (data.lvScale >= LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints.Count - 1 || data.lvScale >= maxlvUp)
         {
             tmpPriceLevelSize.text = $"Max";
         }
