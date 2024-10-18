@@ -18,7 +18,7 @@ MonoBehaviour:
     - id: 0
       checkPoint: 140
       scale: 0.005
-      speedMove: 0.12
+      speedMove: 0.09
       price: 50
       cameraDistance: 0.3
     - id: 1
@@ -30,25 +30,25 @@ MonoBehaviour:
     - id: 2
       checkPoint: 1000
       scale: 0.05
-      speedMove: 0.4
+      speedMove: 0.39
       price: 200
       cameraDistance: 1.2
     - id: 3
       checkPoint: 3500
       scale: 0.09
-      speedMove: 0.8
+      speedMove: 0.79
       price: 300
       cameraDistance: 1.7
     - id: 4
       checkPoint: 6000
       scale: 0.1
-      speedMove: 1.5
+      speedMove: 1.3
       price: 400
       cameraDistance: 2.2
     - id: 5
       checkPoint: 10000
       scale: 0.2
-      speedMove: 2.5
+      speedMove: 1.7
       price: 500
       cameraDistance: 3.5
     stage: {fileID: -1606745078943789629, guid: 8f88eadf265f0384e901ba782e8a0df5, type: 3}
@@ -59,7 +59,7 @@ MonoBehaviour:
     - id: 0
       checkPoint: 140
       scale: 0.005
-      speedMove: 0.12
+      speedMove: 0.09
       price: 50
       cameraDistance: 0.3
     - id: 1
@@ -71,25 +71,25 @@ MonoBehaviour:
     - id: 2
       checkPoint: 1000
       scale: 0.05
-      speedMove: 0.4
+      speedMove: 0.39
       price: 200
       cameraDistance: 1.2
     - id: 3
       checkPoint: 3500
       scale: 0.09
-      speedMove: 0.8
+      speedMove: 0.79
       price: 300
       cameraDistance: 1.7
     - id: 4
       checkPoint: 6000
       scale: 0.1
-      speedMove: 1.5
+      speedMove: 1.3
       price: 400
       cameraDistance: 2.2
     - id: 5
       checkPoint: 10000
       scale: 0.2
-      speedMove: 2.5
+      speedMove: 1.7
       price: 500
       cameraDistance: 3.5
     stage: {fileID: -1606745078943789629, guid: 8f88eadf265f0384e901ba782e8a0df5, type: 3}

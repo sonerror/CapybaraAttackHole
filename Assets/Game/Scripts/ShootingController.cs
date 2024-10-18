@@ -92,7 +92,6 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
             .Join(enemyShot.transform.DOScale(new Vector3(1,1,1) /*data.player.transform.localScale * multi*/, 0.25f).SetEase(Ease.Linear))
             .Join(enemyShot.transform.DOMove(targetPos, 0.25f).SetEase(Ease.Linear))
             .OnComplete(() => OnBulletReachTarget(enemyShot, targetPos, targetPosition));
-
         data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
         UpdateUI();
     }
@@ -165,7 +164,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private IEnumerator IE_UpdateUI(UnityAction unityAction)
     {
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.1f);
         UIManager.Ins.GetUI<UIGamePlay>().UIHPBoss();
         unityAction.Invoke();
     }
