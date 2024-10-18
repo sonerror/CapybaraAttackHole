@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2892579320399149355}
   - component: {fileID: 6348253846985221100}
   - component: {fileID: 986934855423655243}
+  - component: {fileID: 225673219035359279}
   m_Layer: 7
   m_Name: Farm_Small_Rock
   m_TagString: Enemy
@@ -105,6 +106,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.08158594, y: 0.07756163, z: 0.085395485}
   m_Center: {x: -0.0023139417, y: 0.035015784, z: 0.0014995486}
+--- !u!114 &225673219035359279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435486936424976892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c984cfd78c7bf74fa77e53905e55c1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Renderers: []
+  Position: {x: 0, y: 0, z: 0}
+  Materials: []
+  InitialAlpha: 0
 --- !u!1 &5471384724739970426
 GameObject:
   m_ObjectHideFlags: 0

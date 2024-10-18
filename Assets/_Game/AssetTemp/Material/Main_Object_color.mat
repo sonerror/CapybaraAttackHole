@@ -24,10 +24,12 @@ Material:
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _EMISSION
+  - _ENVIRONMENTREFLECTIONS_OFF
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap:
@@ -40,7 +42,7 @@ Material:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 2de524bf2b390a84b944814d78319b89, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Offset: {x: 0.004, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -64,7 +66,7 @@ Material:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 2de524bf2b390a84b944814d78319b89, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Offset: {x: 0.004, y: 0}
     - _MatCapMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -131,7 +133,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EmissionChannel: 4
-    - _EnvironmentReflections: 1
+    - _EnvironmentReflections: 0
     - _Exposure: 1.23
     - _FresnelMax: 1.5
     - _FresnelMin: 0
@@ -179,7 +181,7 @@ Material:
     - _Rotation: 0
     - _ShadowColorLightAtten: 1
     - _SingleIndirectColor: 0
-    - _Smoothness: 0.5
+    - _Smoothness: 0.477
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SpecularMapType: 0
@@ -211,8 +213,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.9716981, g: 0.96017444, b: 0.90447366, a: 0.9882353}
-    - _Color: {r: 0.9716981, g: 0.9601744, b: 0.90447366, a: 0.9882353}
+    - _BaseColor: {r: 0.9716981, g: 0.9601744, b: 1, a: 0.9882353}
+    - _Color: {r: 0.9716981, g: 0.9601744, b: 1, a: 0.9882353}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GroundColor: {r: 0.38364774, g: 0.8138425, b: 1, a: 1}
     - _HColor: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 1}
