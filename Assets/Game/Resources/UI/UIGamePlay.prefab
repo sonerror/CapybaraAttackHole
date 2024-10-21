@@ -94,6 +94,7 @@ MonoBehaviour:
   tmpCountShoot: {fileID: 4790061338840927018}
   spriteDown: {fileID: 7491004131544402570}
   imgTotal: {fileID: 4869466310546668311}
+  endShoot: 0
 --- !u!1 &3037325844290846038
 GameObject:
   m_ObjectHideFlags: 0

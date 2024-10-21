@@ -9,7 +9,7 @@ public class Player : Character
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
     [SerializeField] private Collider colliderPlayer;
-   private Quaternion targetRotation;
+    private Quaternion targetRotation;
     private Vector3 inputDirection = Vector3.zero;
     private bool isCreateEnemy;
     private bool isMagnetic;
@@ -46,7 +46,11 @@ public class Player : Character
         this.transform.localScale = new Vector3(1, 1, 1) * data.scale;
         SetCamera(_lvScale);
         ChangeSpeed(data.speedMove);
-        SetTargetCheckPoint();
+        SetTargetCheckPoint(_lvScale);
+        if (lvCurrent > 0)
+        {
+            point = GetCheckPointData(lvCurrent - 1).checkPoint;
+        }
     }
 
     public void SetScaleUpLevel(int _lvScale)
@@ -68,8 +72,8 @@ public class Player : Character
 
     public void SetCamera(int _levelCurrent)
     {
-        CameraManager.Ins.AdjustCameraDistanceSmooth(GetCheckPointData(_levelCurrent).cameraDistance,0.5f);
-       // CameraManager.Ins.AdjustCameraDistance(GetCheckPointData(_levelCurrent).cameraDistance);
+        CameraManager.Ins.AdjustCameraDistanceSmooth(GetCheckPointData(_levelCurrent).cameraDistance, 0.5f);
+        // CameraManager.Ins.AdjustCameraDistance(GetCheckPointData(_levelCurrent).cameraDistance);
 
     }
 
@@ -80,14 +84,15 @@ public class Player : Character
         this.lvEx = _lvEx;
         SetScale(lvCurrent);
         OnInit();
+       
     }
 
-    private void SetTargetCheckPoint()
+    private void SetTargetCheckPoint(int _Lv)
     {
-        targetCheckPoint = GetCheckPointData(lvCurrent).checkPoint;
+        targetCheckPoint = GetCheckPointData(_Lv).checkPoint;
         if (lvCurrent > 0)
         {
-            durProgress = GetCheckPointData(lvCurrent - 1).checkPoint;
+            durProgress = GetCheckPointData(_Lv - 1).checkPoint;
         }
         Debug.LogError("targetCheckPoint: " + targetCheckPoint);
     }
@@ -148,11 +153,13 @@ public class Player : Character
         moveSpeed = _speed;
     }
 
+
     public void CheckPointUpLevel()
     {
         CheckTurnOnSkill();
         if (lvCurrent < checkPoints.Count && point >= targetCheckPoint)
         {
+            Debug.LogError("Check Up Lv");
             lvCurrent += 1;
             var targetPoint = GetCheckPointData(lvCurrent);
             targetCheckPoint = targetPoint.checkPoint;
@@ -160,12 +167,24 @@ public class Player : Character
             {
                 durProgress = GetCheckPointData(lvCurrent - 1).checkPoint;
             }
-            ChangeSpeed(targetPoint.speedMove);
+            //ChangeSpeed(targetPoint.speedMove);
+            StartCoroutine(IE_Uplevel(targetPoint.speedMove));
             SetScaleUpLevel(lvCurrent);
             SetDataBonusGold();
             UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
             isMagnetic = true;
         }
+    }
+    IEnumerator IE_Uplevel(float _speed)
+    {
+        yield return new WaitForEndOfFrame();
+        if(moveSpeed != _speed)
+        {
+            DOTween.To(() => moveSpeed,
+                      x => moveSpeed = x,
+                      _speed, 0.6f);
+        }
+
     }
     public void SetDataBonusGold()
     {

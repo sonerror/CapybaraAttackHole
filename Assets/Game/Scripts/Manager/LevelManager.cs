@@ -36,7 +36,7 @@ public class LevelManager : Singleton<LevelManager>
         isCont = true;
         isCountTime = false;
     }
-
+  
     public void OnLoadStage()
     {
         int totalLevels = levelData.levels.Count;
@@ -220,6 +220,7 @@ public class LevelManager : Singleton<LevelManager>
             .OnComplete(() =>
             {
                 UIManager.Ins.GetUI<UIGamePlay>().SetUIFloorBoss();
+                bossTimeUp.isUpdate = true;
             });
     }
     Vector3 CalculateNewPosition(Vector3 from, Vector3 to, float distance)

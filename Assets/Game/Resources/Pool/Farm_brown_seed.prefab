@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7881303973927934327}
   - component: {fileID: 4121152408063041624}
   - component: {fileID: 5062361101085479125}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Farm_brown_seed
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4445817921127358003}
   - component: {fileID: 703872465571671504}
   - component: {fileID: 7338922136795308141}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Farm_brown_seed
   m_TagString: Enemy
   m_Icon: {fileID: 0}

@@ -18,6 +18,7 @@ public class Enemy : Character
     public bool isCanMove;
     public float wanderTimer;
     public float wanderRadius;
+    public bool isUpdate;
     public void Start()
     {
         OnInit();
@@ -30,6 +31,7 @@ public class Enemy : Character
     {
         base.OnInit();
         isDead = false;
+        isUpdate = false;
     }
     #region
     /*    void Update()
@@ -84,6 +86,16 @@ public class Enemy : Character
 
 
     #endregion
+    private void Update()
+    {
+        if (isUpdate)
+        {
+            if (point <= 0)
+            {
+                isDead = true;
+            }
+        }
+    }
     public void ChangeColorTriggerEn()
     {
         meshRenderer.material.color = MaterialManager.Ins.Setmat();
@@ -101,7 +113,7 @@ public class Enemy : Character
     {
         meshRenderer.material.color = orColor;
     }
-    public void SetPoint(int lv)
+    public void SetPoint(int lv)// goi khi sinh ra prefabs 
     {
         point = LevelManager.Ins.pointData.GetDataWithID(lv).point;
     }

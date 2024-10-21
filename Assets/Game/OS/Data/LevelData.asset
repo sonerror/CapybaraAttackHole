@@ -24,33 +24,33 @@ MonoBehaviour:
     - id: 1
       checkPoint: 300
       scale: 0.01
-      speedMove: 0.2
+      speedMove: 0.18
       price: 100
       cameraDistance: 0.7
     - id: 2
       checkPoint: 1000
       scale: 0.05
-      speedMove: 0.39
+      speedMove: 0.48
       price: 200
-      cameraDistance: 1.2
+      cameraDistance: 1.5
     - id: 3
       checkPoint: 3500
       scale: 0.09
-      speedMove: 0.79
+      speedMove: 0.88
       price: 300
-      cameraDistance: 1.7
+      cameraDistance: 2.8
     - id: 4
       checkPoint: 6000
       scale: 0.1
-      speedMove: 1.3
+      speedMove: 1.45
       price: 400
-      cameraDistance: 2.2
+      cameraDistance: 3.8
     - id: 5
       checkPoint: 10000
       scale: 0.2
       speedMove: 1.7
       price: 500
-      cameraDistance: 3.5
+      cameraDistance: 5.2
     stage: {fileID: -1606745078943789629, guid: 8f88eadf265f0384e901ba782e8a0df5, type: 3}
     boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
     pointBoss: 2000
@@ -65,33 +65,33 @@ MonoBehaviour:
     - id: 1
       checkPoint: 300
       scale: 0.01
-      speedMove: 0.2
+      speedMove: 0.18
       price: 100
       cameraDistance: 0.7
     - id: 2
       checkPoint: 1000
       scale: 0.05
-      speedMove: 0.39
+      speedMove: 0.48
       price: 200
-      cameraDistance: 1.2
+      cameraDistance: 1.5
     - id: 3
       checkPoint: 3500
       scale: 0.09
-      speedMove: 0.79
+      speedMove: 0.88
       price: 300
-      cameraDistance: 1.7
+      cameraDistance: 2.8
     - id: 4
       checkPoint: 6000
       scale: 0.1
-      speedMove: 1.3
+      speedMove: 1.45
       price: 400
-      cameraDistance: 2.2
+      cameraDistance: 3.8
     - id: 5
       checkPoint: 10000
       scale: 0.2
       speedMove: 1.7
       price: 500
-      cameraDistance: 3.5
+      cameraDistance: 5.2
     stage: {fileID: -1606745078943789629, guid: 8f88eadf265f0384e901ba782e8a0df5, type: 3}
     boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
     pointBoss: 10000

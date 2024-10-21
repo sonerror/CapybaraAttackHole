@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4894553745336296867}
   - component: {fileID: 3638375276940145593}
   - component: {fileID: 1525849584368518464}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Farm_orange_seed
   m_TagString: Enemy
   m_Icon: {fileID: 0}

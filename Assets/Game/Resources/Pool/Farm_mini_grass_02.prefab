@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 967162350801744165}
   - component: {fileID: 1124600622116077255}
   - component: {fileID: 6428779014886630063}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Farm_mini_grass_02
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -97,7 +97,8 @@ GameObject:
   - component: {fileID: 8944563739584966267}
   - component: {fileID: 2125077275123492791}
   - component: {fileID: 1352274596700690408}
-  m_Layer: 7
+  - component: {fileID: 5347811358186005268}
+  m_Layer: 6
   m_Name: Farm_mini_grass_02
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -190,3 +191,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.07058595
   m_Center: {x: -0.0076308977, y: 0.07079764, z: 0.002185665}
+--- !u!114 &5347811358186005268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8945717581536925167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c984cfd78c7bf74fa77e53905e55c1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Renderers: []
+  Position: {x: 0, y: 0, z: 0}
+  Materials: []
+  InitialAlpha: 0

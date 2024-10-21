@@ -15,7 +15,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private Sprite spriteCurrent;
     private Coroutine shootingCoroutine;
-    private const int MaxBullets = 10;
+    private const int MaxBullets = 3;
     private float multi;
     public bool IsShooting { get; private set; }
     public bool endShoot;
@@ -41,7 +41,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     public void OnPointerDown(PointerEventData eventData)
     {
         spriteDown.sprite = spriteUp;
-        if (LevelManager.Ins.isShoot && LevelManager.Ins.historyMagnetics.Count > 0)
+        if (LevelManager.Ins.isShoot && LevelManager.Ins.historyMagnetics.Count > 0 && LevelManager.Ins.bossTimeUp.point > 0)
             IsShooting = true;
     }
 
@@ -50,9 +50,15 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     private void Update()
     {
         var data = LevelManager.Ins;
-        if (data.bossTimeUp == null || endShoot) return;
+        if (data.bossTimeUp == null || endShoot || data.bossTimeUp.isDead) return;
+        if (data.bossTimeUp.point <= 0)
+        {
+            IsShooting = false;
+            data.isShoot = false;
+            return;
+
+        }
         if (IsShooting) OnShoot();
-        if (data.bossTimeUp.point <= 0) IsShooting = data.isShoot = false;
     }
 
     public void UpdateUI() => tmpCountShoot.text = LevelManager.Ins.historyMagnetics.Count.ToString();
@@ -71,7 +77,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         int bulletsToShoot = Mathf.Min(MaxBullets, data.historyMagnetics.Count);
         for (int i = 0; i < bulletsToShoot; i++)
         {
-            Vector3 target = data.bossTimeUp.tfTarget.position + Random.insideUnitSphere * 0.3f;
+            Vector3 target = data.bossTimeUp.tfTarget.position + Random.insideUnitSphere * 0.5f;
             ShootBullet(target);
         }
     }
@@ -81,41 +87,74 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         var data = LevelManager.Ins;
         int id = data.historyMagnetics[^1];
         var enemyShot = SimplePool.Spawn<Enemy>((PoolType)id);
-
         enemyShot.HideCollider(false);
         enemyShot.transform.position = data.player.tfCenter.position;
         enemyShot.transform.localScale = Vector3.zero;
-        multi = data.player.lvCurrent < 2 ? 20 : 12;
-
         Vector3 targetPos = data.player.mouth.position;
+        if (enemyShot.lvCurrent < 1)
+        {
+            multi = 5;
+        }
+        else
+        {
+            multi = 1;
+        }
         DOTween.Sequence()
-            .Join(enemyShot.transform.DOScale(new Vector3(1,1,1) /*data.player.transform.localScale * multi*/, 0.25f).SetEase(Ease.Linear))
-            .Join(enemyShot.transform.DOMove(targetPos, 0.25f).SetEase(Ease.Linear))
-            .OnComplete(() => OnBulletReachTarget(enemyShot, targetPos, targetPosition));
+            .Join(enemyShot.transform.DOScale(new Vector3(1, 1, 1) * multi, 0.2f).SetEase(Ease.Linear))
+            .Join(enemyShot.transform.DOMove(targetPos, 0.2f).SetEase(Ease.Linear))
+            .OnComplete(() =>
+            {
+                OnBulletReachTarget(enemyShot, targetPos, targetPosition);
+            });
         data.historyMagnetics.RemoveAt(data.historyMagnetics.Count - 1);
         UpdateUI();
     }
-
     private void OnBulletReachTarget(Enemy bullet, Vector3 startPos, Vector3 targetPos)
     {
-        Vector3 apex = (startPos + targetPos) / 2 + Vector3.up * Random.Range(-1f, 3f);
-        bullet.transform.DOPath(new[] { startPos, apex, targetPos }, 1.5f, PathType.CatmullRom)
-            .SetEase(Ease.OutQuad)
+        /* Vector3 apex = (startPos + targetPos) / 2 + Vector3.up * Random.Range(-1f, 3f);
+         Vector3 apex1 = (startPos + targetPos) / 2 + Vector3.left * Random.Range(-1f, 3f);
+         Vector3 apex2 = (startPos + targetPos) / 2 + Vector3.right * Random.Range(-1f, 3f);
+ */
+        bullet.transform.DOPath(new[] { startPos, RandomApex(startPos, targetPos), targetPos }, 0.4f, PathType.CatmullRom)
+            .SetEase(Ease.Linear)
             .OnComplete(() => HandleBulletComplete(bullet));
     }
-
+    private Vector3 RandomApex(Vector3 startPos, Vector3 targetPos)
+    {
+        Vector3 midPoint = (startPos + targetPos) / 2;
+        Vector3 apex = midPoint + Vector3.up * Random.Range(0.1f, 1.5f);
+        Vector3 apex1 = midPoint + Vector3.left * Random.Range(0.1f, 0.75f);
+        Vector3 apex2 = midPoint + Vector3.right * Random.Range(0.1f, 0.75f);
+        Vector3 apex3 = midPoint + Vector3.down * Random.Range(0.1f, 0.75f);
+        Vector3 apex4 = midPoint + (Vector3.left + Vector3.up).normalized * Random.Range(0.1f, 1f);
+        Vector3 apex5 = midPoint + (Vector3.right + Vector3.up).normalized * Random.Range(0.1f, 1f);
+        int randomIndex = Random.Range(0, 6); 
+        switch (randomIndex)
+        {
+            case 0: return apex;
+            case 1: return apex1;
+            case 2: return apex2;
+            case 3: return apex3;
+            case 4: return apex4;
+            case 5: return apex5;
+        }
+        return apex; 
+    }
     private void HandleBulletComplete(Enemy bullet)
     {
         LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.bonusGlod;
         SimplePool.Despawn(bullet);
-
-        StartCoroutine(IE_UpdateUI(() =>
+        IE_UpdateUI();
+        if (LevelManager.Ins.bossTimeUp.point <= 0 && !endShoot)
         {
-            if (LevelManager.Ins.bossTimeUp.point <= 0 && endShoot)
-                HandleBossDefeated();
-            else if (LevelManager.Ins.historyMagnetics.Count <= 0 && !endShoot)
-                StartCoroutine(IE_ShowUILose());
-        }));
+            Debug.Log("Win 1");
+            HandleBossDefeated();
+        }
+        else if (LevelManager.Ins.historyMagnetics.Count <= 0 && !endShoot)
+        {
+            Debug.Log("Win 2");
+            StartCoroutine(IE_ShowUILose());
+        }
     }
 
     private void HandleEndShooting()
@@ -161,11 +200,8 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         yield return new WaitForSeconds(2f);
         UIManager.Ins.OpenUI<PopupReward>().Oninit(false);
     }
-
-    private IEnumerator IE_UpdateUI(UnityAction unityAction)
+    private void IE_UpdateUI()
     {
-        yield return new WaitForSeconds(0.1f);
         UIManager.Ins.GetUI<UIGamePlay>().UIHPBoss();
-        unityAction.Invoke();
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SightCheck : MonoBehaviour
 {
-    /*[SerializeField] private Material material;
+    [SerializeField] private Material material;
     public Character Character;
     private void OnTriggerEnter(Collider other)
     {
@@ -15,7 +15,8 @@ public class SightCheck : MonoBehaviour
             {
                 if (!_target.isDead)
                 {
-                    Character.AddTarget(_target);
+                    //Character.AddTarget(_target);
+                    Debug.Log("Hit");
                     _target.AddMat(material);
                 }
             }
@@ -30,10 +31,10 @@ public class SightCheck : MonoBehaviour
             {
                 if (!_target.isDead)
                 {
-                    Character.RemoveTarget(_target);
+                    //Character.RemoveTarget(_target);
                     _target.RemoveLastMat();
                 }
             }
         }
-    }*/
+    }
 }

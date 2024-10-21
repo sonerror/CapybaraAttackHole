@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5788153155811651883}
   - component: {fileID: 4925357257963102958}
   - component: {fileID: 5712841367099277092}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Farm_petal_01
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 735902792970005363}
   - component: {fileID: 3599132352606665939}
   - component: {fileID: 942477698932415197}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Farm_petal_155
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -182,8 +182,8 @@ MonoBehaviour:
   listTarget: []
   point: 2
   lvCurrent: 2
-  boxCollider: {fileID: 0}
-  meshRenderer: {fileID: 0}
+  boxCollider: {fileID: 5712841367099277092}
+  meshRenderer: {fileID: 4925357257963102958}
   agent: {fileID: 0}
   animator: {fileID: 0}
   tfTarget: {fileID: 0}

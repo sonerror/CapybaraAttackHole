@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1605510502365823350}
   - component: {fileID: 1789585256551157409}
   - component: {fileID: 4693742873232372650}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Farm_white_dust
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 7864413142522814545}
   - component: {fileID: 8827583550918523685}
   - component: {fileID: 2354985265152759347}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Model
   m_TagString: Enemy
   m_Icon: {fileID: 0}

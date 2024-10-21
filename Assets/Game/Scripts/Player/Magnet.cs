@@ -24,10 +24,10 @@ public class Magnet : GameUnit
                 AddToBlackHole(_target);
                 LevelManager.Ins.historyMagnetics.Add((int)_target.poolType);
             }
-            else
+            /*else
             {
                 _target.ChangeColorTriggerEn();
-            }
+            }*/
         }
         if (other.CompareTag(Const.TAG_ENEMY_MACHINE))
         {
@@ -52,7 +52,7 @@ public class Magnet : GameUnit
                 .OnComplete(() =>
                 {
                     SimplePool.Despawn(enemy);
-                    player.RemoveTarget(enemy);
+                    //player.RemoveTarget(enemy);
                     player.point += enemy.point * bonus;
                     player.CheckPointUpLevel();
                     UpdateUIProgress(player);
@@ -96,12 +96,14 @@ public class Magnet : GameUnit
             root = 0;
         }
         float detal = lv.point - root;
+        Debug.Log(target + " Non" + lv.point + " " + detal);
         UIManager.Ins.GetUI<UIGamePlay>().SetProgressSpin(detal / target);
         if (lv.lvCurrent >= 1)
         {
             float targetSkill = (target * 2) / 3;
             UIManager.Ins.GetUI<UIGamePlay>().SetProgressSkill(detal / targetSkill);
         }
+
     }
 
 }
