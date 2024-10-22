@@ -55,7 +55,7 @@ public class LevelManager : Singleton<LevelManager>
             OnLoadStage();
             InstantiatePlayer();
             OnInit();
-            EnemyManager.Ins.Oninit();
+            
         }
     }
     private void InstantiatePlayer()
@@ -71,6 +71,7 @@ public class LevelManager : Singleton<LevelManager>
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
         SetEX();
+        EnemyManager.Ins.Oninit();
     }
 
     public LevelBonusDataModel GetDataTimeCountWithId(int id)

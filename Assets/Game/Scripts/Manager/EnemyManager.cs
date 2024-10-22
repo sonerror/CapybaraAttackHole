@@ -13,9 +13,10 @@ public class EnemyManager : Singleton<EnemyManager>
     [SerializeField] private int quantityInStack;
     [SerializeField] private int quantityInMap;
     [SerializeField] private float radius;
-
+    private PlayerData data;
     public void Oninit()
     {
+        data = DataManager.Ins.playerData;
         ResetEnemies();
         for (int i = 0; i < quantityInStack; i++)
         {
@@ -37,6 +38,7 @@ public class EnemyManager : Singleton<EnemyManager>
         EnemyMachine enemy = GetBotFormPool();
         enemy.OnInit();
         enemy.isCanMove = false;
+        enemy.SetData(data.lvScale, data.lvTime, data.lvEx);
         if (CheckRamdomPosition(enemy))
         {
             enemy.gameObject.SetActive(true);
@@ -44,6 +46,7 @@ public class EnemyManager : Singleton<EnemyManager>
             LevelManager.Ins.characterList.Add(enemy);
         }
     }
+
     public EnemyMachine GetBotFormPool()
     {
         for (int i = 0; i < enemies.Count; i++)

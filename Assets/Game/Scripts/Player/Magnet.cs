@@ -8,7 +8,7 @@ public class Magnet : GameUnit
 {
     [SerializeField] private float pullForce = 5f;
     [SerializeField] private float rotationSpeed = 360f;
-    public Player player;
+    public Character player;
     private float pullDuration;
     public Transform blackHoleCenter;
 
@@ -52,7 +52,6 @@ public class Magnet : GameUnit
                 .OnComplete(() =>
                 {
                     SimplePool.Despawn(enemy);
-                    //player.RemoveTarget(enemy);
                     player.point += enemy.point * bonus;
                     player.CheckPointUpLevel();
                     UpdateUIProgress(player);
@@ -82,7 +81,7 @@ public class Magnet : GameUnit
         yield return new WaitForSeconds(0.5f);
       //  EnemyManager.Ins.SpawmEnemy();
     }
-    private void UpdateUIProgress(Player lv)
+    private void UpdateUIProgress(Character lv)
     {
         float target, root;
         if (lv.lvCurrent > 0)

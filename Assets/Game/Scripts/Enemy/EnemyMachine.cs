@@ -23,6 +23,8 @@ public class EnemyMachine : Character
     {
         base.OnInit();
         isDead = false;
+        isMagnetic = true;
+        SetDataBonusGold();
     }
     #region
     void Update()
@@ -70,16 +72,18 @@ public class EnemyMachine : Character
     }
     bool IsDestination() => Vector3.Distance(transform.position, nextPoint) - Mathf.Abs(transform.position.y - nextPoint.y) < 0.1f;
 
-  
+
     #endregion
+    public override void SetData(int _Lv, int _lvTime, int _lvEx)
+    {
+        base.SetData(_Lv, _lvTime, _lvEx);
+        OnInit();
+        SetScale(lvCurrent);
+    }
     public void SetScale(float scale)
     {
         this.transform.localScale = new Vector3(1, 1, 1) * scale;
     }    
-    public void ChangeColorTriggerEn()
-    {
-        meshRenderer.material.color = MaterialManager.Ins.Setmat();
-    }
     public void ChangeAnim(string animName)
     {
         if (currentAnim != animName)
@@ -93,12 +97,10 @@ public class EnemyMachine : Character
     {
         point = LevelManager.Ins.pointData.GetDataWithID(lv).point;
     }
-
     public void HideCollider(bool isActive)
     {
         boxCollider.enabled = isActive;
     }
-
     public void AddMat(Material mat)
     {
         if (meshRenderer != null && mat != null)
@@ -121,4 +123,5 @@ public class EnemyMachine : Character
             }
         }
     }
+
 }

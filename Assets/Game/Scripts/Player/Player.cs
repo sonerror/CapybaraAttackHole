@@ -6,26 +6,13 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Player : Character
 {
-    [SerializeField] public float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
     [SerializeField] private Collider colliderPlayer;
     private Quaternion targetRotation;
     private Vector3 inputDirection = Vector3.zero;
     private bool isCreateEnemy;
-    private bool isMagnetic;
-
-    public List<CheckPoint> checkPoints = new List<CheckPoint>();
     public bool move = true;
-    public int lvTime;
-    public int lvEx;
     public Transform mouth;
-
-    public float targetCheckPoint;
-    public float durProgress;
-    public Transform playerSkill;
-    public Transform blackHoleCenter;
-    public float bonusGlod;
-    public Transform tfCenter;
     public override void OnInit()
     {
         base.OnInit();
@@ -40,62 +27,27 @@ public class Player : Character
             colliderPlayer.enabled = isEnabled;
         }
     }
-    public void SetScale(int _lvScale)
+    public override void SetScale(int _lvScale)
     {
-        var data = GetCheckPointData(_lvScale);
-        this.transform.localScale = new Vector3(1, 1, 1) * data.scale;
-        SetCamera(_lvScale);
-        ChangeSpeed(data.speedMove);
-        SetTargetCheckPoint(_lvScale);
-        if (lvCurrent > 0)
-        {
-            point = GetCheckPointData(lvCurrent - 1).checkPoint;
-        }
-    }
-
-    public void SetScaleUpLevel(int _lvScale)
-    {
-        float targetScale = GetCheckPointData(_lvScale).scale;
-        ChangeScale(targetScale);
+        base.SetScale(_lvScale);
         SetCamera(_lvScale);
     }
-
-    public void GetDataLevel(List<CheckPoint> _checkPoint)
+    public override void SetScaleUpLevel(int _lvScale)
     {
-        this.checkPoints = new List<CheckPoint>(_checkPoint);
+        base.SetScaleUpLevel(_lvScale);
+        SetCamera(_lvScale);
     }
-
-    private CheckPoint GetCheckPointData(int id)
-    {
-        return checkPoints.Find(x => x.id == id);
-    }
-
     public void SetCamera(int _levelCurrent)
     {
         CameraManager.Ins.AdjustCameraDistanceSmooth(GetCheckPointData(_levelCurrent).cameraDistance, 0.5f);
-        // CameraManager.Ins.AdjustCameraDistance(GetCheckPointData(_levelCurrent).cameraDistance);
-
     }
-
-    public void SetData(int _Lv, int _lvTime, int _lvEx)
+    public override void SetData(int _Lv, int _lvTime, int _lvEx)
     {
-        this.lvCurrent = _Lv;
-        this.lvTime = _lvTime;
-        this.lvEx = _lvEx;
+        base.SetData(_Lv, _lvTime, _lvEx);  
         SetScale(lvCurrent);
         OnInit();
-       
     }
 
-    private void SetTargetCheckPoint(int _Lv)
-    {
-        targetCheckPoint = GetCheckPointData(_Lv).checkPoint;
-        if (lvCurrent > 0)
-        {
-            durProgress = GetCheckPointData(_Lv - 1).checkPoint;
-        }
-        Debug.LogError("targetCheckPoint: " + targetCheckPoint);
-    }
     private void Update()
     {
         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
@@ -111,7 +63,6 @@ public class Player : Character
             StopMovement();
         }
     }
-
     private void Move(Vector3 dir)
     {
         transform.Translate(dir * moveSpeed * Time.deltaTime, Space.World);
@@ -148,48 +99,13 @@ public class Player : Character
         return moveDirection.normalized;
     }
 
-    public void ChangeSpeed(float _speed)
-    {
-        moveSpeed = _speed;
-    }
 
-
-    public void CheckPointUpLevel()
+    public override void CheckPointUpLevel()
     {
+        base.CheckPointUpLevel();
         CheckTurnOnSkill();
-        if (lvCurrent < checkPoints.Count && point >= targetCheckPoint)
-        {
-            Debug.LogError("Check Up Lv");
-            lvCurrent += 1;
-            var targetPoint = GetCheckPointData(lvCurrent);
-            targetCheckPoint = targetPoint.checkPoint;
-            if (lvCurrent > 0)
-            {
-                durProgress = GetCheckPointData(lvCurrent - 1).checkPoint;
-            }
-            //ChangeSpeed(targetPoint.speedMove);
-            StartCoroutine(IE_Uplevel(targetPoint.speedMove));
-            SetScaleUpLevel(lvCurrent);
-            SetDataBonusGold();
-            UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
-            isMagnetic = true;
-        }
-    }
-    IEnumerator IE_Uplevel(float _speed)
-    {
-        yield return new WaitForEndOfFrame();
-        if(moveSpeed != _speed)
-        {
-            DOTween.To(() => moveSpeed,
-                      x => moveSpeed = x,
-                      _speed, 0.6f);
-        }
-
-    }
-    public void SetDataBonusGold()
-    {
-        bonusGlod = GetBonusEXP();
-        Debug.Log("Set" + GetBonusEXP());
+        SetDataBonusGold();
+        UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
     }
     public void CheckSpanEnemy()
     {
@@ -219,24 +135,5 @@ public class Player : Character
     IEnumerator IE_DelaySpawn()
     {
         yield return new WaitForSeconds(0.5f);
-        //EnemyManager.Ins.SpawmEnemy();
-    }
-    public float GetCheckPoint(int lv)
-    {
-        return GetCheckPointData(lv).checkPoint;
-    }
-
-    public float GetBonusEXP()
-    {
-        return LevelManager.Ins.levelEx.GetDataWithID(lvEx).bonus;
-    }
-
-    public void OnLose()
-    {
-    }
-
-    public void MoveToTfTarget(Transform tfTarget)
-    {
-        this.transform.DOMove(tfTarget.position, 1f).SetEase(Ease.InOutQuad);
     }
 }
