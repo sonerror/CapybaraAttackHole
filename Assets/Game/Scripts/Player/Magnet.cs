@@ -73,14 +73,14 @@ public class Magnet : GameUnit
                 .OnComplete(() =>
                 {
                     SimplePool.Despawn(enemy);
-                    EnemyManager.Ins.Enemies.Remove(enemy);
+                    EnemyManager.Ins.enemies.Remove(enemy);
                 });
         }
     }
     IEnumerator IE_DelaySpawn()
     {
         yield return new WaitForSeconds(0.5f);
-        EnemyManager.Ins.SpawmEnemy();
+      //  EnemyManager.Ins.SpawmEnemy();
     }
     private void UpdateUIProgress(Player lv)
     {

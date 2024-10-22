@@ -27,6 +27,7 @@ public class Stage : MonoBehaviour
         {
             LevelManager.Ins.player.move = false;
             isCountDown = false;
+            EnemyManager.Ins.PlayIdle();
             StartCoroutine(IE_OnTimeUp());
         }
     }

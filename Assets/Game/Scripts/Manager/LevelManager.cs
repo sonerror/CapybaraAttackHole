@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LevelManager : Singleton<LevelManager>
 {
+
     [SerializeField] private Player playerPrefabs;
     [SerializeField] private LevelDatas levelData;
     public LevelDatas _levelData => levelData;
@@ -29,7 +30,8 @@ public class LevelManager : Singleton<LevelManager>
     public List<int> historyMagnetics = new List<int>();
     public bool isCont;
     public bool isCountTime;
-  
+    public List<Character> characterList;
+
     public void OnInit()
     {
         isShoot = true;
@@ -53,13 +55,16 @@ public class LevelManager : Singleton<LevelManager>
             OnLoadStage();
             InstantiatePlayer();
             OnInit();
+            EnemyManager.Ins.Oninit();
         }
     }
     private void InstantiatePlayer()
     {
         var data = DataManager.Ins.playerData;
         player = Instantiate(playerPrefabs);
-        player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
+        characterList.Add(player);
+        //player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
+        player.transform.position = Vector3.zero;
         player.transform.rotation = Quaternion.Euler(0, 180, 0);
         CameraManager.Ins.SetData(player);
         int validLevelID = data.levelCurrent % levelData.levels.Count;
@@ -149,13 +154,12 @@ public class LevelManager : Singleton<LevelManager>
         {
             UIManager.Ins.OpenUI<PopupLose>();
         }
-        StartCoroutine(IE_DespawnEnemy());
+       // StartCoroutine(IE_DespawnEnemy());
     }
     IEnumerator IE_DespawnEnemy()
     {
         yield return new WaitForSeconds(1f);
         EnemyManager.Ins.DespawnEnemy();
-        EnemyManager.Ins.ResetEnemes();
     }
     private void SpawnFloorBoss()
     {

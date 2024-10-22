@@ -1,76 +1,128 @@
-using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine;
+using UnityEngine.UIElements;
+using System.Collections;
 
 public class EnemyManager : Singleton<EnemyManager>
 {
-    public List<EnemyMachine> Enemies = new List<EnemyMachine>();
+    public List<EnemyMachine> enemies = new List<EnemyMachine>();
+    public List<EnemyMachine> activeEnemies = new List<EnemyMachine>();
+    public List<EnemyMachine> enemyPool = new List<EnemyMachine>();
     public float minDistance;
-    public void SpawmEnemy()
-    {
-        if (Enemies.Count < 1)
-        {
-            EnemyMachine enemy = SimplePool.Spawn<EnemyMachine>(PoolType.Enemy, Vector3.zero, Quaternion.identity);
-            Vector3 spawnPos = GetPos();
-            enemy.transform.position = spawnPos;
-            enemy.HideCollider(true);
-            Enemies.Add(enemy);
-            enemy.SetScale(0.6f);
-            enemy.ChangeState(new PatrolState());
-            enemy.isCanMove = true;
-            /*DOVirtual.DelayedCall(0.5f, () =>
-            {
-                UIManager.Ins.OpenUI<UIIndicator>();
-            });*/
-        }
-    }
+    [SerializeField] private int quantityInStack;
+    [SerializeField] private int quantityInMap;
+    [SerializeField] private float radius;
 
-    public Vector3 GetSpawnPosition()
+    public void Oninit()
     {
-        Vector3 playerPosition = LevelManager.Ins.player.transform.position;
-        Vector3 randomDirection = Random.onUnitSphere * 10f;
-        randomDirection.y = playerPosition.y;
-        Vector3 spawnPosition = playerPosition + randomDirection;
-        NavMeshHit navHit;
-        if (NavMesh.SamplePosition(spawnPosition, out navHit, 10f, NavMesh.AllAreas))
+        ResetEnemies();
+        for (int i = 0; i < quantityInStack; i++)
         {
-            return navHit.position;
+            EnemyMachine enemy = SimplePool.Spawn<EnemyMachine>(PoolType.Enemy_Machine, Vector3.zero, Quaternion.identity);
+            enemies.Add(enemy);
+            enemy.gameObject.SetActive(false);
         }
-        return playerPosition;
+        SpawmIntoMap(quantityInMap);
     }
-    public Vector3 GetPos()
+    private void SpawmIntoMap(int real)
     {
-        Vector3 playerPosition = new Vector3(0, LevelManager.Ins.player.transform.position.y, 0);
-        Vector3 randomDirection = Random.onUnitSphere * 10f;
-        Vector3 spawnPosition = playerPosition + randomDirection;
-        NavMeshHit navHit;
-        if (NavMesh.SamplePosition(spawnPosition, out navHit, 10f, NavMesh.AllAreas))
+        for (int i = 0; i < real; i++)
         {
-            return navHit.position;
+            SwamEnemy();
         }
-        return playerPosition;
+    }
+    private void SwamEnemy()
+    {
+        EnemyMachine enemy = GetBotFormPool();
+        enemy.OnInit();
+        enemy.isCanMove = false;
+        if (CheckRamdomPosition(enemy))
+        {
+            enemy.gameObject.SetActive(true);
+            activeEnemies.Add(enemy);
+            LevelManager.Ins.characterList.Add(enemy);
+        }
+    }
+    public EnemyMachine GetBotFormPool()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (!enemies[i].gameObject.activeInHierarchy)
+            {
+                return enemies[i];
+            }
+        }
+        EnemyMachine enemy = SimplePool.Spawn<EnemyMachine>(PoolType.Enemy_Machine, Vector3.zero, Quaternion.identity);
+        enemy.gameObject.SetActive(false);
+        enemies.Add(enemy);
+        return enemy;
+    }
+    public void DespawnEnemy()
+    {
+        foreach (EnemyMachine enemy in activeEnemies)
+        {
+            SimplePool.Despawn(enemy);
+        }
+        activeEnemies.Clear();
+    }
+    public void ResetEnemies()
+    {
+        enemies.Clear();
+        activeEnemies.Clear();
+        enemyPool.Clear();
+    }
+    public void PlayPantrol()
+    {
+        StartCoroutine(IE_PlayPantrol());
+    }
+    IEnumerator IE_PlayPantrol()
+    {
+        yield return new WaitForSeconds(1);
+        foreach (EnemyMachine enemy in activeEnemies)
+        {
+            enemy.isCanMove = true;
+            enemy.ChangeState(new PatrolState());
+        }
+    }
+    public void PlayIdle()
+    {
+        StartCoroutine(IE_PlayIdle());
+    }
+    IEnumerator IE_PlayIdle()
+    {
+        yield return new WaitForSeconds(1);
+        foreach (EnemyMachine enemy in activeEnemies)
+        {
+            enemy.isCanMove = false;
+            enemy.ChangeState(new IdleState());
+        }
+    }
+    public bool CheckRamdomPosition(Character character)
+    {
+        bool validPosition = false;
+        while (!validPosition)
+        {
+            character.transform.position = RandomNavSphere(character.transform.position, radius, -1);
+            validPosition = true;
+            foreach (Character otherCharacter in LevelManager.Ins.characterList)
+            {
+                if (Vector3.Distance(character.transform.position, otherCharacter.transform.position) < minDistance)
+                {
+                    validPosition = false;
+                    break;
+                }
+            }
+        }
+        return validPosition;
     }
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {
         Vector3 randDirection = Random.insideUnitSphere * dist;
         randDirection += origin;
-
         NavMeshHit navHit;
         NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
-
         return navHit.position;
     }
-    public void DespawnEnemy()
-    {
-        foreach (EnemyMachine enemy in Enemies)
-        {
-            SimplePool.Despawn(enemy);
-        }
-    }
-    public void ResetEnemes()
-    {
-        Enemies.Clear();
-    }
+
 }

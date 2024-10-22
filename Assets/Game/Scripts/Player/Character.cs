@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Character : GameUnit
 {
-    [SerializeField] public List<Character> listTarget = new List<Character>();
+    public List<Character> listTarget = new List<Character>();
     public float point = 1;
     public int lvCurrent = 1;
     public bool isDead { get; set; }
@@ -30,5 +30,5 @@ public class Character : GameUnit
     {
         this.transform.DOScale(new Vector3(1, 1, 1) * scale, 0.5f).SetEase(Ease.InOutQuad);
     }
-   
+
 }

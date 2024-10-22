@@ -26,8 +26,7 @@ public class UIHome : UICanvas
         UIManager.Ins.OpenUI<UIGamePlay>();
         GameManager.Ins.ChangeState(GameState.GamePlay);
         UIManager.Ins.GetUI<UIGamePlay>().ReLoadUIFollow();
-
-
+        EnemyManager.Ins.PlayPantrol();
     }
     public void BtnUpScale()
     {

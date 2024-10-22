@@ -540,6 +540,7 @@ MonoBehaviour:
   historyMagnetics: 
   isCont: 0
   isCountTime: 0
+  characterList: []
 --- !u!1 &460583165
 GameObject:
   m_ObjectHideFlags: 0
@@ -1248,8 +1249,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2835c1c597e6c448bf0888f51c3bfc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Enemies: []
-  minDistance: 0
+  enemies: []
+  activeEnemies: []
+  enemyPool: []
+  minDistance: 5
+  quantityInStack: 2
+  quantityInMap: 1
+  radius: 10
 --- !u!1 &1137424944
 GameObject:
   m_ObjectHideFlags: 0

@@ -219,7 +219,7 @@ public class Player : Character
     IEnumerator IE_DelaySpawn()
     {
         yield return new WaitForSeconds(0.5f);
-        EnemyManager.Ins.SpawmEnemy();
+        //EnemyManager.Ins.SpawmEnemy();
     }
     public float GetCheckPoint(int lv)
     {
