@@ -51,6 +51,7 @@ public class EnemyMachine : Character
     {
         agent.enabled = true;
         timer += Time.deltaTime;
+        agent.speed = moveSpeed;
         if (timer >= wanderTimer)
         {
             Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
@@ -80,10 +81,10 @@ public class EnemyMachine : Character
         OnInit();
         SetScale(lvCurrent);
     }
-    public void SetScale(float scale)
+    public override void SetScale(int _lvScale)
     {
-        this.transform.localScale = new Vector3(1, 1, 1) * scale;
-    }    
+        base.SetScale(_lvScale);
+    }
     public void ChangeAnim(string animName)
     {
         if (currentAnim != animName)
@@ -123,5 +124,4 @@ public class EnemyMachine : Character
             }
         }
     }
-
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8568806920722095017}
   - component: {fileID: 8561079949883760010}
   - component: {fileID: 8536015604566466998}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Model
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 8542261452771214741}
   - component: {fileID: 8528993977758815751}
   - component: {fileID: 215901460414385918}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Bouns_Goldbar_20
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -180,8 +180,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolType: 5
   listTarget: []
+  checkPoints: []
   point: 1
   lvCurrent: 2
+  targetCheckPoint: 0
+  moveSpeed: 5
+  durProgress: 0
+  isMagnetic: 0
+  lvTime: 0
+  lvEx: 0
+  bonusGlod: 0
+  playerSkill: {fileID: 0}
+  blackHoleCenter: {fileID: 0}
+  tfCenter: {fileID: 0}
   boxCollider: {fileID: 8536015604566466998}
   meshRenderer: {fileID: 8561079949883760010}
+  agent: {fileID: 0}
+  animator: {fileID: 0}
   tfTarget: {fileID: 0}
+  isCanMove: 0
+  wanderTimer: 0
+  wanderRadius: 0
+  isUpdate: 0

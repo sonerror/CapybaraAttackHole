@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3505067969040120760}
   - component: {fileID: 3491649582213298198}
   - component: {fileID: 4537216577945808597}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Bonus_Goldcoin_3
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -75,11 +75,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolType: 3
   listTarget: []
+  checkPoints: []
   point: 1
   lvCurrent: 0
+  targetCheckPoint: 0
+  moveSpeed: 5
+  durProgress: 0
+  isMagnetic: 0
+  lvTime: 0
+  lvEx: 0
+  bonusGlod: 0
+  playerSkill: {fileID: 0}
+  blackHoleCenter: {fileID: 0}
+  tfCenter: {fileID: 0}
   boxCollider: {fileID: 3485028461242243297}
   meshRenderer: {fileID: 3523562268486754716}
+  agent: {fileID: 0}
+  animator: {fileID: 0}
   tfTarget: {fileID: 0}
+  isCanMove: 0
+  wanderTimer: 0
+  wanderRadius: 0
+  isUpdate: 0
 --- !u!1 &3508541173312438858
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,7 +109,7 @@ GameObject:
   - component: {fileID: 3513624211578098468}
   - component: {fileID: 3523562268486754716}
   - component: {fileID: 3485028461242243297}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Model
   m_TagString: Enemy
   m_Icon: {fileID: 0}

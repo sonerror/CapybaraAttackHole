@@ -127,6 +127,7 @@ public class LevelManager : Singleton<LevelManager>
     public void ReLoad()
     {
         player.checkPoints.Clear();
+        characterList.Clear();
     }
 
     public void ReloadScene()
@@ -155,11 +156,11 @@ public class LevelManager : Singleton<LevelManager>
         {
             UIManager.Ins.OpenUI<PopupLose>();
         }
-       // StartCoroutine(IE_DespawnEnemy());
+        StartCoroutine(IE_DespawnEnemy());
     }
     IEnumerator IE_DespawnEnemy()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         EnemyManager.Ins.DespawnEnemy();
     }
     private void SpawnFloorBoss()

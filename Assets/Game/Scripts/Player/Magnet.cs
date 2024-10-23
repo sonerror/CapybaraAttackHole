@@ -22,17 +22,16 @@ public class Magnet : GameUnit
             if (player.lvCurrent >= _target.lvCurrent)
             {
                 AddToBlackHole(_target);
-                LevelManager.Ins.historyMagnetics.Add((int)_target.poolType);
+                if (poolType == PoolType.Player)
+                {
+                    LevelManager.Ins.historyMagnetics.Add((int)_target.poolType);
+                }
             }
-            /*else
-            {
-                _target.ChangeColorTriggerEn();
-            }*/
         }
-        if (other.CompareTag(Const.TAG_ENEMY_MACHINE))
+        if (other.CompareTag(Const.TAG_ENEMY_MACHINE) || other.CompareTag(Const.TAG_PLAYER))
         {
             EnemyMachine _target = other.GetComponentInParent<EnemyMachine>();
-            if (player.lvCurrent >= _target.lvCurrent)
+            if (player.lvCurrent > _target.lvCurrent)
             {
                 AddToBlackHole1(_target);
             }
@@ -79,7 +78,7 @@ public class Magnet : GameUnit
     IEnumerator IE_DelaySpawn()
     {
         yield return new WaitForSeconds(0.5f);
-      //  EnemyManager.Ins.SpawmEnemy();
+        //  EnemyManager.Ins.SpawmEnemy();
     }
     private void UpdateUIProgress(Character lv)
     {
@@ -104,5 +103,4 @@ public class Magnet : GameUnit
         }
 
     }
-
 }

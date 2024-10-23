@@ -35,9 +35,10 @@ public class EnemyManager : Singleton<EnemyManager>
     }
     private void SwamEnemy()
     {
+        int validLevelID = data.levelCurrent % LevelManager.Ins._levelData.levels.Count;
         EnemyMachine enemy = GetBotFormPool();
-        enemy.OnInit();
         enemy.isCanMove = false;
+        enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
         enemy.SetData(data.lvScale, data.lvTime, data.lvEx);
         if (CheckRamdomPosition(enemy))
         {
@@ -67,7 +68,7 @@ public class EnemyManager : Singleton<EnemyManager>
         {
             SimplePool.Despawn(enemy);
         }
-        activeEnemies.Clear();
+        ResetEnemies();
     }
     public void ResetEnemies()
     {
@@ -104,10 +105,13 @@ public class EnemyManager : Singleton<EnemyManager>
     public bool CheckRamdomPosition(Character character)
     {
         bool validPosition = false;
-        while (!validPosition)
+        int maxAttempts = 10; 
+        int attempts = 0;
+        while (!validPosition && attempts < maxAttempts)
         {
             character.transform.position = RandomNavSphere(character.transform.position, radius, -1);
             validPosition = true;
+
             foreach (Character otherCharacter in LevelManager.Ins.characterList)
             {
                 if (Vector3.Distance(character.transform.position, otherCharacter.transform.position) < minDistance)
@@ -116,15 +120,23 @@ public class EnemyManager : Singleton<EnemyManager>
                     break;
                 }
             }
+            attempts++;
         }
         return validPosition;
     }
+
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {
         Vector3 randDirection = Random.insideUnitSphere * dist;
         randDirection += origin;
+
         NavMeshHit navHit;
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+        bool foundPosition = NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+        if (!foundPosition)
+        {
+            return origin;  
+        }
+
         return navHit.position;
     }
 

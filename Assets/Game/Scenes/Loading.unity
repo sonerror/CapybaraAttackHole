@@ -1253,9 +1253,9 @@ MonoBehaviour:
   activeEnemies: []
   enemyPool: []
   minDistance: 5
-  quantityInStack: 2
-  quantityInMap: 1
-  radius: 10
+  quantityInStack: 50
+  quantityInMap: 50
+  radius: 5
 --- !u!1 &1137424944
 GameObject:
   m_ObjectHideFlags: 0

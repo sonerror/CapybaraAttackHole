@@ -86,7 +86,6 @@ public class Character : GameUnit
             }
             StartCoroutine(IE_Uplevel(targetPoint.speedMove));
             SetScaleUpLevel(lvCurrent);
-            UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
             isMagnetic = true;
         }
     }
