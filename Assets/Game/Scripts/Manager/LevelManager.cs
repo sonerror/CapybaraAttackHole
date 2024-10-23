@@ -236,6 +236,18 @@ public class LevelManager : Singleton<LevelManager>
         Vector3 newPosition = from + direction * distance;
         return newPosition;
     }
+    public void RemoveTarget(Character character)
+    {
+        for (int i = 0; i < characterList.Count; i++)
+        {
+            if (characterList[i].listTarget.Contains(character))
+            {
+                characterList[i].listTarget.Remove(character);
+            }
+        }
+    }
+
+
 }
 
 [System.Serializable]

@@ -47,7 +47,22 @@ public class EnemyManager : Singleton<EnemyManager>
             LevelManager.Ins.characterList.Add(enemy);
         }
     }
-
+    public void SpawnNewEnemyAfterDeath()
+    {
+        Debug.Log("SPN");
+        int validLevelID = data.levelCurrent % LevelManager.Ins._levelData.levels.Count;
+        EnemyMachine enemy = GetBotFormPool();
+        if (CheckRamdomPosition(enemy))
+        {
+            enemy.gameObject.SetActive(true);
+            activeEnemies.Add(enemy);
+            LevelManager.Ins.characterList.Add(enemy);
+            enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
+            enemy.SetData(data.lvScale, data.lvTime, data.lvEx);
+            enemy.isCanMove = true;
+            enemy.ChangeState(new PatrolState());
+        }
+    }
     public EnemyMachine GetBotFormPool()
     {
         for (int i = 0; i < enemies.Count; i++)
@@ -82,7 +97,7 @@ public class EnemyManager : Singleton<EnemyManager>
     }
     IEnumerator IE_PlayPantrol()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForEndOfFrame();
         foreach (EnemyMachine enemy in activeEnemies)
         {
             enemy.isCanMove = true;

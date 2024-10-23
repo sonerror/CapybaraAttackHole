@@ -6,15 +6,11 @@ using UnityEngine.AI;
 
 public class EnemyMachine : Character
 {
-    [SerializeField] private SphereCollider boxCollider;
     [SerializeField] private Renderer meshRenderer;
     [SerializeField] public NavMeshAgent agent;
-    [SerializeField] public Animator animator;
-    private float timer;
+    public float timer;
     public IState<EnemyMachine> currentState;
-    private Vector3 nextPoint;
-    string currentAnim;
-
+    [SerializeField] private Vector3 nextPoint;
     public Transform tfTarget;
     public bool isCanMove;
     public float wanderTimer;
@@ -22,6 +18,7 @@ public class EnemyMachine : Character
     public override void OnInit()
     {
         base.OnInit();
+        timer = 0;
         isDead = false;
         isMagnetic = true;
         SetDataBonusGold();
@@ -29,11 +26,20 @@ public class EnemyMachine : Character
     #region
     void Update()
     {
-        if (GameManager.Ins.gameState != GameState.GamePlay || !isCanMove) return;
-        if (currentState != null)
+
+        if (!isDead)
         {
-            currentState.OnExecute(this);
+            if (GameManager.Ins.gameState != GameState.GamePlay || !isCanMove) return;
+            if (currentState != null)
+            {
+                currentState.OnExecute(this);
+            }
         }
+        else
+        {
+            ChangeState(new DeadState());
+        }
+
     }
     public void ChangeState(IState<EnemyMachine> state)
     {
@@ -49,19 +55,29 @@ public class EnemyMachine : Character
     }
     public void Moving()
     {
-        agent.enabled = true;
         timer += Time.deltaTime;
-        agent.speed = moveSpeed;
-        if (timer >= wanderTimer)
+        Debug.Log(timer + " timer!");
+
+        if (timer >= 5)
         {
+            Debug.Log(IsDestination() + " Check!");
+
             Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+            nextPoint = newPos;
             agent.SetDestination(newPos);
             timer = 0;
         }
-        if (IsDestination())
+      /*  if (IsDestination())
         {
+            Debug.Log("idle");
             ChangeState(new IdleState());
-        }
+        }*/
+    }
+
+    public override void CheckPointUpLevel()
+    {
+        base.CheckPointUpLevel();
+        agent.speed = moveSpeed;
     }
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {
@@ -71,37 +87,57 @@ public class EnemyMachine : Character
         NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
         return navHit.position;
     }
-    bool IsDestination() => Vector3.Distance(transform.position, nextPoint) - Mathf.Abs(transform.position.y - nextPoint.y) < 0.1f;
+    public bool IsDestination() => Vector3.Distance(transform.position, nextPoint) - Mathf.Abs(transform.position.y - nextPoint.y) < 0.1f;
 
 
     #endregion
     public override void SetData(int _Lv, int _lvTime, int _lvEx)
     {
         base.SetData(_Lv, _lvTime, _lvEx);
+
+        /* int rd = Random.Range(0, 2);
+         if (rd == 0)
+         {
+             lvCurrent = _Lv;
+         }
+         else
+         {
+             lvCurrent = _Lv + 1;
+         }*/
+
         OnInit();
         SetScale(lvCurrent);
+        agent.speed = moveSpeed;
+    }
+    public void SetDataRandom(int _Lv, int _lvTime, int _lvEx)
+    {
+        this.lvTime = _lvTime;
+        this.lvEx = _lvEx;
+        int rd = Random.Range(0, 2);
+        if (rd == 0)
+        {
+            lvCurrent = _Lv;
+        }
+        else
+        {
+            if (lvCurrent < checkPoints.Count - 1)
+            {
+                lvCurrent = _Lv + 1;
+            }
+        }
+        OnInit();
+        SetScale(lvCurrent);
+        agent.speed = moveSpeed;
     }
     public override void SetScale(int _lvScale)
     {
         base.SetScale(_lvScale);
     }
-    public void ChangeAnim(string animName)
-    {
-        if (currentAnim != animName)
-        {
-            animator.ResetTrigger(animName);
-            currentAnim = animName;
-            animator.SetTrigger(currentAnim);
-        }
-    }
     public void SetPoint(int lv)
     {
         point = LevelManager.Ins.pointData.GetDataWithID(lv).point;
     }
-    public void HideCollider(bool isActive)
-    {
-        boxCollider.enabled = isActive;
-    }
+
     public void AddMat(Material mat)
     {
         if (meshRenderer != null && mat != null)
@@ -123,5 +159,15 @@ public class EnemyMachine : Character
                 meshRenderer.materials = materials.ToArray();
             }
         }
+    }
+    public void StopMove()
+    {
+        agent.speed = 0;
+    }
+    public override void OnDead()
+    {
+        base.OnDead();
+        StopMove();
+        LevelManager.Ins.RemoveTarget(this);
     }
 }

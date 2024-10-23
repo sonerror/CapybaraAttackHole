@@ -1,44 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 public class IdleState : IState<EnemyMachine>
 {
-    float timer;
-    float time = 0f;
-    float durationTimeAttack = 1.1f;
+    float timer = 0f;
+    float idleDuration;
+
     public void OnEnter(EnemyMachine t)
     {
-       // t.ChangeAnim();
+        idleDuration = Random.Range(1f, 2f); 
+        timer = 0f;
     }
 
-    public void OnExecute(EnemyMachine t)
+    public void OnExecute(EnemyMachine bot)
     {
-        if (t.isDead)
+        if (bot.isDead)
         {
-            t.ChangeState(new DeadState());
+            bot.ChangeState(new DeadState());
         }
         else
         {
-            timer = Random.Range(2f, 4f);
-            if (t.isCanMove)
+            timer += Time.deltaTime;
+            if (timer >= 2)
             {
-                if (time > timer && t.listTarget.Count <= 0)
-                {
-                    t.ChangeState(new PatrolState());
-                    time = 0f;
-                }
-                time += Time.deltaTime;
-
+                bot.ChangeState(new PatrolState());
             }
         }
     }
 
-    public void OnExit(EnemyMachine t)
+    public void OnExit(EnemyMachine bot)
     {
-
+        timer = 0f;
     }
-
 }

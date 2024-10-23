@@ -7,15 +7,9 @@ using UnityEngine.UIElements;
 
 public class Enemy : Character
 {
-    [SerializeField] private Collider boxCollider;
     [SerializeField] private Renderer meshRenderer;
-    [SerializeField] public NavMeshAgent agent;
-    [SerializeField] public Animator animator;
     private Color orColor;
-    string currentAnim;
-
     public Transform tfTarget;
-    public bool isCanMove;
     public float wanderTimer;
     public float wanderRadius;
     public bool isUpdate;
@@ -100,15 +94,6 @@ public class Enemy : Character
     {
         meshRenderer.material.color = MaterialManager.Ins.Setmat();
     }
-    public void ChangeAnim(string animName)
-    {
-        if (currentAnim != animName)
-        {
-            animator.ResetTrigger(animName);
-            currentAnim = animName;
-            animator.SetTrigger(currentAnim);
-        }
-    }
     public void ChangeColorTriggerEX()
     {
         meshRenderer.material.color = orColor;
@@ -117,15 +102,6 @@ public class Enemy : Character
     {
         point = LevelManager.Ins.pointData.GetDataWithID(lv).point;
     }
-
-    public void HideCollider(bool isActive)
-    {
-        if (boxCollider != null)
-        {
-            boxCollider.enabled = isActive;
-        }
-    }
-
     public void AddMat(Material mat)
     {
         if (meshRenderer != null && mat != null)

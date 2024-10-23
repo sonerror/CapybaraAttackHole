@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class Character : GameUnit
 {
+    [SerializeField] private Collider boxCollider;
+    [SerializeField] private Animator animator;
     public List<Character> listTarget = new List<Character>();
     public List<CheckPoint> checkPoints = new List<CheckPoint>();
+    string currentAnim;
     public float point = 1;
     public int lvCurrent = 1;
     public bool isDead { get; set; }
@@ -17,7 +20,6 @@ public class Character : GameUnit
     public int lvTime;
     public int lvEx;
     public float bonusGlod;
-
     public Transform playerSkill;
     public Transform blackHoleCenter;
     public Transform tfCenter;
@@ -117,5 +119,22 @@ public class Character : GameUnit
     public float GetBonusEXP()
     {
         return LevelManager.Ins.levelEx.GetDataWithID(lvEx).bonus;
+    }
+    public void HideCollider(bool isActive)
+    {
+        boxCollider.enabled = isActive;
+    }
+    public void ChangeAnim(string animName)
+    {
+        if (currentAnim != animName)
+        {
+            animator.ResetTrigger(animName);
+            currentAnim = animName;
+            animator.SetTrigger(currentAnim);
+        }
+    }
+    public virtual void OnDead()
+    {
+        ChangeAnim("");
     }
 }

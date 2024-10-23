@@ -20,6 +20,21 @@ public class Player : Character
         isCreateEnemy = true;
         isMagnetic = true;
     }
+    private void Update()
+    {
+        if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
+
+        Vector3 currentInputDirection = GetInputDirection();
+        if (currentInputDirection.sqrMagnitude > 0.001f)
+        {
+            inputDirection = currentInputDirection;
+            Move(inputDirection);
+        }
+        else
+        {
+            StopMovement();
+        }
+    }
     public void HideColliderPlayer(bool isEnabled)
     {
         if (colliderPlayer != null)
@@ -48,21 +63,7 @@ public class Player : Character
         OnInit();
     }
 
-    private void Update()
-    {
-        if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
-
-        Vector3 currentInputDirection = GetInputDirection();
-        if (currentInputDirection.sqrMagnitude > 0.001f)
-        {
-            inputDirection = currentInputDirection;
-            Move(inputDirection);
-        }
-        else
-        {
-            StopMovement();
-        }
-    }
+   
     private void Move(Vector3 dir)
     {
         transform.Translate(dir * moveSpeed * Time.deltaTime, Space.World);

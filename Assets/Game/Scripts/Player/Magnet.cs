@@ -30,10 +30,10 @@ public class Magnet : GameUnit
         }
         if (other.CompareTag(Const.TAG_ENEMY_MACHINE) || other.CompareTag(Const.TAG_PLAYER))
         {
-            EnemyMachine _target = other.GetComponentInParent<EnemyMachine>();
+            Character _target = other.GetComponentInParent<Character>();
             if (player.lvCurrent > _target.lvCurrent)
             {
-                AddToBlackHole1(_target);
+                AddToBlackHoleCharacter(_target);
             }
         }
     }
@@ -58,7 +58,7 @@ public class Magnet : GameUnit
         }
     }
 
-    public void AddToBlackHole1(EnemyMachine enemy)
+    public void AddToBlackHoleCharacter(Character enemy)
     {
         if (enemy != null)
         {
@@ -71,14 +71,16 @@ public class Magnet : GameUnit
                 .OnComplete(() =>
                 {
                     SimplePool.Despawn(enemy);
-                    EnemyManager.Ins.enemies.Remove(enemy);
+                    enemy.isDead = true;
+                    StartCoroutine(IE_DelaySpawn());
+
                 });
         }
     }
     IEnumerator IE_DelaySpawn()
     {
-        yield return new WaitForSeconds(0.5f);
-        //  EnemyManager.Ins.SpawmEnemy();
+        yield return new WaitForSeconds(0.1f);
+        EnemyManager.Ins.SpawnNewEnemyAfterDeath();
     }
     private void UpdateUIProgress(Character lv)
     {
@@ -94,7 +96,6 @@ public class Magnet : GameUnit
             root = 0;
         }
         float detal = lv.point - root;
-        Debug.Log(target + " Non" + lv.point + " " + detal);
         UIManager.Ins.GetUI<UIGamePlay>().SetProgressSpin(detal / target);
         if (lv.lvCurrent >= 1)
         {

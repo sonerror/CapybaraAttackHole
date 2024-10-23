@@ -592,37 +592,6 @@ MonoBehaviour:
     lvScale: 0
     lvEx: 0
     gold: 100
---- !u!1 &467043266
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 467043267}
-  m_Layer: 0
-  m_Name: Stage
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &467043267
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 467043266}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2060344064}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &534301443
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,37 +924,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5878776275478260292, guid: 6471cd5f9b17f004f9b372ba16c692ff, type: 3}
   m_PrefabInstance: {fileID: 686425417}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &733711341
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 733711342}
-  m_Layer: 0
-  m_Name: Boss
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &733711342
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 733711341}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2060344064}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &948127251
 GameObject:
   m_ObjectHideFlags: 0
@@ -1254,7 +1192,7 @@ MonoBehaviour:
   enemyPool: []
   minDistance: 5
   quantityInStack: 50
-  quantityInMap: 50
+  quantityInMap: 1
   radius: 5
 --- !u!1 &1137424944
 GameObject:
@@ -1746,8 +1684,6 @@ Transform:
   m_Children:
   - {fileID: 2042509434}
   - {fileID: 1838132597}
-  - {fileID: 467043267}
-  - {fileID: 733711342}
   - {fileID: 172745529}
   - {fileID: 1837051142}
   m_Father: {fileID: 0}

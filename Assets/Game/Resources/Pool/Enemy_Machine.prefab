@@ -400,6 +400,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolType: 200
+  boxCollider: {fileID: 7140001645459568001}
+  animator: {fileID: 0}
   listTarget: []
   checkPoints: []
   point: 1
@@ -414,14 +416,12 @@ MonoBehaviour:
   playerSkill: {fileID: 0}
   blackHoleCenter: {fileID: 0}
   tfCenter: {fileID: 0}
-  boxCollider: {fileID: 7140001645459568001}
   meshRenderer: {fileID: 7611838429873445733}
   agent: {fileID: 3362695025576812466}
-  animator: {fileID: 0}
   tfTarget: {fileID: 0}
   isCanMove: 0
-  wanderTimer: 2
-  wanderRadius: 20
+  wanderTimer: 5
+  wanderRadius: 10
 --- !u!114 &1311694519984274457
 MonoBehaviour:
   m_ObjectHideFlags: 0
