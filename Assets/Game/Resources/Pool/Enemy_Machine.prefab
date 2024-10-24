@@ -418,10 +418,12 @@ MonoBehaviour:
   tfCenter: {fileID: 0}
   meshRenderer: {fileID: 7611838429873445733}
   agent: {fileID: 3362695025576812466}
+  timer: 0
+  nextPoint: {x: 0, y: 0, z: 0}
   tfTarget: {fileID: 0}
   isCanMove: 0
   wanderTimer: 5
-  wanderRadius: 10
+  wanderRadius: 5
 --- !u!114 &1311694519984274457
 MonoBehaviour:
   m_ObjectHideFlags: 0

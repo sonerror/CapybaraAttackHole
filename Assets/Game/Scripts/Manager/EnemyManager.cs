@@ -1,81 +1,72 @@
 using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
-using UnityEngine.UIElements;
 using System.Collections;
 
 public class EnemyManager : Singleton<EnemyManager>
 {
     public List<EnemyMachine> enemies = new List<EnemyMachine>();
+    public List<Character> enemyPool = new List<Character>();
     public List<EnemyMachine> activeEnemies = new List<EnemyMachine>();
-    public List<EnemyMachine> enemyPool = new List<EnemyMachine>();
     public float minDistance;
     [SerializeField] private int quantityInStack;
     [SerializeField] private int quantityInMap;
     [SerializeField] private float radius;
     private PlayerData data;
-    public void Oninit()
+    public void Oninit(Player player)
     {
         data = DataManager.Ins.playerData;
         ResetEnemies();
+        enemyPool.Add(player);
         for (int i = 0; i < quantityInStack; i++)
         {
             EnemyMachine enemy = SimplePool.Spawn<EnemyMachine>(PoolType.Enemy_Machine, Vector3.zero, Quaternion.identity);
-            enemies.Add(enemy);
             enemy.gameObject.SetActive(false);
+            if (CheckRamdomPosition(enemy))
+            {
+                enemies.Add(enemy);
+                enemyPool.Add(enemy);
+            }
         }
         SpawmIntoMap(quantityInMap);
     }
     private void SpawmIntoMap(int real)
     {
-        for (int i = 0; i < real; i++)
+        int count = System.Math.Min(real, enemies.Count);
+        for (int i = 0; i < count; i++)
         {
-            SwamEnemy();
+            StartCoroutine(IE_SpawmEnemyIntoMap(enemies[i]));
         }
     }
-    private void SwamEnemy()
+    IEnumerator IE_SpawmEnemyIntoMap(EnemyMachine enemy)
     {
+        yield return new WaitForEndOfFrame();
+        enemies.Remove(enemy);
         int validLevelID = data.levelCurrent % LevelManager.Ins._levelData.levels.Count;
-        EnemyMachine enemy = GetBotFormPool();
         enemy.isCanMove = false;
         enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
         enemy.SetData(data.lvScale, data.lvTime, data.lvEx);
-        if (CheckRamdomPosition(enemy))
-        {
-            enemy.gameObject.SetActive(true);
-            activeEnemies.Add(enemy);
-            LevelManager.Ins.characterList.Add(enemy);
-        }
+        enemy.gameObject.SetActive(true);
+        activeEnemies.Add(enemy);
+        LevelManager.Ins.characterList.Add(enemy);
     }
-    public void SpawnNewEnemyAfterDeath()
+    public void SpawmIntoMapAfterDeath()
+    {
+        StartCoroutine(IE_SpawnNewEnemyAfterDeath(enemies[0]));
+    }
+    IEnumerator IE_SpawnNewEnemyAfterDeath(EnemyMachine enemy)
     {
         Debug.Log("SPN");
+        yield return new WaitForEndOfFrame();
+        enemies.Remove(enemy);
         int validLevelID = data.levelCurrent % LevelManager.Ins._levelData.levels.Count;
-        EnemyMachine enemy = GetBotFormPool();
-        if (CheckRamdomPosition(enemy))
-        {
-            enemy.gameObject.SetActive(true);
-            activeEnemies.Add(enemy);
-            LevelManager.Ins.characterList.Add(enemy);
-            enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
-            enemy.SetData(data.lvScale, data.lvTime, data.lvEx);
-            enemy.isCanMove = true;
-            enemy.ChangeState(new PatrolState());
-        }
-    }
-    public EnemyMachine GetBotFormPool()
-    {
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            if (!enemies[i].gameObject.activeInHierarchy)
-            {
-                return enemies[i];
-            }
-        }
-        EnemyMachine enemy = SimplePool.Spawn<EnemyMachine>(PoolType.Enemy_Machine, Vector3.zero, Quaternion.identity);
-        enemy.gameObject.SetActive(false);
-        enemies.Add(enemy);
-        return enemy;
+        enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
+        enemy.SetDataRandom(data.lvScale, data.lvTime, data.lvEx);
+        enemy.gameObject.SetActive(true);
+        activeEnemies.Add(enemy);
+        LevelManager.Ins.characterList.Add(enemy);
+        enemy.isCanMove = true;
+        enemy.ChangeState(new PatrolState());
     }
     public void DespawnEnemy()
     {
@@ -120,14 +111,14 @@ public class EnemyManager : Singleton<EnemyManager>
     public bool CheckRamdomPosition(Character character)
     {
         bool validPosition = false;
-        int maxAttempts = 10; 
+        int maxAttempts = 10;
         int attempts = 0;
         while (!validPosition && attempts < maxAttempts)
         {
             character.transform.position = RandomNavSphere(character.transform.position, radius, -1);
             validPosition = true;
 
-            foreach (Character otherCharacter in LevelManager.Ins.characterList)
+            foreach (Character otherCharacter in enemyPool)
             {
                 if (Vector3.Distance(character.transform.position, otherCharacter.transform.position) < minDistance)
                 {
@@ -139,7 +130,6 @@ public class EnemyManager : Singleton<EnemyManager>
         }
         return validPosition;
     }
-
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {
         Vector3 randDirection = Random.insideUnitSphere * dist;
@@ -149,7 +139,7 @@ public class EnemyManager : Singleton<EnemyManager>
         bool foundPosition = NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
         if (!foundPosition)
         {
-            return origin;  
+            return origin;
         }
 
         return navHit.position;

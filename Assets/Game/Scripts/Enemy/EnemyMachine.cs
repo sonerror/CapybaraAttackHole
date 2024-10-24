@@ -13,6 +13,7 @@ public class EnemyMachine : Character
     [SerializeField] private Vector3 nextPoint;
     public Transform tfTarget;
     public bool isCanMove;
+    public bool isChangeStateDead;
     public float wanderTimer;
     public float wanderRadius;
     public override void OnInit()
@@ -20,13 +21,13 @@ public class EnemyMachine : Character
         base.OnInit();
         timer = 0;
         isDead = false;
+        isChangeStateDead = false;
         isMagnetic = true;
         SetDataBonusGold();
     }
     #region
     void Update()
     {
-
         if (!isDead)
         {
             if (GameManager.Ins.gameState != GameState.GamePlay || !isCanMove) return;
@@ -37,7 +38,12 @@ public class EnemyMachine : Character
         }
         else
         {
-            ChangeState(new DeadState());
+            if (!isChangeStateDead)
+            {
+                Debug.Log("dead");
+                ChangeState(new DeadState());
+                isChangeStateDead = true;
+            }
         }
 
     }
@@ -56,24 +62,14 @@ public class EnemyMachine : Character
     public void Moving()
     {
         timer += Time.deltaTime;
-        Debug.Log(timer + " timer!");
-
-        if (timer >= 5)
+        if (timer >= wanderTimer)
         {
-            Debug.Log(IsDestination() + " Check!");
-
             Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
             nextPoint = newPos;
             agent.SetDestination(newPos);
             timer = 0;
         }
-      /*  if (IsDestination())
-        {
-            Debug.Log("idle");
-            ChangeState(new IdleState());
-        }*/
     }
-
     public override void CheckPointUpLevel()
     {
         base.CheckPointUpLevel();
@@ -94,17 +90,6 @@ public class EnemyMachine : Character
     public override void SetData(int _Lv, int _lvTime, int _lvEx)
     {
         base.SetData(_Lv, _lvTime, _lvEx);
-
-        /* int rd = Random.Range(0, 2);
-         if (rd == 0)
-         {
-             lvCurrent = _Lv;
-         }
-         else
-         {
-             lvCurrent = _Lv + 1;
-         }*/
-
         OnInit();
         SetScale(lvCurrent);
         agent.speed = moveSpeed;

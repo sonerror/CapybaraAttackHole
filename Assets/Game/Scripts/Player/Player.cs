@@ -7,7 +7,6 @@ using static UnityEngine.GraphicsBuffer;
 public class Player : Character
 {
     [SerializeField] private float rotateSpeed = 5f;
-    [SerializeField] private Collider colliderPlayer;
     private Quaternion targetRotation;
     private Vector3 inputDirection = Vector3.zero;
     private bool isCreateEnemy;
@@ -23,7 +22,6 @@ public class Player : Character
     private void Update()
     {
         if (GameManager.Ins.gameState != GameState.GamePlay || !move) return;
-
         Vector3 currentInputDirection = GetInputDirection();
         if (currentInputDirection.sqrMagnitude > 0.001f)
         {
@@ -35,13 +33,7 @@ public class Player : Character
             StopMovement();
         }
     }
-    public void HideColliderPlayer(bool isEnabled)
-    {
-        if (colliderPlayer != null)
-        {
-            colliderPlayer.enabled = isEnabled;
-        }
-    }
+
     public override void SetScale(int _lvScale)
     {
         base.SetScale(_lvScale);
@@ -58,18 +50,15 @@ public class Player : Character
     }
     public override void SetData(int _Lv, int _lvTime, int _lvEx)
     {
-        base.SetData(_Lv, _lvTime, _lvEx);  
+        base.SetData(_Lv, _lvTime, _lvEx);
         SetScale(lvCurrent);
         OnInit();
     }
-
-   
     private void Move(Vector3 dir)
     {
         transform.Translate(dir * moveSpeed * Time.deltaTime, Space.World);
         Rotate(dir);
     }
-
     private void StopMovement()
     {
         inputDirection = Vector3.zero;
@@ -104,7 +93,7 @@ public class Player : Character
     public override void CheckPointUpLevel()
     {
         base.CheckPointUpLevel();
-        CheckTurnOnSkill();
+        //CheckTurnOnSkill();
         SetDataBonusGold();
         UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
     }

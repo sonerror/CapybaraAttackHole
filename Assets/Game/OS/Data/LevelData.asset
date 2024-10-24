@@ -17,41 +17,41 @@ MonoBehaviour:
     checkPoints:
     - id: 0
       checkPoint: 140
-      scale: 0.005
+      scale: 0.1
       speedMove: 0.09
       price: 50
       cameraDistance: 0.3
     - id: 1
       checkPoint: 300
-      scale: 0.01
+      scale: 0.2
       speedMove: 0.18
       price: 100
       cameraDistance: 0.7
     - id: 2
       checkPoint: 1000
-      scale: 0.05
+      scale: 0.3
       speedMove: 0.48
       price: 200
       cameraDistance: 1.5
     - id: 3
       checkPoint: 3500
-      scale: 0.09
+      scale: 0.4
       speedMove: 0.88
       price: 300
       cameraDistance: 2.8
     - id: 4
       checkPoint: 6000
-      scale: 0.1
+      scale: 0.5
       speedMove: 1.45
       price: 400
       cameraDistance: 3.8
     - id: 5
       checkPoint: 10000
-      scale: 0.2
+      scale: 0.6
       speedMove: 1.7
       price: 500
       cameraDistance: 5.2
-    stage: {fileID: 8102440477563105061, guid: 9c79c7537df5e844db0cfdbd52d84a68, type: 3}
+    stage: {fileID: -1606745078943789629, guid: 8f88eadf265f0384e901ba782e8a0df5, type: 3}
     boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
     pointBoss: 2000
   - levelID: 1

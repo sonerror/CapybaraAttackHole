@@ -31,6 +31,15 @@ public class Character : GameUnit
     {
         isDead = false;
     }
+    public void PlayAnim(string animName)
+    {
+        if (animName != null)
+        {
+            Debug.Log("PlayAnim");
+            animator.Play(animName, -1, 0);
+            currentAnim = animName;
+        }
+    }
     public void GetDataLevel(List<CheckPoint> _checkPoint)
     {
         this.checkPoints = new List<CheckPoint>(_checkPoint);
@@ -128,6 +137,7 @@ public class Character : GameUnit
     {
         if (currentAnim != animName)
         {
+            Debug.Log(animName + " animName");
             animator.ResetTrigger(animName);
             currentAnim = animName;
             animator.SetTrigger(currentAnim);
@@ -135,6 +145,19 @@ public class Character : GameUnit
     }
     public virtual void OnDead()
     {
-        ChangeAnim("");
+        //ChangeAnim("");
+    }
+    public virtual void OnMove()
+    {
+        ChangeAnim("idle");
+    }
+    public virtual void OnEat()
+    {
+        ChangeAnim("eat");
+    }
+    public float GetTimeAnim()
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        return stateInfo.length;
     }
 }

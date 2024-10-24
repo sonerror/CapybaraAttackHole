@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -63,15 +64,15 @@ public class LevelManager : Singleton<LevelManager>
         var data = DataManager.Ins.playerData;
         player = Instantiate(playerPrefabs);
         characterList.Add(player);
-        //player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
-        player.transform.position = Vector3.zero;
-        player.transform.rotation = Quaternion.Euler(0, 180, 0);
+        player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
+        //player.transform.position = Vector3.zero;
+        player.transform.rotation = Quaternion.identity;
         CameraManager.Ins.SetData(player);
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
         SetEX();
-        EnemyManager.Ins.Oninit();
+        EnemyManager.Ins.Oninit(player);
     }
 
     public LevelBonusDataModel GetDataTimeCountWithId(int id)
@@ -174,24 +175,35 @@ public class LevelManager : Singleton<LevelManager>
     {
         yield return new WaitForSeconds(0.2f);
         CameraManager.Ins.virtualCamera.enabled = false;
-        player.transform.rotation = Quaternion.identity;
+        player.transform.rotation =  Quaternion.Euler(0, 0, 0);
         float distance = Vector3.Distance(Camera.main.transform.position, player.transform.position);
         Vector3 maxPosition = GetMaxVisiblePosition(Camera.main, distance);
-        player.transform.DOMove(new Vector3(player.transform.position.x, maxPosition.y, player.transform.position.z), 0.6f)
-            .SetEase(Ease.Linear)
-            .OnComplete(() =>
-            {
-                player.HideColliderPlayer(false);
-                player.transform.DOMove(new Vector3(tf.position.x, tf.position.y + player.transform.localScale.y * 5f, tf.position.z), 0.2f)
-                .SetEase(Ease.Linear)
-                .OnComplete(() =>
-                {
-                    player.HideColliderPlayer(true);
-                    CameraManager.Ins.virtualCamera.enabled = true;
-                    CameraManager.Ins.SetTransform();
-                    StartCoroutine(IE_SetupBossFight());
-                });
-            });
+        player.ChangeAnim("up");
+        DOVirtual.DelayedCall(0.1f, () =>
+        {
+            player.transform.DOMove(new Vector3(player.transform.position.x, maxPosition.y, player.transform.position.z), 0.6f)
+             .SetEase(Ease.Linear)
+             .OnComplete(() =>
+             {
+                 player.HideCollider(false);
+                 player.transform.DOMove(new Vector3(tf.position.x, tf.position.y + player.transform.localScale.y * 2, tf.position.z), 0.2f)
+                 .SetEase(Ease.Linear)
+                 .OnComplete(() =>
+                 {
+                     player.ChangeAnim("down");
+                     player.HideCollider(true);
+                     CameraManager.Ins.virtualCamera.enabled = true;
+                     CameraManager.Ins.SetTransform();
+                     StartCoroutine(IE_SetupBossFight());
+                     StartCoroutine(IE_PlayAnim());
+                 });
+             });
+        });
+    }
+    IEnumerator IE_PlayAnim()
+    {
+        yield return new WaitForSeconds(1f);
+        player.OnMove();
     }
     public Vector3 GetMaxVisiblePosition(Camera camera, float distance)
     {
@@ -246,8 +258,6 @@ public class LevelManager : Singleton<LevelManager>
             }
         }
     }
-
-
 }
 
 [System.Serializable]

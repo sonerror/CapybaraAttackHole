@@ -93,7 +93,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         Vector3 targetPos = data.player.mouth.position;
         if (enemyShot.lvCurrent < 1)
         {
-            multi = 5;
+            multi = 3;
         }
         else
         {
