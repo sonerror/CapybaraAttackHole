@@ -23,6 +23,7 @@ public class EnemyMachine : Character
         isDead = false;
         isChangeStateDead = false;
         isMagnetic = true;
+        isAttack = true;
         SetDataBonusGold();
     }
     #region

@@ -10,6 +10,10 @@ public class Const
     public const string TAG_ENEMY = "Enemy";
     public const string TAG_ENEMY_MACHINE = "EnemyMachine";
     public const string TAG_PLAYER = "Player";
+    public const string ANIM_UP = "up";
+    public const string ANIM_DOWN = "down";
+    public const string ANIM_EAT = "Eat";
+    public const string ANIM_IDLE = "idle";
     public const float PULLDURATIONMIN = 0.1f;
     public const float PULLDURATIONMAX = 0.15f;
     public const int ROTATETIME = 3;

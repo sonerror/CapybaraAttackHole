@@ -5,18 +5,13 @@ public class DeadState : IState<EnemyMachine>
     float time;
     public void OnEnter(EnemyMachine t)
     {
-        timer = 0.1f;
         t.OnDead();
+        EnemyManager.Ins.enemies.Remove(t);
+        EnemyManager.Ins.activeEnemies.Remove(t);
+        SimplePool.Despawn(t);
     }
     public void OnExecute(EnemyMachine t)
     {
-        time += Time.deltaTime;
-        if (time > timer)
-        {
-            EnemyManager.Ins.enemies.Remove(t);
-            EnemyManager.Ins.activeEnemies.Remove(t);
-            SimplePool.Despawn(t);
-        }
     }
     public void OnExit(EnemyMachine t)
     {

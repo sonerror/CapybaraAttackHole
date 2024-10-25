@@ -4,14 +4,39 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
+[System.Serializable]
+public enum TypeMagnet
+{
+    TypeAnim,
+    TypeNoneAnim
+}
+
 public class Magnet : GameUnit
 {
     [SerializeField] private float pullForce = 5f;
     [SerializeField] private float rotationSpeed = 360f;
+    [SerializeField] private TypeMagnet typeMagnet;
+    [SerializeField] private float timedur = 2;
     public Character player;
     private float pullDuration;
     public Transform blackHoleCenter;
-
+    private float time = 0;
+    private void Awake()
+    {
+        time = timedur + 1;
+    }
+    private void Update()
+    {
+        if (typeMagnet == TypeMagnet.TypeAnim && time < timedur + 1)
+        {
+            if (time > timedur && poolType == PoolType.Player)
+            {
+                player.OnMove();
+                time = 0;
+            }
+            time += Time.deltaTime;
+        }
+    }
     public virtual void OnTriggerEnter(Collider other)
     {
         if (GameManager.Ins.gameState != GameState.GamePlay) return;
@@ -21,8 +46,14 @@ public class Magnet : GameUnit
             Enemy _target = other.GetComponentInParent<Enemy>();
             if (player.lvCurrent >= _target.lvCurrent)
             {
-                player.PlayAnim("Eat");
-                StartCoroutine(IE_AddToBlackHole(_target));
+                if (typeMagnet == TypeMagnet.TypeAnim)
+                {
+                    StartCoroutine(IE_AddToBlackHoleAnim(_target));
+                }
+                else
+                {
+                    StartCoroutine(IE_AddToBlackHole(_target));
+                }
                 if (poolType == PoolType.Player)
                 {
                     LevelManager.Ins.historyMagnetics.Add((int)_target.poolType);
@@ -32,32 +63,11 @@ public class Magnet : GameUnit
         if (other.CompareTag(Const.TAG_ENEMY_MACHINE) || other.CompareTag(Const.TAG_PLAYER))
         {
             Character _target = other.GetComponentInParent<Character>();
-            if (player.lvCurrent > _target.lvCurrent)
+            if (player.lvCurrent > _target.lvCurrent && _target.isAttack)
             {
+                _target.isAttack = false;
                 AddToBlackHoleCharacter(_target);
             }
-        }
-    }
-
-    public void AddToBlackHole(Enemy enemy)
-    {
-        if (enemy != null)
-        {
-            pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
-            float bonus = player.bonusGlod;
-            enemy.HideCollider(false);
-            player.PlayAnim("Eat");
-            Sequence sequence = DOTween.Sequence();
-            sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.Linear))
-                .Join(enemy.transform.DOScale(Vector3.zero, pullDuration).SetEase(Ease.Linear))
-                .OnComplete(() =>
-                {
-
-                    SimplePool.Despawn(enemy);
-                    player.point += enemy.point * bonus;
-                    player.CheckPointUpLevel();
-                    UpdateUIProgress(player);
-                });
         }
     }
     IEnumerator IE_AddToBlackHole(Enemy enemy)
@@ -68,7 +78,6 @@ public class Magnet : GameUnit
             pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
             float bonus = player.bonusGlod;
             enemy.HideCollider(false);
-            yield return new WaitForSeconds(0.2f);
             Sequence sequence = DOTween.Sequence();
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.Linear))
                 .Join(enemy.transform.DOScale(Vector3.zero, pullDuration).SetEase(Ease.Linear))
@@ -78,16 +87,33 @@ public class Magnet : GameUnit
                     player.point += enemy.point * bonus;
                     player.CheckPointUpLevel();
                     UpdateUIProgress(player);
-                    
                 });
-            StartCoroutine(IE_PlayAnimation(0.15f + pullDuration));
         }
     }
-
-    IEnumerator IE_PlayAnimation(float delay)
+    IEnumerator IE_AddToBlackHoleAnim(Enemy enemy)
     {
-        yield return new WaitForSeconds(delay);
-        player.OnMove();
+        if (enemy != null)
+        {
+            yield return new WaitForEndOfFrame();
+            time = 0;
+            player.OnEat();
+            float bonus = player.bonusGlod;
+            enemy.HideCollider(false);
+            DOVirtual.DelayedCall(0.2f, () =>
+            {
+                pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
+                Sequence sequence = DOTween.Sequence();
+                sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.Linear))
+                    .Join(enemy.transform.DOScale(Vector3.zero, pullDuration).SetEase(Ease.Linear))
+                    .OnComplete(() =>
+                    {
+                        SimplePool.Despawn(enemy);
+                        player.point += enemy.point * bonus;
+                        player.CheckPointUpLevel();
+                        UpdateUIProgress(player);
+                    });
+            });
+        }
     }
     public void AddToBlackHoleCharacter(Character enemy)
     {

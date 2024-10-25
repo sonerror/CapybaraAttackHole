@@ -23,6 +23,8 @@ public class Character : GameUnit
     public Transform playerSkill;
     public Transform blackHoleCenter;
     public Transform tfCenter;
+    public bool isAttack;
+
     private void Start()
     {
         listTarget.Clear();
@@ -131,13 +133,16 @@ public class Character : GameUnit
     }
     public void HideCollider(bool isActive)
     {
-        boxCollider.enabled = isActive;
+        if (boxCollider != null)
+        {
+            boxCollider.enabled = isActive;
+
+        }
     }
     public void ChangeAnim(string animName)
     {
         if (currentAnim != animName)
         {
-            Debug.Log(animName + " animName");
             animator.ResetTrigger(animName);
             currentAnim = animName;
             animator.SetTrigger(currentAnim);
@@ -145,15 +150,14 @@ public class Character : GameUnit
     }
     public virtual void OnDead()
     {
-        //ChangeAnim("");
     }
     public virtual void OnMove()
     {
-        ChangeAnim("idle");
+        ChangeAnim(Const.ANIM_IDLE);
     }
     public virtual void OnEat()
     {
-        ChangeAnim("eat");
+        ChangeAnim(Const.ANIM_EAT);
     }
     public float GetTimeAnim()
     {

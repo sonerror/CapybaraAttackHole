@@ -18,6 +18,11 @@ public class EnemyManager : Singleton<EnemyManager>
         data = DataManager.Ins.playerData;
         ResetEnemies();
         enemyPool.Add(player);
+        StartCoroutine(IE_CreateEnemy());
+    }
+    IEnumerator IE_CreateEnemy()
+    {
+        yield return new WaitForEndOfFrame();
         for (int i = 0; i < quantityInStack; i++)
         {
             EnemyMachine enemy = SimplePool.Spawn<EnemyMachine>(PoolType.Enemy_Machine, Vector3.zero, Quaternion.identity);
@@ -52,7 +57,10 @@ public class EnemyManager : Singleton<EnemyManager>
     }
     public void SpawmIntoMapAfterDeath()
     {
-        StartCoroutine(IE_SpawnNewEnemyAfterDeath(enemies[0]));
+        if (enemies.Count > 0)
+        {
+            StartCoroutine(IE_SpawnNewEnemyAfterDeath(enemies[0]));
+        }
     }
     IEnumerator IE_SpawnNewEnemyAfterDeath(EnemyMachine enemy)
     {

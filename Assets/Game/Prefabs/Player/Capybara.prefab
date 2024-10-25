@@ -239,7 +239,7 @@ Transform:
   m_GameObject: {fileID: 1157991079993987342}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: 0.08}
+  m_LocalPosition: {x: 0, y: 0.05, z: 0.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -332,6 +332,8 @@ MonoBehaviour:
   poolType: 1
   pullForce: 10
   rotationSpeed: 360
+  typeMagnet: 0
+  timedur: 0.9
   player: {fileID: 3009420019358515908}
   blackHoleCenter: {fileID: 5816354807323187075}
 --- !u!1 &1205854373017641603
@@ -1128,6 +1130,8 @@ MonoBehaviour:
   poolType: 1
   pullForce: 10
   rotationSpeed: 360
+  typeMagnet: 1
+  timedur: 0.9
   player: {fileID: 3009420019358515908}
   blackHoleCenter: {fileID: 5816354807323187075}
 --- !u!1 &4481332466087086196
@@ -1284,7 +1288,6 @@ MonoBehaviour:
   blackHoleCenter: {fileID: 5816354807323187075}
   tfCenter: {fileID: 5816354807323187075}
   rotateSpeed: 14
-  colliderPlayer: {fileID: 0}
   move: 1
   mouth: {fileID: 4458318907704498493}
 --- !u!114 &4105499406995743830
@@ -1496,6 +1499,8 @@ MonoBehaviour:
   poolType: 1
   pullForce: 10
   rotationSpeed: 360
+  typeMagnet: 1
+  timedur: 0.9
   player: {fileID: 3009420019358515908}
   blackHoleCenter: {fileID: 5816354807323187075}
 --- !u!1 &7623560341762582477

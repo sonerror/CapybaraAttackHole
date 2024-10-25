@@ -26,6 +26,7 @@ public class Enemy : Character
         base.OnInit();
         isDead = false;
         isUpdate = false;
+        isAttack = true;
     }
     #region
     /*    void Update()

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4993070543561812682}
   m_Layer: 11
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -67,7 +67,7 @@ GameObject:
   - component: {fileID: 6028855898618720815}
   m_Layer: 6
   m_Name: Right
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -150,6 +150,8 @@ MonoBehaviour:
   poolType: 0
   pullForce: 10
   rotationSpeed: 360
+  typeMagnet: 0
+  timedur: 2
   player: {fileID: 106549875201764645}
   blackHoleCenter: {fileID: 2172239331190528816}
 --- !u!1 &174144713332329728
@@ -163,7 +165,7 @@ GameObject:
   - component: {fileID: 4302141126938913066}
   m_Layer: 0
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -199,7 +201,7 @@ GameObject:
   - component: {fileID: 8206475567829545568}
   m_Layer: 0
   m_Name: Shadow
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -334,7 +336,6 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6882392746279617390}
-  - {fileID: 8327819784849442812}
   - {fileID: 8357545011520652980}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -400,7 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolType: 200
-  boxCollider: {fileID: 7140001645459568001}
+  boxCollider: {fileID: 4993070543561812682}
   animator: {fileID: 0}
   listTarget: []
   checkPoints: []
@@ -416,12 +417,14 @@ MonoBehaviour:
   playerSkill: {fileID: 0}
   blackHoleCenter: {fileID: 0}
   tfCenter: {fileID: 0}
+  isAttack: 0
   meshRenderer: {fileID: 7611838429873445733}
   agent: {fileID: 3362695025576812466}
   timer: 0
   nextPoint: {x: 0, y: 0, z: 0}
   tfTarget: {fileID: 0}
   isCanMove: 0
+  isChangeStateDead: 0
   wanderTimer: 5
   wanderRadius: 5
 --- !u!114 &1311694519984274457
@@ -520,7 +523,7 @@ GameObject:
   - component: {fileID: 5025454297096215802}
   m_Layer: 0
   m_Name: Mouth_right
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -551,7 +554,7 @@ GameObject:
   - component: {fileID: 1974175646212687223}
   m_Layer: 0
   m_Name: Spine
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -587,7 +590,7 @@ GameObject:
   - component: {fileID: 6209038688738926362}
   m_Layer: 6
   m_Name: Mouth
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -694,6 +697,8 @@ MonoBehaviour:
   poolType: 0
   pullForce: 10
   rotationSpeed: 360
+  typeMagnet: 0
+  timedur: 2
   player: {fileID: 106549875201764645}
   blackHoleCenter: {fileID: 2172239331190528816}
 --- !u!1 &4860926301104523445
@@ -762,7 +767,7 @@ GameObject:
   - component: {fileID: 4429005420168073618}
   m_Layer: 0
   m_Name: Spine01
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -797,7 +802,7 @@ GameObject:
   - component: {fileID: 7611838429873445733}
   m_Layer: 0
   m_Name: Among
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -888,7 +893,7 @@ GameObject:
   - component: {fileID: 6882392746279617390}
   m_Layer: 6
   m_Name: Colliders
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -924,7 +929,7 @@ GameObject:
   - component: {fileID: 8896085343251523279}
   m_Layer: 0
   m_Name: Armature
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -946,59 +951,6 @@ Transform:
   - {fileID: 2316791612916804636}
   m_Father: {fileID: 568395556802968517}
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
---- !u!1 &6408862418410879531
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8327819784849442812}
-  - component: {fileID: 7140001645459568001}
-  m_Layer: 11
-  m_Name: Body
-  m_TagString: EnemyMachine
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8327819784849442812
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6408862418410879531}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 348646482054573324}
-  m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
---- !u!135 &7140001645459568001
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6408862418410879531}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1.15
-  m_Center: {x: 0, y: 1.155, z: 0}
 --- !u!1 &7798468802355273686
 GameObject:
   m_ObjectHideFlags: 0
@@ -1010,7 +962,7 @@ GameObject:
   - component: {fileID: 519644705008268049}
   m_Layer: 0
   m_Name: PopPoint
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1076,7 +1028,7 @@ GameObject:
   - component: {fileID: 9005261994509293449}
   m_Layer: 6
   m_Name: Left
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1159,6 +1111,8 @@ MonoBehaviour:
   poolType: 0
   pullForce: 10
   rotationSpeed: 360
+  typeMagnet: 0
+  timedur: 2
   player: {fileID: 106549875201764645}
   blackHoleCenter: {fileID: 2172239331190528816}
 --- !u!1 &8539815113720763308
@@ -1172,7 +1126,7 @@ GameObject:
   - component: {fileID: 2980624599642034453}
   m_Layer: 0
   m_Name: AbsorbPoint
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1203,7 +1157,7 @@ GameObject:
   - component: {fileID: 3254386791840627640}
   m_Layer: 0
   m_Name: Mouth_left
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1234,7 +1188,7 @@ GameObject:
   - component: {fileID: 3393780871921213128}
   m_Layer: 0
   m_Name: Eyes
-  m_TagString: Untagged
+  m_TagString: EnemyMachine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -51,7 +51,7 @@ MonoBehaviour:
       speedMove: 1.7
       price: 500
       cameraDistance: 5.2
-    stage: {fileID: -1606745078943789629, guid: 8f88eadf265f0384e901ba782e8a0df5, type: 3}
+    stage: {fileID: 8102440477563105061, guid: 9c79c7537df5e844db0cfdbd52d84a68, type: 3}
     boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
     pointBoss: 2000
   - levelID: 1

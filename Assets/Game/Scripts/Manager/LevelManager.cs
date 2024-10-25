@@ -64,8 +64,8 @@ public class LevelManager : Singleton<LevelManager>
         var data = DataManager.Ins.playerData;
         player = Instantiate(playerPrefabs);
         characterList.Add(player);
-        player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
-        //player.transform.position = Vector3.zero;
+        //player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
+        player.transform.position = Vector3.zero;
         player.transform.rotation = Quaternion.identity;
         CameraManager.Ins.SetData(player);
         int validLevelID = data.levelCurrent % levelData.levels.Count;
@@ -178,7 +178,7 @@ public class LevelManager : Singleton<LevelManager>
         player.transform.rotation =  Quaternion.Euler(0, 0, 0);
         float distance = Vector3.Distance(Camera.main.transform.position, player.transform.position);
         Vector3 maxPosition = GetMaxVisiblePosition(Camera.main, distance);
-        player.ChangeAnim("up");
+        player.ChangeAnim(Const.ANIM_UP);
         DOVirtual.DelayedCall(0.1f, () =>
         {
             player.transform.DOMove(new Vector3(player.transform.position.x, maxPosition.y, player.transform.position.z), 0.6f)
@@ -190,12 +190,11 @@ public class LevelManager : Singleton<LevelManager>
                  .SetEase(Ease.Linear)
                  .OnComplete(() =>
                  {
-                     player.ChangeAnim("down");
+                     player.ChangeAnim(Const.ANIM_DOWN);
                      player.HideCollider(true);
                      CameraManager.Ins.virtualCamera.enabled = true;
                      CameraManager.Ins.SetTransform();
                      StartCoroutine(IE_SetupBossFight());
-                     StartCoroutine(IE_PlayAnim());
                  });
              });
         });
