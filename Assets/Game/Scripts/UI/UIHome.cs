@@ -13,9 +13,14 @@ public class UIHome : UICanvas
     [SerializeField] private TextMeshProUGUI tmpLevelTime;
     [SerializeField] private TextMeshProUGUI tmpPriceLevelTime;
     private int maxlvUp = 3;
+    private PlayerData data;
+    public override void Setup()
+    {
+        base.Setup();
+        data = DataManager.Ins.playerData;
+    }
     public override void Open()
     {
-
         UIManager.Ins.CloseAll();
         base.Open();
         UpdateUI();
@@ -26,12 +31,16 @@ public class UIHome : UICanvas
         UIManager.Ins.OpenUI<UIGamePlay>();
         GameManager.Ins.ChangeState(GameState.GamePlay);
         UIManager.Ins.GetUI<UIGamePlay>().ReLoadUIFollow();
-        EnemyManager.Ins.PlayPantrol();
+        EnemyManager.Ins.SpawmIntoMap();
+    }
+
+    IEnumerator IE_SpawmBot()
+    {
+        yield return new WaitForEndOfFrame();
+        EnemyManager.Ins.SpawmIntoMap();
     }
     public void BtnUpScale()
     {
-        
-        var data = DataManager.Ins.playerData;
         if(data.lvScale < maxlvUp)
         {
             int totalLevels = LevelManager.Ins._levelData.levels.Count;
@@ -51,7 +60,6 @@ public class UIHome : UICanvas
     }
     public void BtnUpLvEXP()
     {
-        var data = DataManager.Ins.playerData;
         int price = LevelManager.Ins.levelEx.GetDataWithID(data.lvEx).price;
         if (data.gold >= price && data.lvEx < LevelManager.Ins.levelEx.levelBonusDataModels.Count - 1)
         {
@@ -62,7 +70,6 @@ public class UIHome : UICanvas
     }
     public void BtnUpLvTime()
     {
-        var data = DataManager.Ins.playerData;
         int price = LevelManager.Ins.levelTime.GetDataWithID(data.lvTime).price;
         if (data.gold >= price && data.lvTime < LevelManager.Ins.levelTime.levelBonusDataModels.Count - 1)
         {
@@ -79,7 +86,6 @@ public class UIHome : UICanvas
     }
     public void UpdateUIBtnScale()
     {
-        var data = DataManager.Ins.playerData;
         int totalLevels = LevelManager.Ins._levelData.levels.Count;
         int validLevelID = data.levelCurrent % totalLevels;
         tmpLevelSize.text = $"Size LV: {data.lvScale + 1}";
@@ -95,8 +101,7 @@ public class UIHome : UICanvas
     }
     public void UpdateUIBtnExp()
     {
-        var data = DataManager.Ins.playerData;
-        tmpLevelExp.text = $"EXP LV: {DataManager.Ins.playerData.lvEx + 1}";
+        tmpLevelExp.text = $"EXP LV: {data.lvEx + 1}";
         if (data.lvEx >= LevelManager.Ins.levelEx.levelBonusDataModels.Count - 1)
         {
             tmpPriceLevelExp.text = $"Max";
@@ -108,8 +113,7 @@ public class UIHome : UICanvas
     }
     public void UpdateUIBtnTime()
     {
-        var data = DataManager.Ins.playerData;
-        tmpLevelTime.text = $"Time LV: {DataManager.Ins.playerData.lvTime + 1}";
+        tmpLevelTime.text = $"Time LV: {data.lvTime + 1}";
         if (data.lvTime >= LevelManager.Ins.levelTime.levelBonusDataModels.Count - 1)
         {
             tmpPriceLevelTime.text = $"Max";

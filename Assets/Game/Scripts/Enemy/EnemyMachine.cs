@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,14 +8,15 @@ using UnityEngine.AI;
 public class EnemyMachine : Character
 {
     [SerializeField] private Renderer meshRenderer;
-    [SerializeField] public NavMeshAgent agent;
+    [SerializeField] private float wanderTimer;
+    [SerializeField] private Vector3 nextPoint;
+
+    public NavMeshAgent agent;
     public float timer;
     public IState<EnemyMachine> currentState;
-    [SerializeField] private Vector3 nextPoint;
     public Transform tfTarget;
     public bool isCanMove;
     public bool isChangeStateDead;
-    public float wanderTimer;
     public float wanderRadius;
     public override void OnInit()
     {
@@ -24,6 +26,7 @@ public class EnemyMachine : Character
         isChangeStateDead = false;
         isMagnetic = true;
         isAttack = true;
+        wanderTimer = Random.Range(Const.RANMIN, Const.RANMAX);
         SetDataBonusGold();
     }
     #region
@@ -65,10 +68,11 @@ public class EnemyMachine : Character
         timer += Time.deltaTime;
         if (timer >= wanderTimer)
         {
-            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, "EnemyMove");
             nextPoint = newPos;
             agent.SetDestination(newPos);
             timer = 0;
+            wanderTimer = Random.Range(Const.RANMIN, Const.RANMAX);
         }
     }
     public override void CheckPointUpLevel()
@@ -76,13 +80,15 @@ public class EnemyMachine : Character
         base.CheckPointUpLevel();
         agent.speed = moveSpeed;
     }
-    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, string areaName)
     {
         Vector3 randDirection = Random.insideUnitSphere * dist;
         randDirection += origin;
         NavMeshHit navHit;
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
-        return navHit.position;
+        NavMeshQueryFilter filter = new NavMeshQueryFilter();
+        filter.areaMask = 1 << NavMesh.GetAreaFromName(areaName);
+        bool foundPosition = NavMesh.SamplePosition(randDirection, out navHit, dist, filter.areaMask);
+        return foundPosition ? navHit.position : origin;
     }
     public bool IsDestination() => Vector3.Distance(transform.position, nextPoint) - Mathf.Abs(transform.position.y - nextPoint.y) < 0.1f;
 
@@ -106,9 +112,13 @@ public class EnemyMachine : Character
         }
         else
         {
-            if (lvCurrent < checkPoints.Count - 1)
+            if (_Lv < checkPoints.Count - 1)
             {
                 lvCurrent = _Lv + 1;
+            }
+            else
+            {
+                lvCurrent = _Lv;
             }
         }
         OnInit();

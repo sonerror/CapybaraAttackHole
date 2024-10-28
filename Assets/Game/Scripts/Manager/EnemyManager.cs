@@ -33,11 +33,10 @@ public class EnemyManager : Singleton<EnemyManager>
                 enemyPool.Add(enemy);
             }
         }
-        SpawmIntoMap(quantityInMap);
     }
-    private void SpawmIntoMap(int real)
+    public void SpawmIntoMap()
     {
-        int count = System.Math.Min(real, enemies.Count);
+        int count = System.Math.Min(quantityInMap, enemies.Count);
         for (int i = 0; i < count; i++)
         {
             StartCoroutine(IE_SpawmEnemyIntoMap(enemies[i]));
@@ -48,12 +47,13 @@ public class EnemyManager : Singleton<EnemyManager>
         yield return new WaitForEndOfFrame();
         enemies.Remove(enemy);
         int validLevelID = data.levelCurrent % LevelManager.Ins._levelData.levels.Count;
-        enemy.isCanMove = false;
+        enemy.isCanMove = true;
         enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
-        enemy.SetData(data.lvScale, data.lvTime, data.lvEx);
+        enemy.SetDataRandom(data.lvScale, data.lvTime, data.lvEx);
         enemy.gameObject.SetActive(true);
         activeEnemies.Add(enemy);
         LevelManager.Ins.characterList.Add(enemy);
+        enemy.ChangeState(new PatrolState());
     }
     public void SpawmIntoMapAfterDeath()
     {
@@ -121,9 +121,13 @@ public class EnemyManager : Singleton<EnemyManager>
         bool validPosition = false;
         int maxAttempts = 10;
         int attempts = 0;
+
         while (!validPosition && attempts < maxAttempts)
         {
-            character.transform.position = RandomNavSphere(character.transform.position, radius, -1);
+            Vector3 randomPosition = RandomNavSphere(character.transform.position, radius, "SpawnArea");
+
+            character.transform.position = randomPosition;
+
             validPosition = true;
 
             foreach (Character otherCharacter in enemyPool)
@@ -138,19 +142,17 @@ public class EnemyManager : Singleton<EnemyManager>
         }
         return validPosition;
     }
-    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
+
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, string areaName)
     {
         Vector3 randDirection = Random.insideUnitSphere * dist;
         randDirection += origin;
-
         NavMeshHit navHit;
-        bool foundPosition = NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
-        if (!foundPosition)
-        {
-            return origin;
-        }
-
-        return navHit.position;
+        NavMeshQueryFilter filter = new NavMeshQueryFilter();
+        filter.areaMask = 1 << NavMesh.GetAreaFromName(areaName);
+        bool foundPosition = NavMesh.SamplePosition(randDirection, out navHit, dist, filter.areaMask);
+        return foundPosition ? navHit.position : origin;
     }
+
 
 }

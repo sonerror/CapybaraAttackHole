@@ -43,7 +43,7 @@ public class Magnet : GameUnit
 
         if (other.CompareTag(Const.TAG_ENEMY))
         {
-            Enemy _target = other.GetComponentInParent<Enemy>();
+            Enemy _target = other.GetComponent<Enemy>();
             if (player.lvCurrent >= _target.lvCurrent)
             {
                 if (typeMagnet == TypeMagnet.TypeAnim)
@@ -63,13 +63,23 @@ public class Magnet : GameUnit
         if (other.CompareTag(Const.TAG_ENEMY_MACHINE) || other.CompareTag(Const.TAG_PLAYER))
         {
             Character _target = other.GetComponentInParent<Character>();
-            if (player.lvCurrent > _target.lvCurrent && _target.isAttack)
+            if (this.player.lvCurrent > _target.lvCurrent && _target.isAttack)
             {
                 _target.isAttack = false;
-                AddToBlackHoleCharacter(_target);
+                if (other.CompareTag(Const.TAG_PLAYER))
+                {
+                    _target.isDead = true;
+                    LevelManager.Ins.OnPlayDead();
+                }
+                else
+                {
+                    AddToBlackHoleCharacter(_target);
+                }
+
             }
         }
     }
+
     IEnumerator IE_AddToBlackHole(Enemy enemy)
     {
         if (enemy != null)
@@ -86,7 +96,10 @@ public class Magnet : GameUnit
                     SimplePool.Despawn(enemy);
                     player.point += enemy.point * bonus;
                     player.CheckPointUpLevel();
-                    UpdateUIProgress(player);
+                    if (poolType == PoolType.Player)
+                    {
+                        UpdateUIProgress(player);
+                    }
                 });
         }
     }
@@ -110,7 +123,10 @@ public class Magnet : GameUnit
                         SimplePool.Despawn(enemy);
                         player.point += enemy.point * bonus;
                         player.CheckPointUpLevel();
-                        UpdateUIProgress(player);
+                        if (poolType == PoolType.Player)
+                        {
+                            UpdateUIProgress(player);
+                        }
                     });
             });
         }

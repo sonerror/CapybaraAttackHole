@@ -18,6 +18,7 @@ public class Player : Character
         move = true;
         isCreateEnemy = true;
         isMagnetic = true;
+        isAttack = true;
     }
     private void Update()
     {

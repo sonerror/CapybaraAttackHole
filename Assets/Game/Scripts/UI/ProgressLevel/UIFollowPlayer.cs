@@ -13,7 +13,7 @@ public class UIFollowPlayer : MonoBehaviour
     [SerializeField] private Canvas canvas;
     private Vector3 targetPosition;
 
-    void LateUpdate()
+    void Update()
     {
         if (GameManager.Ins.gameState == GameState.GamePlay && targetTransform != null)
         {
@@ -29,6 +29,4 @@ public class UIFollowPlayer : MonoBehaviour
     {
         targetTransform = targetTF;
     }
-
-
 }

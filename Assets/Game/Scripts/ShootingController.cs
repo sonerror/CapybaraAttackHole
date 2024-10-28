@@ -111,10 +111,6 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     }
     private void OnBulletReachTarget(Enemy bullet, Vector3 startPos, Vector3 targetPos)
     {
-        /* Vector3 apex = (startPos + targetPos) / 2 + Vector3.up * Random.Range(-1f, 3f);
-         Vector3 apex1 = (startPos + targetPos) / 2 + Vector3.left * Random.Range(-1f, 3f);
-         Vector3 apex2 = (startPos + targetPos) / 2 + Vector3.right * Random.Range(-1f, 3f);
- */
         bullet.transform.DOPath(new[] { startPos, RandomApex(startPos, targetPos), targetPos }, 0.4f, PathType.CatmullRom)
             .SetEase(Ease.Linear)
             .OnComplete(() => HandleBulletComplete(bullet));
@@ -147,12 +143,10 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         IE_UpdateUI();
         if (LevelManager.Ins.bossTimeUp.point <= 0 && !endShoot)
         {
-            Debug.Log("Win 1");
             HandleBossDefeated();
         }
         else if (LevelManager.Ins.historyMagnetics.Count <= 0 && !endShoot)
         {
-            Debug.Log("Win 2");
             StartCoroutine(IE_ShowUILose());
         }
     }

@@ -39,15 +39,14 @@ public class LevelManager : Singleton<LevelManager>
         isCont = true;
         isCountTime = false;
     }
-  
     public void OnLoadStage()
     {
         int totalLevels = levelData.levels.Count;
         int validLevelID = DataManager.Ins.playerData.levelCurrent % totalLevels;
         stage = Instantiate(levelData.GetDataWithID(validLevelID).stage);
+        stage.transform.position = Vector3.zero;
         SetTimeCount();
     }
-
     public void OnLoadLevel()
     {
         if (playerPrefabs != null)
@@ -56,7 +55,6 @@ public class LevelManager : Singleton<LevelManager>
             OnLoadStage();
             InstantiatePlayer();
             OnInit();
-            
         }
     }
     private void InstantiatePlayer()
@@ -65,21 +63,24 @@ public class LevelManager : Singleton<LevelManager>
         player = Instantiate(playerPrefabs);
         characterList.Add(player);
         //player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
-        player.transform.position = Vector3.zero;
-        player.transform.rotation = Quaternion.identity;
+        player.transform.position = new Vector3(0f, 0f, 0f);
+        player.transform.rotation = Quaternion.Euler(0, 180, 0);
         CameraManager.Ins.SetData(player);
         int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
+        StartCoroutine(IE_OninitEnemy());
         SetEX();
+    }
+    IEnumerator IE_OninitEnemy()
+    {
+        yield return new WaitForEndOfFrame();
         EnemyManager.Ins.Oninit(player);
     }
-
     public LevelBonusDataModel GetDataTimeCountWithId(int id)
     {
         return levelTime.levelBonusDataModels?.Find(x => x.id == id);
     }
-
     public void UpDataScale()
     {
         var data = DataManager.Ins.playerData;
@@ -90,7 +91,6 @@ public class LevelManager : Singleton<LevelManager>
             player.SetScale(player.lvCurrent);
         }
     }
-
     public void SetTimeCount()
     {
         stage.SetTimeData((int)GetDataTimeCountWithId(DataManager.Ins.playerData.lvTime).bonus);
@@ -115,7 +115,6 @@ public class LevelManager : Singleton<LevelManager>
         UpdateLevelBonus(ref DataManager.Ins.playerData.lvTime, player.lvTime, levelTime);
         SetTimeCount();
     }
-
     private void UpdateLevelBonus(ref int levelData, int playerLevel, LevelBonusData bonusData)
     {
         if (levelData < bonusData.levelBonusDataModels.Count - 1)
@@ -124,7 +123,6 @@ public class LevelManager : Singleton<LevelManager>
             playerLevel++;
         }
     }
-
     public void ReLoad()
     {
         player.checkPoints.Clear();
@@ -144,7 +142,6 @@ public class LevelManager : Singleton<LevelManager>
             });
         });
     }
-
     public void OnTimeUP()
     {
         if (historyMagnetics.Count > 0)
@@ -157,6 +154,10 @@ public class LevelManager : Singleton<LevelManager>
         {
             UIManager.Ins.OpenUI<PopupLose>();
         }
+        StartCoroutine(IE_DespawnEnemy());
+    }
+    public void DespawnEnemy()
+    {
         StartCoroutine(IE_DespawnEnemy());
     }
     IEnumerator IE_DespawnEnemy()
@@ -175,7 +176,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         yield return new WaitForSeconds(0.2f);
         CameraManager.Ins.virtualCamera.enabled = false;
-        player.transform.rotation =  Quaternion.Euler(0, 0, 0);
+        player.transform.rotation = Quaternion.Euler(0, 0, 0);
         float distance = Vector3.Distance(Camera.main.transform.position, player.transform.position);
         Vector3 maxPosition = GetMaxVisiblePosition(Camera.main, distance);
         player.ChangeAnim(Const.ANIM_UP);
@@ -212,7 +213,6 @@ public class LevelManager : Singleton<LevelManager>
         float frustumWidth = frustumHeight * aspect;
         return new Vector3(frustumWidth / 2f, frustumHeight / 2f, distance);
     }
-
     IEnumerator IE_SetupBossFight()
     {
         yield return new WaitForSeconds(1f);
@@ -223,7 +223,6 @@ public class LevelManager : Singleton<LevelManager>
         var boss = levelData.GetDataWithID(validLevelID);
         SpawnBoss(boss);
     }
-
     private void SpawnBoss(LevelData bossData)
     {
         bossTimeUp = Instantiate(bossData.boss);
@@ -257,8 +256,19 @@ public class LevelManager : Singleton<LevelManager>
             }
         }
     }
+    private IEnumerator IE_ShowUILose()
+    {
+        yield return new WaitForSeconds(5f);
+        EnemyManager.Ins.DespawnEnemy();
+        UIManager.Ins.OpenUI<PopupReward>().Oninit(false);
+    }
+    public void OnPlayDead()
+    {
+        EnemyManager.Ins.PlayIdle();
+        stage.IsCountDown(false);
+        StartCoroutine(IE_ShowUILose());
+    }
 }
-
 [System.Serializable]
 public class LevelBonusData
 {
@@ -269,7 +279,6 @@ public class LevelBonusData
         return levelBonusDataModels?.Find(x => x.id == id);
     }
 }
-
 [System.Serializable]
 public class LevelBonusDataModel
 {
@@ -288,7 +297,6 @@ public class EnemyData
         return enemyDataModels?.Find(x => (int)x.poolType == id);
     }
 }
-
 [System.Serializable]
 public class EnemyDataModel
 {

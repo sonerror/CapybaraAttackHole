@@ -22,4 +22,6 @@ public class Const
     public const int BONUSWIN = 500;
     public const int BONUSLOSE = 200;
     public const int BONUSADS = 500;
+    public const int RANMIN = 6;
+    public const int RANMAX = 11;
 }

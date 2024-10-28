@@ -147,10 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74f1ea1f18d63a4eb2d9cf49088a66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 0
+  poolType: 200
   pullForce: 10
   rotationSpeed: 360
-  typeMagnet: 0
+  typeMagnet: 1
   timedur: 2
   player: {fileID: 106549875201764645}
   blackHoleCenter: {fileID: 2172239331190528816}
@@ -419,14 +419,14 @@ MonoBehaviour:
   tfCenter: {fileID: 0}
   isAttack: 0
   meshRenderer: {fileID: 7611838429873445733}
+  wanderTimer: 5
+  nextPoint: {x: 0, y: 0, z: 0}
   agent: {fileID: 3362695025576812466}
   timer: 0
-  nextPoint: {x: 0, y: 0, z: 0}
   tfTarget: {fileID: 0}
   isCanMove: 0
   isChangeStateDead: 0
-  wanderTimer: 5
-  wanderRadius: 5
+  wanderRadius: 50
 --- !u!114 &1311694519984274457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -694,7 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74f1ea1f18d63a4eb2d9cf49088a66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 0
+  poolType: 200
   pullForce: 10
   rotationSpeed: 360
   typeMagnet: 0
@@ -1108,10 +1108,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74f1ea1f18d63a4eb2d9cf49088a66e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 0
+  poolType: 200
   pullForce: 10
   rotationSpeed: 360
-  typeMagnet: 0
+  typeMagnet: 1
   timedur: 2
   player: {fileID: 106549875201764645}
   blackHoleCenter: {fileID: 2172239331190528816}

@@ -141,7 +141,7 @@ public class Character : GameUnit
     }
     public void ChangeAnim(string animName)
     {
-        if (currentAnim != animName)
+        if (currentAnim != animName && animator != null)
         {
             animator.ResetTrigger(animName);
             currentAnim = animName;
@@ -150,6 +150,7 @@ public class Character : GameUnit
     }
     public virtual void OnDead()
     {
+        moveSpeed = 0;
     }
     public virtual void OnMove()
     {
