@@ -18,6 +18,7 @@ public class LevelData
     public Stage stage;
     public Enemy boss;
     public float pointBoss;
+    public Vector3 positonStart;
 
 }
 [System.Serializable]

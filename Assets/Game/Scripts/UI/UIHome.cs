@@ -12,7 +12,7 @@ public class UIHome : UICanvas
     [SerializeField] private TextMeshProUGUI tmpPriceLevelExp;
     [SerializeField] private TextMeshProUGUI tmpLevelTime;
     [SerializeField] private TextMeshProUGUI tmpPriceLevelTime;
-    private int maxlvUp = 3;
+    private int maxlvUp = 10;
     private PlayerData data;
     public override void Setup()
     {

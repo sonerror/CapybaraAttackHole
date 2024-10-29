@@ -35,7 +35,7 @@ public class Character : GameUnit
     }
     public void PlayAnim(string animName)
     {
-        if (animName != null)
+        if (animName != null && animator != null)
         {
             Debug.Log("PlayAnim");
             animator.Play(animName, -1, 0);
@@ -159,6 +159,7 @@ public class Character : GameUnit
     public virtual void OnEat()
     {
         ChangeAnim(Const.ANIM_EAT);
+        Debug.LogError("Anim Eat");
     }
     public float GetTimeAnim()
     {

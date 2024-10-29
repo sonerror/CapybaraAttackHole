@@ -1305,12 +1305,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 65
   Target: {fileID: 8966796253596131243}
   Camera: {fileID: 0}
-  FadedAlpha: 0.6
+  FadedAlpha: 0.4
   RetainShadows: 1
-  TargetPositionOffset: {x: 0, y: 0.06, z: 0}
+  TargetPositionOffset: {x: 0, y: 0.001, z: 0}
   FadeSpeed: 1.5
   ObjectsBlockingView: []
 --- !u!54 &2304714650812255818
@@ -1589,7 +1589,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1938031772286764731
 MonoBehaviour:
@@ -1604,7 +1604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 0b704602326e91a4f8d87cede62a40ef, type: 2}
-  Character: {fileID: 3009420019358515908}
+  character: {fileID: 3009420019358515908}
 --- !u!1 &7674902347168070128
 GameObject:
   m_ObjectHideFlags: 0

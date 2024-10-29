@@ -13,7 +13,7 @@ public class UIFollowPlayer : MonoBehaviour
     [SerializeField] private Canvas canvas;
     private Vector3 targetPosition;
 
-    void Update()
+    void LateUpdate()
     {
         if (GameManager.Ins.gameState == GameState.GamePlay && targetTransform != null)
         {
@@ -24,9 +24,16 @@ public class UIFollowPlayer : MonoBehaviour
 
         }
     }
-
+    public void SetStart(Transform targetTF)
+    {
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(targetTF.position);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        canvas.GetComponent<RectTransform>(), screenPosition, canvas.worldCamera, out Vector2 localPos);
+        rectTransform.localPosition = localPos + offset;
+    }
     public void SetTargetTransform(Transform targetTF)
     {
         targetTransform = targetTF;
+        SetStart(targetTF);
     }
 }

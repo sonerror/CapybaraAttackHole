@@ -515,23 +515,9 @@ MonoBehaviour:
   enemyDatas:
     enemyDataModels:
     - poolType: 3
-      enemy: {fileID: 653856259928987750, guid: ae42ef202bb179e4bb0054818f92edf5, type: 3}
+      enemy: {fileID: 383076086074882565, guid: 4417f801e87800e4cb0647309eb95aef, type: 3}
     - poolType: 4
-      enemy: {fileID: 5062361101085479125, guid: 28c75aa42a28d3242af55047e091106a, type: 3}
-    - poolType: 5
-      enemy: {fileID: 8729865370307067313, guid: 4ebd9a590e3048b47a488695dc2c034d, type: 3}
-    - poolType: 6
-      enemy: {fileID: 9097909378778403732, guid: 8c000a9a6079a6547aed2681356fd99f, type: 3}
-    - poolType: 7
-      enemy: {fileID: 6428779014886630063, guid: 4c8da4748e22b7c4fb4d62dc0d364119, type: 3}
-    - poolType: 8
-      enemy: {fileID: 1525849584368518464, guid: a8609a048af99fa4ea9cdefd20c0eb5f, type: 3}
-    - poolType: 9
-      enemy: {fileID: 942477698932415197, guid: 0972c3058a37f5847966a099e09e1c45, type: 3}
-    - poolType: 10
-      enemy: {fileID: 1000415594321273623, guid: 011bb83871e50b14687e9ec9a6f4bd57, type: 3}
-    - poolType: 11
-      enemy: {fileID: 4693742873232372650, guid: a6c71290aa3d5f449afc0349ce715880, type: 3}
+      enemy: {fileID: 4749596467812754787, guid: 0d87a230a6340a940a2afff96e658ad0, type: 3}
   player: {fileID: 0}
   stage: {fileID: 0}
   floorBoss: {fileID: 0}
@@ -1190,10 +1176,10 @@ MonoBehaviour:
   enemies: []
   enemyPool: []
   activeEnemies: []
-  minDistance: 100
-  quantityInStack: 100
-  quantityInMap: 5
-  radius: 100
+  minDistance: 50
+  quantityInStack: 0
+  quantityInMap: 0
+  radius: 50
 --- !u!1 &1137424944
 GameObject:
   m_ObjectHideFlags: 0

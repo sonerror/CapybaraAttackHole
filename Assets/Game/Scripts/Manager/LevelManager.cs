@@ -60,13 +60,12 @@ public class LevelManager : Singleton<LevelManager>
     private void InstantiatePlayer()
     {
         var data = DataManager.Ins.playerData;
+        int validLevelID = data.levelCurrent % levelData.levels.Count;
         player = Instantiate(playerPrefabs);
         characterList.Add(player);
-        //player.transform.position = new Vector3(-29.4421997f, 0.00171999994f, 10.6892004f);
-        player.transform.position = new Vector3(0f, 0f, 0f);
+        player.transform.position = levelData.GetDataWithID(validLevelID).positonStart;
         player.transform.rotation = Quaternion.Euler(0, 180, 0);
         CameraManager.Ins.SetData(player);
-        int validLevelID = data.levelCurrent % levelData.levels.Count;
         player.GetDataLevel(levelData.GetDataWithID(validLevelID).checkPoints);
         player.SetData(data.lvScale, data.lvTime, data.lvEx);
         StartCoroutine(IE_OninitEnemy());
@@ -187,11 +186,10 @@ public class LevelManager : Singleton<LevelManager>
              .OnComplete(() =>
              {
                  player.HideCollider(false);
-                 player.transform.DOMove(new Vector3(tf.position.x, tf.position.y + player.transform.localScale.y * 2, tf.position.z), 0.2f)
+                 player.transform.DOMove(new Vector3(tf.position.x, tf.position.y, tf.position.z), 0.2f)
                  .SetEase(Ease.Linear)
                  .OnComplete(() =>
                  {
-                     player.ChangeAnim(Const.ANIM_DOWN);
                      player.HideCollider(true);
                      CameraManager.Ins.virtualCamera.enabled = true;
                      CameraManager.Ins.SetTransform();
@@ -224,9 +222,9 @@ public class LevelManager : Singleton<LevelManager>
         SpawnBoss(boss);
     }
     private void SpawnBoss(LevelData bossData)
-    {
+    {//Vector3(13.5550003,0.0199999996,-111.806999)
         bossTimeUp = Instantiate(bossData.boss);
-        Vector3 tf = CalculateNewPosition(Camera.main.transform.position, player.transform.position, 15);
+        Vector3 tf = CalculateNewPosition(Camera.main.transform.position, player.transform.position, 30);
         bossTimeUp.transform.position = new Vector3(tf.x, 100f, tf.z);
         bossTimeUp.transform.rotation = Quaternion.Euler(0, 180, 0);
         bossTimeUp.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
@@ -241,7 +239,7 @@ public class LevelManager : Singleton<LevelManager>
     }
     Vector3 CalculateNewPosition(Vector3 from, Vector3 to, float distance)
     {
-        Vector3 direction = to - from;
+        Vector3 direction = to -  new Vector3(from.x, to.y, from.z);
         direction.Normalize();
         Vector3 newPosition = from + direction * distance;
         return newPosition;

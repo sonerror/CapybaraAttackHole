@@ -26,17 +26,17 @@ public class Magnet : GameUnit
         time = timedur + 1;
     }
     private void Update()
-    {
-        if (typeMagnet == TypeMagnet.TypeAnim && time < timedur + 1)
+    {//13.586 -111.825
+        if (typeMagnet == TypeMagnet.TypeAnim && time < 0.667f + 0.5f)
         {
-            if (time > timedur && poolType == PoolType.Player)
+            if (time > 0.667f && poolType == PoolType.Player)
             {
                 player.OnMove();
                 time = 0;
             }
             time += Time.deltaTime;
         }
-    }
+    }//96 64 36
     public virtual void OnTriggerEnter(Collider other)
     {
         if (GameManager.Ins.gameState != GameState.GamePlay) return;
@@ -109,10 +109,10 @@ public class Magnet : GameUnit
         {
             yield return new WaitForEndOfFrame();
             time = 0;
-            player.OnEat();
+            player.PlayAnim(Const.ANIM_EAT);
             float bonus = player.bonusGlod;
             enemy.HideCollider(false);
-            DOVirtual.DelayedCall(0.2f, () =>
+            DOVirtual.DelayedCall(0.1f, () =>
             {
                 pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
                 Sequence sequence = DOTween.Sequence();
