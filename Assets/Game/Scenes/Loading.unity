@@ -495,28 +495,66 @@ MonoBehaviour:
   LevelTime:
     levelBonusDataModels:
     - id: 0
-      bonus: 12
+      bonus: 20
       price: 50
     - id: 1
       bonus: 14
       price: 100
     - id: 2
-      bonus: 18
+      bonus: 25
       price: 200
     - id: 3
-      bonus: 22
+      bonus: 30
       price: 300
     - id: 4
-      bonus: 28
+      bonus: 35
       price: 400
+    - id: 5
+      bonus: 50
+      price: 1000
+    - id: 6
+      bonus: 80
+      price: 25000
   floorBossPrefabs: {fileID: 2597985030068527147, guid: 3751b6a7a4920634f8cde03d8727db55, type: 3}
   cameraPos: {x: 0.8, y: 103, z: -20}
   cameraRotate: {x: 15, y: 0, z: 0}
   enemyDatas:
     enemyDataModels:
     - poolType: 3
-      enemy: {fileID: 383076086074882565, guid: 4417f801e87800e4cb0647309eb95aef, type: 3}
+      enemy: {fileID: 7148049872185217702, guid: 9fd865b0ab04cb644b245167ce4f70ce, type: 3}
     - poolType: 4
+      enemy: {fileID: 9086725903846074214, guid: 1bd93894c97187f45855bc197e6e8208, type: 3}
+    - poolType: 5
+      enemy: {fileID: 7638905126315591614, guid: b7c0c3798acc8fd43af5d449161d16c9, type: 3}
+    - poolType: 6
+      enemy: {fileID: 8864549638280695736, guid: c94401ea7f599d449b52badd620e9ae9, type: 3}
+    - poolType: 7
+      enemy: {fileID: 6087004306203856756, guid: b9120d4d2b61b53459a5ea38e1d45125, type: 3}
+    - poolType: 8
+      enemy: {fileID: 1340725700081979538, guid: 9799a5183cdd55f428c86c99f9b9025d, type: 3}
+    - poolType: 9
+      enemy: {fileID: 608108486092997946, guid: 9dfc28cd9f15de0459224549d964e68d, type: 3}
+    - poolType: 10
+      enemy: {fileID: 109815761362380740, guid: eafd5ffc5c1464f48a3c457381391d56, type: 3}
+    - poolType: 11
+      enemy: {fileID: 1816090869506964114, guid: 625e1baac4d7c1946b72dd7fcb42c7be, type: 3}
+    - poolType: 12
+      enemy: {fileID: 8585231481116393374, guid: a70c59e542310f247bb7de84a323b0d0, type: 3}
+    - poolType: 13
+      enemy: {fileID: 383076086074882565, guid: 4417f801e87800e4cb0647309eb95aef, type: 3}
+    - poolType: 14
+      enemy: {fileID: 4440806382482199663, guid: 2ad6053dfb892e8458df7862689958ef, type: 3}
+    - poolType: 15
+      enemy: {fileID: 4844266619556265954, guid: 40a85a15c9709a5458f0e5aadf93d31d, type: 3}
+    - poolType: 16
+      enemy: {fileID: 4854193537344419244, guid: 973f3645d90ed854298bc3fc6ff040ad, type: 3}
+    - poolType: 17
+      enemy: {fileID: 7767478783813030211, guid: fac0d56c9adafd049b5524e8f9761ec8, type: 3}
+    - poolType: 18
+      enemy: {fileID: 5153992636144680440, guid: 7551e3e245791a64895579a1cff1eaad, type: 3}
+    - poolType: 19
+      enemy: {fileID: 3295476131752468285, guid: 5eb035ef0a9d7a34588fcfedf93f9f09, type: 3}
+    - poolType: 20
       enemy: {fileID: 4749596467812754787, guid: 0d87a230a6340a940a2afff96e658ad0, type: 3}
   player: {fileID: 0}
   stage: {fileID: 0}
@@ -811,6 +849,10 @@ PrefabInstance:
     - target: {fileID: 1605955682109199454, guid: 6471cd5f9b17f004f9b372ba16c692ff, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5762742349499459062, guid: 6471cd5f9b17f004f9b372ba16c692ff, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5878776275478260292, guid: 6471cd5f9b17f004f9b372ba16c692ff, type: 3}
       propertyPath: m_Pivot.x

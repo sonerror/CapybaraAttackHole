@@ -167,7 +167,22 @@ public enum PoolType
     Enemy_09 = 12,
     Enemy_10 = 13,
     Enemy_11 = 14,
+    Enemy_12 = 15,
+    Enemy_13 = 16,
+    Enemy_14 = 17,
+    Enemy_15 = 18,
+    Enemy_16 = 19,
+    Enemy_17 = 20,
+    Enemy_18 = 21,
+    Enemy_19 = 22,
+    Enemy_20 = 23,
+    Enemy_21 = 24,
+    Enemy_22 = 25,
     ObjMagnet = 100,
-    Enemy_Machine = 200
+    Enemy_Machine = 200,
+    People = 300,
+    Boss = 400
+
+
 }
 

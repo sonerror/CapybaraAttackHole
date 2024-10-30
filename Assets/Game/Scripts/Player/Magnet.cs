@@ -21,15 +21,18 @@ public class Magnet : GameUnit
     private float pullDuration;
     public Transform blackHoleCenter;
     private float time = 0;
+
     private void Awake()
     {
+        timedur = player.GetTimeAnim();
         time = timedur + 1;
+
     }
     private void Update()
     {//13.586 -111.825
-        if (typeMagnet == TypeMagnet.TypeAnim && time < 0.667f + 0.5f)
+        if (typeMagnet == TypeMagnet.TypeAnim && time < timedur + 0.5f)
         {
-            if (time > 0.667f && poolType == PoolType.Player)
+            if (time > timedur && poolType == PoolType.Player)
             {
                 player.OnMove();
                 time = 0;
@@ -112,9 +115,10 @@ public class Magnet : GameUnit
             player.PlayAnim(Const.ANIM_EAT);
             float bonus = player.bonusGlod;
             enemy.HideCollider(false);
-            DOVirtual.DelayedCall(0.1f, () =>
+            DOVirtual.DelayedCall(0.05f, () =>
             {
                 pullDuration = player.lvCurrent < 1 ? Const.PULLDURATIONMIN : Const.PULLDURATIONMAX;
+                enemy.transform.SetParent(blackHoleCenter);
                 Sequence sequence = DOTween.Sequence();
                 sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.Linear))
                     .Join(enemy.transform.DOScale(Vector3.zero, pullDuration).SetEase(Ease.Linear))

@@ -34,7 +34,10 @@ public class Player : Character
             StopMovement();
         }
     }
-
+    public float GetDataScale()
+    {
+       return checkPoints.Find(x => x.id == lvCurrent).scale;
+    }
     public override void SetScale(int _lvScale)
     {
         base.SetScale(_lvScale);

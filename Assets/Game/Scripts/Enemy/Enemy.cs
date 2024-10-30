@@ -12,7 +12,6 @@ public class Enemy : Character
     public Transform tfTarget;
     public float wanderTimer;
     public float wanderRadius;
-    public bool isUpdate;
     public void Start()
     {
         OnInit();
@@ -25,7 +24,6 @@ public class Enemy : Character
     {
         base.OnInit();
         isDead = false;
-        isUpdate = false;
         isAttack = true;
     }
     #region
@@ -81,16 +79,7 @@ public class Enemy : Character
 
 
     #endregion
-    private void Update()
-    {
-        if (isUpdate)
-        {
-            if (point <= 0)
-            {
-                isDead = true;
-            }
-        }
-    }
+   
     public void ChangeColorTriggerEn()
     {
         meshRenderer.material.color = MaterialManager.Ins.Setmat();

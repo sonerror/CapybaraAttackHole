@@ -17,6 +17,8 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] private Vector3 cameraPos;
     [SerializeField] private Vector3 cameraRotate;
 
+    private float deltaScale;
+    private float deltaDur;
     public EnemyData enemyDatas;
     public PointData pointData => PointDatas;
     public LevelBonusData levelTime => LevelTime;
@@ -25,13 +27,14 @@ public class LevelManager : Singleton<LevelManager>
     public Player player;
     public Stage stage;
     public FloorBoss floorBoss;
-    public Enemy bossTimeUp;
+    public Boss bossTimeUp;
 
     public bool isShoot;
     public List<int> historyMagnetics = new List<int>();
     public bool isCont;
     public bool isCountTime;
     public List<Character> characterList;
+
 
     public void OnInit()
     {
@@ -222,24 +225,35 @@ public class LevelManager : Singleton<LevelManager>
         SpawnBoss(boss);
     }
     private void SpawnBoss(LevelData bossData)
-    {//Vector3(13.5550003,0.0199999996,-111.806999)
+    {
         bossTimeUp = Instantiate(bossData.boss);
-        Vector3 tf = CalculateNewPosition(Camera.main.transform.position, player.transform.position, 30);
+        if (player.lvCurrent <= 5)
+        {
+            deltaScale = 2;
+            deltaDur = 60;
+        }
+        else
+        {
+            deltaScale = 4;
+            deltaDur = 80;
+        }
+        Vector3 tf = CalculateNewPosition(Camera.main.transform.position, player.transform.position, deltaDur);
         bossTimeUp.transform.position = new Vector3(tf.x, 100f, tf.z);
         bossTimeUp.transform.rotation = Quaternion.Euler(0, 180, 0);
         bossTimeUp.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         bossTimeUp.point = bossData.pointBoss;
-        bossTimeUp.transform.DOScale(new Vector3(2, 2, 2), 1)
+       
+        bossTimeUp.transform.DOScale(new Vector3(deltaScale, deltaScale, deltaScale), 1)
             .SetEase(Ease.OutBounce)
             .OnComplete(() =>
             {
-                UIManager.Ins.GetUI<UIGamePlay>().SetUIFloorBoss();
+                UIManager.Ins.GetUI<UIGamePlay>().SetUIFloorBoss(player.GetDataScale(),player.point);
                 bossTimeUp.isUpdate = true;
             });
     }
     Vector3 CalculateNewPosition(Vector3 from, Vector3 to, float distance)
     {
-        Vector3 direction = to -  new Vector3(from.x, to.y, from.z);
+        Vector3 direction = to - new Vector3(from.x, to.y, from.z);
         direction.Normalize();
         Vector3 newPosition = from + direction * distance;
         return newPosition;

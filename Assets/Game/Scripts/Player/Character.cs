@@ -38,8 +38,9 @@ public class Character : GameUnit
         if (animName != null && animator != null)
         {
             Debug.Log("PlayAnim");
-            animator.Play(animName, -1, 0);
+            animator.Play(animName, -1, 0.475f);
             currentAnim = animName;
+            Debug.Log(GetTimeAnim() + " Time Anim") ;
         }
     }
     public void GetDataLevel(List<CheckPoint> _checkPoint)
@@ -102,6 +103,7 @@ public class Character : GameUnit
             isMagnetic = true;
         }
     }
+    
     public virtual void SetData(int _Lv, int _lvTime, int _lvEx)
     {
         this.lvCurrent = _Lv;

@@ -61,11 +61,15 @@ public class UIGamePlay : UICanvas
 
     }
 
-    public void SetUIFloorBoss()
+    public void SetUIFloorBoss(float scalePl,float pointBoss)
     {
         HideProHPBoss(true);
         OninitHPBoss();
         SetAtiveBtnShot();
+        shootingController.scalePlayer = scalePl;
+        shootingController.pointPlayer = pointBoss;
+        shootingController.currenPoint = pointBoss;
+
     }
     public void SetAtiveBtnShot()
     {

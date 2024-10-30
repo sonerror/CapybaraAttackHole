@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Enemys
   - EnemyMachine
+  - Boss
   layers:
   - Default
   - TransparentFX

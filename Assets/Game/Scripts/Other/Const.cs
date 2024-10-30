@@ -13,6 +13,7 @@ public class Const
     public const string ANIM_UP = "up";
     public const string ANIM_DOWN = "down";
     public const string ANIM_EAT = "eat";
+    public const string ANIM_EAT_FAST = "eatFast";
     public const string ANIM_IDLE = "idle";
     public const float PULLDURATIONMIN = 0.1f;
     public const float PULLDURATIONMAX = 0.15f;

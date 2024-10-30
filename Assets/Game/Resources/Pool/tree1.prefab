@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3a0105fdfdd0648a8754e8bb280349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 3
+  poolType: 13
   boxCollider: {fileID: 352952375518290135}
   animator: {fileID: 0}
   listTarget: []

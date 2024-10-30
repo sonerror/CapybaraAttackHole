@@ -17,9 +17,13 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     private Coroutine shootingCoroutine;
     private const int MaxBullets = 3;
     private float multi;
+
     public bool IsShooting { get; private set; }
     public bool endShoot;
-
+    public int LevelPlayer;
+    public float scalePlayer;
+    public float pointPlayer;
+    public float currenPoint;
     private void Awake() => Initialize();
 
     private void Start()
@@ -32,6 +36,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     {
         IsShooting = false;
         endShoot = false;
+
     }
     public void ResetBool()
     {
@@ -56,7 +61,6 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
             IsShooting = false;
             data.isShoot = false;
             return;
-
         }
         if (IsShooting) OnShoot();
     }
@@ -124,7 +128,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         Vector3 apex3 = midPoint + Vector3.down * Random.Range(0.1f, 0.75f);
         Vector3 apex4 = midPoint + (Vector3.left + Vector3.up).normalized * Random.Range(0.1f, 1f);
         Vector3 apex5 = midPoint + (Vector3.right + Vector3.up).normalized * Random.Range(0.1f, 1f);
-        int randomIndex = Random.Range(0, 6); 
+        int randomIndex = Random.Range(0, 6);
         switch (randomIndex)
         {
             case 0: return apex;
@@ -134,11 +138,12 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
             case 4: return apex4;
             case 5: return apex5;
         }
-        return apex; 
+        return apex;
     }
     private void HandleBulletComplete(Enemy bullet)
     {
-        LevelManager.Ins.bossTimeUp.point -= bullet.point * LevelManager.Ins.player.bonusGlod;
+        float curPoint = bullet.point * LevelManager.Ins.player.bonusGlod;
+        LevelManager.Ins.bossTimeUp.point -= curPoint;
         SimplePool.Despawn(bullet);
         IE_UpdateUI();
         if (LevelManager.Ins.bossTimeUp.point <= 0 && !endShoot)
@@ -150,7 +155,12 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
             StartCoroutine(IE_ShowUILose());
         }
     }
-
+    public Vector3 UpdateScale(float points)
+    {
+        currenPoint = Mathf.Clamp(currenPoint - points, 0, pointPlayer);
+        float scaleMultiplier = (float)currenPoint / pointPlayer;
+        return Vector3.one * (scalePlayer * scaleMultiplier);
+    }
     private void HandleEndShooting()
     {
         spriteDown.gameObject.SetActive(false);

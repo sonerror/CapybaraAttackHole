@@ -18,67 +18,49 @@ MonoBehaviour:
     - id: 0
       checkPoint: 90
       scale: 1
-      speedMove: 0.6
+      speedMove: 0.8
       price: 50
       cameraDistance: 3
     - id: 1
       checkPoint: 200
-      scale: 2
-      speedMove: 1
+      scale: 1.8
+      speedMove: 1.1
       price: 100
       cameraDistance: 4
     - id: 2
       checkPoint: 1000
-      scale: 3
-      speedMove: 1.2
+      scale: 4
+      speedMove: 2
       price: 200
       cameraDistance: 10
     - id: 3
-      checkPoint: 3500
-      scale: 5
-      speedMove: 1.4
+      checkPoint: 2400
+      scale: 8
+      speedMove: 3
       price: 300
       cameraDistance: 20
     - id: 4
-      checkPoint: 6000
-      scale: 10
-      speedMove: 1.6
+      checkPoint: 3200
+      scale: 14
+      speedMove: 5
       price: 400
       cameraDistance: 30
     - id: 5
-      checkPoint: 10000
+      checkPoint: 5400
       scale: 20
-      speedMove: 1.8
+      speedMove: 5.7
       price: 500
       cameraDistance: 35
     - id: 6
       checkPoint: 10000
-      scale: 40
-      speedMove: 1.8
+      scale: 35
+      speedMove: 6
       price: 500
       cameraDistance: 40
-    - id: 7
-      checkPoint: 10000
-      scale: 60
-      speedMove: 1.8
-      price: 500
-      cameraDistance: 45
-    - id: 8
-      checkPoint: 10000
-      scale: 70
-      speedMove: 1.8
-      price: 500
-      cameraDistance: 50
-    - id: 9
-      checkPoint: 10000
-      scale: 80
-      speedMove: 1.8
-      price: 500
-      cameraDistance: 55
-    stage: {fileID: 6025837946342093105, guid: 23d4cb6994fcbe143ab20f3b1f225b9b, type: 3}
-    boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
+    stage: {fileID: 4628824589564312308, guid: 06f09b85517525143a87a5a186d429c8, type: 3}
+    boss: {fileID: 8974683485813999817, guid: 7ae4fc0735c276540bf2d7085ce77e0d, type: 3}
     pointBoss: 2000
-    positonStart: {x: 13.555, y: 0.02, z: -111.807}
+    positonStart: {x: -16.16, y: -0.05, z: -26.559}
   - levelID: 1
     checkPoints:
     - id: 0
@@ -118,6 +100,6 @@ MonoBehaviour:
       price: 500
       cameraDistance: 5
     stage: {fileID: 6025837946342093105, guid: 23d4cb6994fcbe143ab20f3b1f225b9b, type: 3}
-    boss: {fileID: -4936385935464205566, guid: c9c735520bf1b9a49ad5091021292437, type: 3}
+    boss: {fileID: 8974683485813999817, guid: 7ae4fc0735c276540bf2d7085ce77e0d, type: 3}
     pointBoss: 5000
     positonStart: {x: -30.85, y: 0, z: -24.9}
