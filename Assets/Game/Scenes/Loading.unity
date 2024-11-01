@@ -498,22 +498,22 @@ MonoBehaviour:
       bonus: 20
       price: 50
     - id: 1
-      bonus: 14
+      bonus: 25
       price: 100
     - id: 2
-      bonus: 25
+      bonus: 30
       price: 200
     - id: 3
-      bonus: 30
+      bonus: 35
       price: 300
     - id: 4
-      bonus: 35
+      bonus: 40
       price: 400
     - id: 5
       bonus: 50
       price: 1000
     - id: 6
-      bonus: 80
+      bonus: 60
       price: 25000
   floorBossPrefabs: {fileID: 2597985030068527147, guid: 3751b6a7a4920634f8cde03d8727db55, type: 3}
   cameraPos: {x: 0.8, y: 103, z: -20}
@@ -556,15 +556,18 @@ MonoBehaviour:
       enemy: {fileID: 3295476131752468285, guid: 5eb035ef0a9d7a34588fcfedf93f9f09, type: 3}
     - poolType: 20
       enemy: {fileID: 4749596467812754787, guid: 0d87a230a6340a940a2afff96e658ad0, type: 3}
+    - poolType: 21
+      enemy: {fileID: 4904370507647537965, guid: 5e7ca7c795b83234dab6e2cc36a396c8, type: 3}
   player: {fileID: 0}
   stage: {fileID: 0}
   floorBoss: {fileID: 0}
   bossTimeUp: {fileID: 0}
   isShoot: 0
-  historyMagnetics: 
   isCont: 0
   isCountTime: 0
   characterList: []
+  infoEnemyList: []
+  bossIsMove: 0
 --- !u!1 &460583165
 GameObject:
   m_ObjectHideFlags: 0
@@ -1219,9 +1222,10 @@ MonoBehaviour:
   enemyPool: []
   activeEnemies: []
   minDistance: 50
-  quantityInStack: 0
-  quantityInMap: 0
+  quantityInStack: 100
+  quantityInMap: 2
   radius: 50
+  listPosStartEnemy: []
 --- !u!1 &1137424944
 GameObject:
   m_ObjectHideFlags: 0

@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b3a0105fdfdd0648a8754e8bb280349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolType: 20
+  poolType: 21
   boxCollider: {fileID: 8736166326958043021}
   animator: {fileID: 0}
   listTarget: []
@@ -141,7 +141,9 @@ MonoBehaviour:
   tfTarget: {fileID: 0}
   wanderTimer: 0
   wanderRadius: 0
-  isUpdate: 0
+  inforEnemy:
+    poolType: 0
+    scale: 0
 --- !u!114 &7760170716774550836
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class UIHome : UICanvas
     [SerializeField] private TextMeshProUGUI tmpPriceLevelExp;
     [SerializeField] private TextMeshProUGUI tmpLevelTime;
     [SerializeField] private TextMeshProUGUI tmpPriceLevelTime;
-    private int maxlvUp = 10;
+    private int maxlvUp = 3;
     private PlayerData data;
     public override void Setup()
     {
@@ -31,7 +31,9 @@ public class UIHome : UICanvas
         UIManager.Ins.OpenUI<UIGamePlay>();
         GameManager.Ins.ChangeState(GameState.GamePlay);
         UIManager.Ins.GetUI<UIGamePlay>().ReLoadUIFollow();
-        EnemyManager.Ins.SpawmIntoMap();
+        //EnemyManager.Ins.SpawmIntoMap();
+        EnemyManager.Ins.PlayPantrol();
+
     }
 
     IEnumerator IE_SpawmBot()
@@ -41,7 +43,7 @@ public class UIHome : UICanvas
     }
     public void BtnUpScale()
     {
-        if(data.lvScale < maxlvUp)
+        if (data.lvScale < maxlvUp)
         {
             int totalLevels = LevelManager.Ins._levelData.levels.Count;
             int validLevelID = data.levelCurrent % totalLevels;

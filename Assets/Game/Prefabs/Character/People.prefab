@@ -413,8 +413,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6006300467849853382}
-  - component: {fileID: 4462336925082464665}
   - component: {fileID: 2325881944720594744}
+  - component: {fileID: 2166595410648575221}
+  - component: {fileID: 2815321777043607875}
   m_Layer: 0
   m_Name: People
   m_TagString: Enemy
@@ -438,36 +439,6 @@ Transform:
   - {fileID: 4417367680701542822}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4462336925082464665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5594246463412063983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 696f4013b2c3ea14db8fa3b24c12e3ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poolType: 300
-  boxCollider: {fileID: 7642309776620258213}
-  animator: {fileID: 6960295138407886969}
-  listTarget: []
-  checkPoints: []
-  point: 20
-  lvCurrent: 6
-  targetCheckPoint: 0
-  moveSpeed: 5
-  durProgress: 0
-  isMagnetic: 0
-  lvTime: 0
-  lvEx: 0
-  bonusGlod: 0
-  playerSkill: {fileID: 0}
-  blackHoleCenter: {fileID: 0}
-  tfCenter: {fileID: 0}
-  isAttack: 0
 --- !u!54 &2325881944720594744
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -495,6 +466,65 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!65 &2166595410648575221
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5594246463412063983}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.7456475, y: 1.2402219, z: 0.42619646}
+  m_Center: {x: 0.028261393, y: 0.5793589, z: -0.004201174}
+--- !u!114 &2815321777043607875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5594246463412063983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3a0105fdfdd0648a8754e8bb280349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolType: 300
+  boxCollider: {fileID: 2166595410648575221}
+  animator: {fileID: 6960295138407886969}
+  listTarget: []
+  checkPoints: []
+  point: 1
+  lvCurrent: 1
+  targetCheckPoint: 0
+  moveSpeed: 5
+  durProgress: 0
+  isMagnetic: 0
+  lvTime: 0
+  lvEx: 0
+  bonusGlod: 0
+  playerSkill: {fileID: 0}
+  blackHoleCenter: {fileID: 0}
+  tfCenter: {fileID: 0}
+  isAttack: 0
+  meshRenderer: {fileID: 6402790405843520236}
+  tfTarget: {fileID: 0}
+  wanderTimer: 0
+  wanderRadius: 0
+  inforEnemy:
+    poolType: 0
+    scale: 0
+    point: 0
 --- !u!1 &5746290540758012053
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,10 +695,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8495495263215769231}
   - component: {fileID: 6402790405843520236}
-  - component: {fileID: 7642309776620258213}
   m_Layer: 0
   m_Name: Players
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -758,27 +787,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.012363172, y: -0.0013300199, z: -0.00038783997}
     m_Extent: {x: 0.032524467, y: 0.019576777, z: 0.02234492}
   m_DirtyAABB: 0
---- !u!65 &7642309776620258213
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8181033575810333218}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.03729468, y: 0.062286288, z: 0.050825063}
-  m_Center: {x: -0.000114720315, y: 0.030105852, z: 0.00033255853}
 --- !u!1 &8683510418924670082
 GameObject:
   m_ObjectHideFlags: 0

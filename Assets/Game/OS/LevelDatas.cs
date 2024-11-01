@@ -19,7 +19,12 @@ public class LevelData
     public Boss boss;
     public float pointBoss;
     public Vector3 positonStart;
-
+}
+[System.Serializable]
+public class PositonStartEnemy
+{
+    public int id;
+    public Transform positonStart;
 }
 [System.Serializable]
 public class CheckPoint

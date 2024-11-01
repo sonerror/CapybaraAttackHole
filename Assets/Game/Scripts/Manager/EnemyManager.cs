@@ -13,13 +13,51 @@ public class EnemyManager : Singleton<EnemyManager>
     [SerializeField] private int quantityInMap;
     [SerializeField] private float radius;
     private PlayerData data;
+    public List<PositonStartEnemy> listPosStartEnemy = new List<PositonStartEnemy>();
     public void Oninit(Player player)
     {
         data = DataManager.Ins.playerData;
         ResetEnemies();
         enemyPool.Add(player);
-        StartCoroutine(IE_CreateEnemy());
+        GetDataStage(LevelManager.Ins.stage.listPosStartEnemy);
+        if (listPosStartEnemy.Count > 0)
+        {
+            StartCoroutine(IE_CreateEnemyPos());
+        }
     }
+    public void GetDataStage(List<PositonStartEnemy> _listPosStartEnemy)
+    {
+        this.listPosStartEnemy = new List<PositonStartEnemy>(_listPosStartEnemy);
+    }
+    IEnumerator IE_CreateEnemyPos()
+    {
+        yield return new WaitForEndOfFrame();
+        NavMeshHit hit;
+
+        for (int i = 0; i < listPosStartEnemy.Count; i++)
+        {
+
+            EnemyMachine enemy = SimplePool.Spawn<EnemyMachine>(PoolType.Enemy_Machine, Vector3.zero, Quaternion.identity);
+            if (NavMesh.SamplePosition(listPosStartEnemy[i].positonStart.position, out hit, 1f, NavMesh.AllAreas))
+            {
+                enemy.transform.position = hit.position;
+            }
+            else
+            {
+                enemy.transform.position = listPosStartEnemy[i].positonStart.position;
+            }
+            yield return new WaitForEndOfFrame();
+            int validLevelID = data.levelCurrent % LevelManager.Ins._levelData.levels.Count;
+            enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
+            enemy.SetDataRandom(data.lvScale, data.lvTime, data.lvEx);
+            activeEnemies.Add(enemy);
+            LevelManager.Ins.characterList.Add(enemy);
+            enemy.isCanMove = false;
+            enemy.ChangeState(new IdleState());
+        }
+        LevelManager.Ins.stage.OnEnableNavMesh(true);
+    }
+
     IEnumerator IE_CreateEnemy()
     {
         yield return new WaitForEndOfFrame();
@@ -62,15 +100,35 @@ public class EnemyManager : Singleton<EnemyManager>
             StartCoroutine(IE_SpawnNewEnemyAfterDeath(enemies[0]));
         }
     }
+    public void SpawmAfterDeath()
+    {
+        if (listPosStartEnemy.Count > 0)
+        {
+            StartCoroutine(IE_SpawnNewEnemy());
+        }
+    }
     IEnumerator IE_SpawnNewEnemyAfterDeath(EnemyMachine enemy)
     {
-        Debug.Log("SPN");
         yield return new WaitForEndOfFrame();
         enemies.Remove(enemy);
         int validLevelID = data.levelCurrent % LevelManager.Ins._levelData.levels.Count;
         enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
         enemy.SetDataRandom(data.lvScale, data.lvTime, data.lvEx);
         enemy.gameObject.SetActive(true);
+        activeEnemies.Add(enemy);
+        LevelManager.Ins.characterList.Add(enemy);
+        enemy.isCanMove = true;
+        enemy.ChangeState(new PatrolState());
+    }
+    IEnumerator IE_SpawnNewEnemy()
+    {
+        int random = Random.Range(1, listPosStartEnemy.Count);
+        EnemyMachine enemy = SimplePool.Spawn<EnemyMachine>(PoolType.Enemy_Machine, Vector3.zero, Quaternion.identity);
+        enemy.transform.position = listPosStartEnemy[random].positonStart.position;
+        yield return new WaitForEndOfFrame();
+        int validLevelID = data.levelCurrent % LevelManager.Ins._levelData.levels.Count;
+        enemy.GetDataLevel(LevelManager.Ins._levelData.GetDataWithID(validLevelID).checkPoints);
+        enemy.SetDataRandom(data.lvScale, data.lvTime, data.lvEx);
         activeEnemies.Add(enemy);
         LevelManager.Ins.characterList.Add(enemy);
         enemy.isCanMove = true;
@@ -124,7 +182,7 @@ public class EnemyManager : Singleton<EnemyManager>
 
         while (!validPosition && attempts < maxAttempts)
         {
-            Vector3 randomPosition = RandomNavSphere(character.transform.position, radius, "SpawnArea");
+            Vector3 randomPosition = RandomNavSphere(character.transform.position, radius, Const.AREA_SPAWM_AREA);
 
             character.transform.position = randomPosition;
 

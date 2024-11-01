@@ -1,8 +1,6 @@
 using UnityEngine;
 public class DeadState : IState<EnemyMachine>
 {
-    float timer = 0f;
-    float time;
     public void OnEnter(EnemyMachine t)
     {
         t.OnDead();

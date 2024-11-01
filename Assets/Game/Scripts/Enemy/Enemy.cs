@@ -12,19 +12,34 @@ public class Enemy : Character
     public Transform tfTarget;
     public float wanderTimer;
     public float wanderRadius;
+    public InforEnemy inforEnemy;
     public void Start()
     {
         OnInit();
-        if (orColor != null)
+        if(poolType == PoolType.Enemy)
         {
-            orColor = GetComponentInChildren<MeshRenderer>().material.color;
+            if (orColor != null)
+            {
+                orColor = GetComponentInChildren<MeshRenderer>().material.color;
+            }
         }
+       
+    }
+    public void SetInfor(float scale, int poolType,float point)
+    {
+        InforEnemy newInfor = new InforEnemy(poolType, scale,point);
+        inforEnemy = newInfor;
+    }
+    public InforEnemy GetInfor()
+    {
+        return inforEnemy;
     }
     public override void OnInit()
     {
         base.OnInit();
         isDead = false;
         isAttack = true;
+        SetInfor(this.transform.localScale.x,(int)this.poolType,this.point);
     }
     #region
     /*    void Update()

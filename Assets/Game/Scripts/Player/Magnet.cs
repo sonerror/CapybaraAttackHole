@@ -1,7 +1,5 @@
 using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 [System.Serializable]
@@ -10,7 +8,6 @@ public enum TypeMagnet
     TypeAnim,
     TypeNoneAnim
 }
-
 public class Magnet : GameUnit
 {
     [SerializeField] private float pullForce = 5f;
@@ -29,12 +26,22 @@ public class Magnet : GameUnit
 
     }
     private void Update()
-    {//13.586 -111.825
+    {
+        if (player == null) return;
+
         if (typeMagnet == TypeMagnet.TypeAnim && time < timedur + 0.5f)
         {
-            if (time > timedur && poolType == PoolType.Player)
+            if (time > timedur && poolType == PoolType.Player || poolType == PoolType.Enemy_Machine)
             {
                 player.OnMove();
+                /*if (player.isMoving)
+                {
+                    player.OnMove();
+                }
+                else
+                {
+                    player.OnStopMove();
+                }*/
                 time = 0;
             }
             time += Time.deltaTime;
@@ -57,9 +64,9 @@ public class Magnet : GameUnit
                 {
                     StartCoroutine(IE_AddToBlackHole(_target));
                 }
-                if (poolType == PoolType.Player)
+                if (poolType == PoolType.Player && _target.poolType != PoolType.People)
                 {
-                    LevelManager.Ins.historyMagnetics.Add((int)_target.poolType);
+                    LevelManager.Ins.infoEnemyList.Add(_target.GetInfor());
                 }
             }
         }
@@ -177,6 +184,5 @@ public class Magnet : GameUnit
             float targetSkill = (target * 2) / 3;
             UIManager.Ins.GetUI<UIGamePlay>().SetProgressSkill(detal / targetSkill);
         }
-
     }
 }

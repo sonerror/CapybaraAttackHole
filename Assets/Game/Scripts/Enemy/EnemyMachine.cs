@@ -26,8 +26,14 @@ public class EnemyMachine : Character
         isChangeStateDead = false;
         isMagnetic = true;
         isAttack = true;
-        wanderTimer = Random.Range(Const.RANMIN, Const.RANMAX);
-        SetDataBonusGold();
+        wanderTimer = 1;
+        //SetDataBonusGold();
+        SetBonusEnemy();
+    }
+
+    public void SetBonusEnemy()
+    {
+        bonusGlod = GetBonusEXP()+5;
     }
     #region
     void Update()
@@ -68,7 +74,7 @@ public class EnemyMachine : Character
         timer += Time.deltaTime;
         if (timer >= wanderTimer)
         {
-            Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, "EnemyMove");
+            Vector3 newPos = GetValidNavMeshPosition(transform.position, wanderRadius, Const.AREA_ENEMY_MOVE);
             nextPoint = newPos;
             agent.SetDestination(newPos);
             timer = 0;
@@ -80,16 +86,46 @@ public class EnemyMachine : Character
         base.CheckPointUpLevel();
         agent.speed = moveSpeed;
     }
-    public static Vector3 RandomNavSphere(Vector3 origin, float dist, string areaName)
+    /*  public static Vector3 RandomNavSphere(Vector3 origin, float dist, string areaName)
+      {
+          Vector3 randDirection = Random.insideUnitSphere * dist;
+          randDirection += origin;
+          NavMeshHit navHit;
+          NavMeshQueryFilter filter = new NavMeshQueryFilter();
+          filter.areaMask = 1 << NavMesh.GetAreaFromName(areaName);
+          bool foundPosition = NavMesh.SamplePosition(randDirection, out navHit, dist, filter.areaMask);
+          return foundPosition ? navHit.position : origin;
+      }*/
+    public static Vector3 GetValidNavMeshPosition(Vector3 origin, float initialRadius, string areaName)
     {
-        Vector3 randDirection = Random.insideUnitSphere * dist;
-        randDirection += origin;
-        NavMeshHit navHit;
-        NavMeshQueryFilter filter = new NavMeshQueryFilter();
-        filter.areaMask = 1 << NavMesh.GetAreaFromName(areaName);
-        bool foundPosition = NavMesh.SamplePosition(randDirection, out navHit, dist, filter.areaMask);
-        return foundPosition ? navHit.position : origin;
+        NavMeshQueryFilter filter = new NavMeshQueryFilter
+        {
+            areaMask = 1 << NavMesh.GetAreaFromName(areaName)
+        };
+
+        Vector3 randDirection = Random.insideUnitSphere * initialRadius + origin;
+        if (NavMesh.SamplePosition(randDirection, out NavMeshHit navHit, initialRadius, filter.areaMask))
+        {
+            return navHit.position;
+        }
+
+        float reducedRadius = initialRadius * 0.5f;
+        randDirection = Random.insideUnitSphere * reducedRadius + origin;
+        if (NavMesh.SamplePosition(randDirection, out navHit, reducedRadius, filter.areaMask))
+        {
+            return navHit.position;
+        }
+
+        reducedRadius *= 0.5f;
+        randDirection = Random.insideUnitSphere * reducedRadius + origin;
+        if (NavMesh.SamplePosition(randDirection, out navHit, reducedRadius, filter.areaMask))
+        {
+            return navHit.position;
+        }
+
+        return LevelManager.Ins.player.transform.position;
     }
+
     public bool IsDestination() => Vector3.Distance(transform.position, nextPoint) - Mathf.Abs(transform.position.y - nextPoint.y) < 0.1f;
 
 
@@ -114,7 +150,7 @@ public class EnemyMachine : Character
         {
             if (_Lv < checkPoints.Count - 1)
             {
-                lvCurrent = _Lv + 1;
+                lvCurrent = _Lv + 2;
             }
             else
             {

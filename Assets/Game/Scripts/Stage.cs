@@ -1,21 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class Stage : MonoBehaviour
 {
+    [SerializeField] private NavMeshSurface navMeshSurface;
     public float initialCountDownTime = 100f;
     public float countDownTime = 100f;
     public bool isCountDown;
+    public List<PositonStartEnemy> listPosStartEnemy = new List<PositonStartEnemy>();
     public void Oninit()
     {
         isCountDown = false;
-
+    }
+    public void OnEnableNavMesh(bool isActive)
+    {
+        navMeshSurface.enabled = isActive;
     }
     public void SetTimeData(int time)
     {
         countDownTime = time;
     }
+
     private void Update()
     {
         if (!isCountDown || countDownTime < 0) return;

@@ -10,7 +10,6 @@ public class Player : Character
     private Quaternion targetRotation;
     private Vector3 inputDirection = Vector3.zero;
     private bool isCreateEnemy;
-    public bool move = true;
     public Transform mouth;
     public override void OnInit()
     {
@@ -19,6 +18,7 @@ public class Player : Character
         isCreateEnemy = true;
         isMagnetic = true;
         isAttack = true;
+        isMoving = false;
     }
     private void Update()
     {
@@ -28,11 +28,14 @@ public class Player : Character
         {
             inputDirection = currentInputDirection;
             Move(inputDirection);
+            isMoving = true;
         }
         else
         {
             StopMovement();
+            isMoving = false;
         }
+
     }
     public float GetDataScale()
     {
@@ -51,6 +54,10 @@ public class Player : Character
     public void SetCamera(int _levelCurrent)
     {
         CameraManager.Ins.AdjustCameraDistanceSmooth(GetCheckPointData(_levelCurrent).cameraDistance, 0.5f);
+    }
+    public void ChangeCamera(float cameraDistance)
+    {
+        CameraManager.Ins.AdjustCameraDistanceSmooth(cameraDistance, 1f);
     }
     public override void SetData(int _Lv, int _lvTime, int _lvEx)
     {

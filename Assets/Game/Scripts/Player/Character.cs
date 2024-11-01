@@ -24,6 +24,8 @@ public class Character : GameUnit
     public Transform blackHoleCenter;
     public Transform tfCenter;
     public bool isAttack;
+    public bool move = true;
+    public bool isMoving = false;
 
     private void Start()
     {
@@ -32,15 +34,17 @@ public class Character : GameUnit
     public virtual void OnInit()
     {
         isDead = false;
+        if (animator != null)
+        {
+            animator.speed = 1;
+        }
     }
     public void PlayAnim(string animName)
     {
         if (animName != null && animator != null)
         {
-            Debug.Log("PlayAnim");
             animator.Play(animName, -1, 0.475f);
             currentAnim = animName;
-            Debug.Log(GetTimeAnim() + " Time Anim") ;
         }
     }
     public void GetDataLevel(List<CheckPoint> _checkPoint)
@@ -56,9 +60,9 @@ public class Character : GameUnit
         this.listTarget.Remove(character);
     }
 
-    public void ChangeScale(float scale)
+    public void ChangeScale(float scale, float timeDur)
     {
-        this.transform.DOScale(new Vector3(1, 1, 1) * scale, 0.5f).SetEase(Ease.InOutQuad);
+        this.transform.DOScale(new Vector3(1, 1, 1) * scale, timeDur).SetEase(Ease.InOutQuad);
     }
     public virtual void SetScale(int _lvScale)
     {
@@ -103,7 +107,7 @@ public class Character : GameUnit
             isMagnetic = true;
         }
     }
-    
+
     public virtual void SetData(int _Lv, int _lvTime, int _lvEx)
     {
         this.lvCurrent = _Lv;
@@ -113,7 +117,7 @@ public class Character : GameUnit
     public virtual void SetScaleUpLevel(int _lvScale)
     {
         float targetScale = GetCheckPointData(_lvScale).scale;
-        ChangeScale(targetScale);
+        ChangeScale(targetScale, 0.5f);
     }
     IEnumerator IE_Uplevel(float _speed)
     {
@@ -158,6 +162,11 @@ public class Character : GameUnit
     {
         ChangeAnim(Const.ANIM_IDLE);
     }
+    public virtual void OnStopMove()
+    {
+        ChangeAnim(Const.ANIM_IDLE);
+    }
+
     public virtual void OnEat()
     {
         ChangeAnim(Const.ANIM_EAT);
@@ -167,5 +176,9 @@ public class Character : GameUnit
     {
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         return stateInfo.length;
+    }
+    public void ChangeSpeedAnim(float mult)
+    {
+        animator.speed = mult;
     }
 }

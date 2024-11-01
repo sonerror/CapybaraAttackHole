@@ -26,6 +26,10 @@ public class UIGamePlay : UICanvas
         uiFollow.SetTargetTransform(LevelManager.Ins.player.transform);
 
     }
+    public void SetHideObjFire(bool hideObjFire)
+    {
+        objFire.SetActive(hideObjFire);
+    }
     public override void Open()
     {
         base.Open();
@@ -61,14 +65,12 @@ public class UIGamePlay : UICanvas
 
     }
 
-    public void SetUIFloorBoss(float scalePl,float pointBoss)
+    public void SetUIFloorBoss(int lvPlayer,float pointBoss, List<CheckPoint> checkPoints)
     {
         HideProHPBoss(true);
         OninitHPBoss();
         SetAtiveBtnShot();
-        shootingController.scalePlayer = scalePl;
-        shootingController.pointPlayer = pointBoss;
-        shootingController.currenPoint = pointBoss;
+        shootingController.GetDataLevel(checkPoints,lvPlayer,pointBoss);
 
     }
     public void SetAtiveBtnShot()
@@ -120,10 +122,6 @@ public class UIGamePlay : UICanvas
         {
             countTime.color = Color.black;
         }
-    }
-    public void ShoterBoss()
-    {
-        Debug.Log(LevelManager.Ins.historyMagnetics.Count);
     }
     public void UIHPBoss()
     {

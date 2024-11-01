@@ -30,17 +30,18 @@ public class LevelManager : Singleton<LevelManager>
     public Boss bossTimeUp;
 
     public bool isShoot;
-    public List<int> historyMagnetics = new List<int>();
     public bool isCont;
     public bool isCountTime;
     public List<Character> characterList;
 
-
+    public List<InforEnemy> infoEnemyList = new List<InforEnemy>();
+    public bool bossIsMove;
     public void OnInit()
     {
         isShoot = true;
         isCont = true;
         isCountTime = false;
+        bossIsMove = false;
     }
     public void OnLoadStage()
     {
@@ -54,7 +55,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         if (playerPrefabs != null)
         {
-            historyMagnetics.Clear();
+            infoEnemyList.Clear();
             OnLoadStage();
             InstantiatePlayer();
             OnInit();
@@ -146,7 +147,7 @@ public class LevelManager : Singleton<LevelManager>
     }
     public void OnTimeUP()
     {
-        if (historyMagnetics.Count > 0)
+        if (infoEnemyList.Count > 0)
         {
             StopAllCoroutines();
             UIManager.Ins.GetUI<UIGamePlay>().SetActiveJoystick(false);
@@ -156,7 +157,7 @@ public class LevelManager : Singleton<LevelManager>
         {
             UIManager.Ins.OpenUI<PopupLose>();
         }
-        StartCoroutine(IE_DespawnEnemy());
+       
     }
     public void DespawnEnemy()
     {
@@ -169,7 +170,7 @@ public class LevelManager : Singleton<LevelManager>
     }
     private void SpawnFloorBoss()
     {
-        Vector3 targetPosition = new Vector3(0, 100, 0);
+        Vector3 targetPosition = new Vector3(100, 100, 100);
         Quaternion rotation = Quaternion.Euler(0, 45, 0);
         floorBoss = Instantiate(floorBossPrefabs, targetPosition, rotation);
         StartCoroutine(IE_MovePlayerToBoss(floorBoss.targetPlayerMove));
@@ -188,6 +189,7 @@ public class LevelManager : Singleton<LevelManager>
              .SetEase(Ease.Linear)
              .OnComplete(() =>
              {
+                 StartCoroutine(IE_DespawnEnemy());
                  player.HideCollider(false);
                  player.transform.DOMove(new Vector3(tf.position.x, tf.position.y, tf.position.z), 0.2f)
                  .SetEase(Ease.Linear)
@@ -196,7 +198,9 @@ public class LevelManager : Singleton<LevelManager>
                      player.HideCollider(true);
                      CameraManager.Ins.virtualCamera.enabled = true;
                      CameraManager.Ins.SetTransform();
+                     stage.OnEnableNavMesh(false);
                      StartCoroutine(IE_SetupBossFight());
+                    
                  });
              });
         });
@@ -227,6 +231,7 @@ public class LevelManager : Singleton<LevelManager>
     private void SpawnBoss(LevelData bossData)
     {
         bossTimeUp = Instantiate(bossData.boss);
+        bossTimeUp.OnInit();
         if (player.lvCurrent <= 5)
         {
             deltaScale = 2;
@@ -242,14 +247,14 @@ public class LevelManager : Singleton<LevelManager>
         bossTimeUp.transform.rotation = Quaternion.Euler(0, 180, 0);
         bossTimeUp.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         bossTimeUp.point = bossData.pointBoss;
-       
         bossTimeUp.transform.DOScale(new Vector3(deltaScale, deltaScale, deltaScale), 1)
             .SetEase(Ease.OutBounce)
             .OnComplete(() =>
             {
-                UIManager.Ins.GetUI<UIGamePlay>().SetUIFloorBoss(player.GetDataScale(),player.point);
+                floorBoss.OnEnableNavMesh(true);
+                UIManager.Ins.GetUI<UIGamePlay>().SetUIFloorBoss(player.lvCurrent, player.point,player.checkPoints);
                 bossTimeUp.isUpdate = true;
-            });
+            });//Vector3(-7.05700016,0,-48.8510017)
     }
     Vector3 CalculateNewPosition(Vector3 from, Vector3 to, float distance)
     {
@@ -314,4 +319,18 @@ public class EnemyDataModel
 {
     public PoolType poolType;
     public Enemy enemy;
+}
+
+[System.Serializable]
+public class InforEnemy
+{
+    public int poolType;
+    public float scale;
+    public float point;
+    public InforEnemy(int poolType, float scale, float point)
+    {
+        this.poolType = poolType;
+        this.scale = scale;
+        this.point = point;
+    }
 }

@@ -180,9 +180,8 @@ public enum PoolType
     Enemy_22 = 25,
     ObjMagnet = 100,
     Enemy_Machine = 200,
+    Enemy_Rabbit = 201,
     People = 300,
     Boss = 400
-
-
 }
 
