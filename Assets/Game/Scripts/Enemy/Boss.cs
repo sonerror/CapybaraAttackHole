@@ -7,7 +7,6 @@ public class Boss : Character
     public Transform tfTarget;
     public bool isUpdate;
     public NavMeshAgent agent;
-
     public override void OnInit()
     {
         base.OnInit();
@@ -15,6 +14,7 @@ public class Boss : Character
         isUpdate = false;
         agent.enabled = true;
         isAttack = true;
+        HideAgent(true);
     }
     private void Update()
     {
@@ -24,10 +24,15 @@ public class Boss : Character
             {
                 isDead = true;
                 this.ChangeAnim(Const.ANIM_BOSS_DIE);
-                agent.speed = 0;
+                //StopMove();
+                HideAgent(false);
                 isUpdate = false;
             }
         }
+    }
+    public void HideAgent(bool isActive)
+    {
+        agent.enabled = isActive;
     }
     public void OnMoveBoss()
     {
@@ -38,29 +43,28 @@ public class Boss : Character
             ChangeAnim(Const.ANIM_BOSS_RUN);
         }
     }
+    private void StopMove()
+    {
+        agent.speed = 0;
+        agent.velocity = Vector3.zero;
+    }
     public void CheckIfReachedTarget()
     {
-        
         float distanceToTarget = Vector3.Distance(transform.position, LevelManager.Ins.player.transform.position);
-
-        if(distanceToTarget <= 15f && isAttack)
+        if (distanceToTarget <= 4f && isAttack)
         {
-            agent.speed = 0;
-        }
-        if (distanceToTarget <= 10f && isAttack)
-        {
-            StartCoroutine(IE_Attack());
             isAttack = false;
+            HideAgent(false);
+            ChangeSpeedAnim(1);
+            StartCoroutine(IE_Attack());
         }
     }
     IEnumerator IE_Attack()
     {
-        yield return new WaitForEndOfFrame();
-        ChangeSpeedAnim(1);
-        yield return new WaitForEndOfFrame();
         ChangeAnim(Const.ANIM_BOSS_ATTACK);
+        yield return new WaitForSeconds(GetTimeAnim() + .5f);
+        LevelManager.Ins.player.OnDead();
         yield return new WaitForSeconds(1f);
-        LevelManager.Ins.player.point = 0;
         ChangeAnim(Const.ANIM_BOSS_IDLE);
     }
 }

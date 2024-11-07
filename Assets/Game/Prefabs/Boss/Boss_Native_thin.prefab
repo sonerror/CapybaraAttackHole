@@ -470,6 +470,8 @@ MonoBehaviour:
   blackHoleCenter: {fileID: 0}
   tfCenter: {fileID: 0}
   isAttack: 0
+  move: 1
+  isMoving: 0
   tfTarget: {fileID: 7059575452854359020}
   isUpdate: 0
   agent: {fileID: 3798086129511098295}
@@ -2182,8 +2184,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.565501, y: 5.5260935, z: 2.0346158}
-  m_Center: {x: 0.22061789, y: 2.6701064, z: 0.08452806}
+  m_Size: {x: 1.543181, y: 5.4393673, z: 1.438617}
+  m_Center: {x: 0, y: 2.7134695, z: 0.119307876}
 --- !u!1 &7759396671117622814
 GameObject:
   m_ObjectHideFlags: 0

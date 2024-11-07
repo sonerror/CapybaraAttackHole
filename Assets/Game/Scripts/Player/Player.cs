@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 using static UnityEngine.GraphicsBuffer;
 
 public class Player : Character
@@ -35,11 +36,10 @@ public class Player : Character
             StopMovement();
             isMoving = false;
         }
-
     }
     public float GetDataScale()
     {
-       return checkPoints.Find(x => x.id == lvCurrent).scale;
+        return checkPoints.Find(x => x.id == lvCurrent).scale;
     }
     public override void SetScale(int _lvScale)
     {
@@ -86,7 +86,6 @@ public class Player : Character
             );
         }
     }
-
     private Vector3 GetInputDirection()
     {
         Vector3 moveDirection = Vector3.zero;
@@ -99,12 +98,9 @@ public class Player : Character
         }
         return moveDirection.normalized;
     }
-
-
     public override void CheckPointUpLevel()
     {
         base.CheckPointUpLevel();
-        //CheckTurnOnSkill();
         SetDataBonusGold();
         UIManager.Ins.GetUI<UIGamePlay>().ReLoadUI();
     }
@@ -136,5 +132,15 @@ public class Player : Character
     IEnumerator IE_DelaySpawn()
     {
         yield return new WaitForSeconds(0.5f);
+    }
+    public override void OnDead()
+    {
+        base.OnDead();
+        point = 0;
+        ChangeAnim(Const.ANIM_DIE);
+        DOVirtual.DelayedCall(GetTimeAnim(), () =>
+        {
+           Destroy(this.gameObject);
+        });
     }
 }

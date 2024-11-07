@@ -92,9 +92,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteUp: {fileID: 21300000, guid: 5001a72c39c53ec4da5340f98788d37e, type: 2}
   tmpCountShoot: {fileID: 4790061338840927018}
+  objTmpCount: {fileID: 4869466310546668311}
   spriteDown: {fileID: 7491004131544402570}
   imgTotal: {fileID: 4869466310546668311}
+  checkPoints: []
   endShoot: 0
+  LevelPlayer: 0
+  scalePlayer: 0
+  pointPlayer: 0
+  currenPoint: 0
+  targetCheckPoint: 0
+  isMove: 0
+  isAttack: 0
+  isShowPopup: 0
+  isShowPopupLose: 0
 --- !u!1 &3037325844290846038
 GameObject:
   m_ObjectHideFlags: 0

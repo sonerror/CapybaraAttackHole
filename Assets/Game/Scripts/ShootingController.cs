@@ -11,6 +11,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 {
     [SerializeField] private Sprite spriteUp;
     [SerializeField] private TextMeshProUGUI tmpCountShoot;
+    [SerializeField] private GameObject objTmpCount;
     public Image spriteDown;
     public GameObject imgTotal;
     private Sprite spriteCurrent;
@@ -30,6 +31,11 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     public bool isShowPopupLose;
     private void Awake() => Initialize();
 
+    public void HideUIBtnShoot(bool isActive)
+    {
+        objTmpCount.SetActive(isActive);
+        spriteDown.gameObject.SetActive(isActive);
+    }
     private void Start()
     {
         spriteCurrent = spriteDown.sprite;
@@ -62,14 +68,14 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     private void Update()
     {
         var data = LevelManager.Ins;
-        if (data.bossTimeUp == null) return;
+        if (data.bossTimeUp == null || data.player == null) return;
         if (!data.bossTimeUp.isDead)
         {
             data.bossTimeUp.CheckIfReachedTarget();
-            if (LevelManager.Ins.player.point <= 0&& isShowPopup)
+            if (data.player.point <= 0 && isShowPopup)
             {
                 HandleEndShooting();
-                StartCoroutine(IE_ShowUILose(1f));
+                StartCoroutine(IE_ShowUILose(2f));
                 isShowPopup = false;
             }
         }
@@ -83,16 +89,15 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
         if (IsShooting) OnShoot();
     }
     public void UpdateUI() => tmpCountShoot.text = LevelManager.Ins.infoEnemyList.Count.ToString();
-
     private void OnShoot()
     {
         var data = LevelManager.Ins;
+        if (data.player == null) return;
         if (data.bossTimeUp.point <= 0 || data.infoEnemyList.Count == 0)
             HandleEndShooting();
         else
             ShootBullets(data);
     }
-
     private void ShootBullets(LevelManager data)
     {
         if (!isMove)
@@ -226,7 +231,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
     }
     private void HandleEndShooting()
     {
-        spriteDown.gameObject.SetActive(false);
+        HideUIBtnShoot(false);
         IsShooting = false;
     }
 
@@ -273,7 +278,7 @@ public class ShootingController : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     private IEnumerator IE_ShowUILose(float timeDur)
     {
-        if(isShowPopupLose)
+        if (isShowPopupLose)
         {
             isShowPopupLose = false;
             yield return new WaitForSeconds(timeDur);

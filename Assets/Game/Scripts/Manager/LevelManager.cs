@@ -16,9 +16,9 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] private FloorBoss floorBossPrefabs;
     [SerializeField] private Vector3 cameraPos;
     [SerializeField] private Vector3 cameraRotate;
-
     private float deltaScale;
     private float deltaDur;
+
     public EnemyData enemyDatas;
     public PointData pointData => PointDatas;
     public LevelBonusData levelTime => LevelTime;
@@ -28,12 +28,10 @@ public class LevelManager : Singleton<LevelManager>
     public Stage stage;
     public FloorBoss floorBoss;
     public Boss bossTimeUp;
-
     public bool isShoot;
     public bool isCont;
     public bool isCountTime;
     public List<Character> characterList;
-
     public List<InforEnemy> infoEnemyList = new List<InforEnemy>();
     public bool bossIsMove;
     public void OnInit()
@@ -78,7 +76,7 @@ public class LevelManager : Singleton<LevelManager>
     IEnumerator IE_OninitEnemy()
     {
         yield return new WaitForEndOfFrame();
-        EnemyManager.Ins.Oninit(player);
+        EnemyManager.Ins.PoolEnemies();
     }
     public LevelBonusDataModel GetDataTimeCountWithId(int id)
     {
@@ -97,6 +95,10 @@ public class LevelManager : Singleton<LevelManager>
     public void SetTimeCount()
     {
         stage.SetTimeData((int)GetDataTimeCountWithId(DataManager.Ins.playerData.lvTime).bonus);
+    }
+    public int SetTime()
+    {
+        return (int)GetDataTimeCountWithId(DataManager.Ins.playerData.lvTime).bonus;
     }
 
     public void UpLVBonusExp()
@@ -130,6 +132,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         player.checkPoints.Clear();
         characterList.Clear();
+       
     }
 
     public void ReloadScene()
@@ -155,9 +158,9 @@ public class LevelManager : Singleton<LevelManager>
         }
         else
         {
+            StartCoroutine(IE_DespawnEnemy());
             UIManager.Ins.OpenUI<PopupLose>();
         }
-       
     }
     public void DespawnEnemy()
     {
@@ -171,8 +174,7 @@ public class LevelManager : Singleton<LevelManager>
     private void SpawnFloorBoss()
     {
         Vector3 targetPosition = new Vector3(100, 100, 100);
-        Quaternion rotation = Quaternion.Euler(0, 45, 0);
-        floorBoss = Instantiate(floorBossPrefabs, targetPosition, rotation);
+        floorBoss = Instantiate(floorBossPrefabs, targetPosition, Quaternion.Euler(0, 45, 0));
         StartCoroutine(IE_MovePlayerToBoss(floorBoss.targetPlayerMove));
     }
     IEnumerator IE_MovePlayerToBoss(Transform tf)
@@ -200,7 +202,6 @@ public class LevelManager : Singleton<LevelManager>
                      CameraManager.Ins.SetTransform();
                      stage.OnEnableNavMesh(false);
                      StartCoroutine(IE_SetupBossFight());
-                    
                  });
              });
         });
@@ -252,9 +253,9 @@ public class LevelManager : Singleton<LevelManager>
             .OnComplete(() =>
             {
                 floorBoss.OnEnableNavMesh(true);
-                UIManager.Ins.GetUI<UIGamePlay>().SetUIFloorBoss(player.lvCurrent, player.point,player.checkPoints);
+                UIManager.Ins.GetUI<UIGamePlay>().SetUIFloorBoss(player.lvCurrent, player.point, player.checkPoints);
                 bossTimeUp.isUpdate = true;
-            });//Vector3(-7.05700016,0,-48.8510017)
+            });
     }
     Vector3 CalculateNewPosition(Vector3 from, Vector3 to, float distance)
     {
@@ -303,7 +304,6 @@ public class LevelBonusDataModel
     public float bonus;
     public int price;
 }
-
 [System.Serializable]
 public class EnemyData
 {
@@ -320,7 +320,6 @@ public class EnemyDataModel
     public PoolType poolType;
     public Enemy enemy;
 }
-
 [System.Serializable]
 public class InforEnemy
 {

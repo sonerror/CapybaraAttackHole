@@ -58,6 +58,5 @@ public class ObjectMagnet : Magnet
     public override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
-        Debug.Log("Hit");
     }
 }

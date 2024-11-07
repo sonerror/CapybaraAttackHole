@@ -22,7 +22,6 @@ public class Stage : MonoBehaviour
     {
         countDownTime = time;
     }
-
     private void Update()
     {
         if (!isCountDown || countDownTime < 0) return;
@@ -47,7 +46,6 @@ public class Stage : MonoBehaviour
     {
         isCountDown = isCount;
     }
-
     public void OnContinue(float plusTime)
     {
         countDownTime += plusTime;

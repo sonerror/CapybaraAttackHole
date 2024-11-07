@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
     public bool IsState(GameState gameState) => this.gameState == gameState;
     private void Awake()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 1000;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         StartCoroutine(I_InitGame());
     }

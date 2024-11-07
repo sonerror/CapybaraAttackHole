@@ -10,7 +10,6 @@ public class UICanvas : MonoBehaviour
 
     protected RectTransform m_RectTransform;
     private Animator m_Animator;
-    private float m_OffsetY = 0;
     public UnityAction OnClose;
     private void Start()
     {

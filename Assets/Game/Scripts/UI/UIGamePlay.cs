@@ -55,7 +55,7 @@ public class UIGamePlay : UICanvas
         uiFollow.gameObject.SetActive(active);
         ObjCountTime.SetActive(active);
         objFire.SetActive(!active);
-        shootingController.spriteDown.gameObject.SetActive(active);
+        shootingController.HideUIBtnShoot(active);
         SetProgressHp(1);
         isCountdown = active;
     }
@@ -76,7 +76,7 @@ public class UIGamePlay : UICanvas
     public void SetAtiveBtnShot()
     {
         objFire.SetActive(true);
-        shootingController.spriteDown.gameObject.SetActive(true);
+        shootingController.HideUIBtnShoot(true);
         shootingController.UpdateUI();
         shootingController.imgTotal.SetActive(true);
         shootingController.ResetBool();

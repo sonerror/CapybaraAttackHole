@@ -7,7 +7,6 @@ public class Loading : MonoBehaviour
 {
     public Image imgFill;
     public float duration = 2f;
-
     private void Awake()
     {
         imgFill.fillAmount = 0;

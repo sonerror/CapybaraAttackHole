@@ -170,15 +170,14 @@ public class Character : GameUnit
     public virtual void OnEat()
     {
         ChangeAnim(Const.ANIM_EAT);
-        Debug.LogError("Anim Eat");
     }
     public float GetTimeAnim()
     {
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         return stateInfo.length;
     }
-    public void ChangeSpeedAnim(float mult)
+    public void ChangeSpeedAnim(float speed)
     {
-        animator.speed = mult;
+        animator.speed = speed;
     }
 }

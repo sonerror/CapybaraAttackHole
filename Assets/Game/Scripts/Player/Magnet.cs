@@ -34,19 +34,11 @@ public class Magnet : GameUnit
             if (time > timedur && poolType == PoolType.Player || poolType == PoolType.Enemy_Machine)
             {
                 player.OnMove();
-                /*if (player.isMoving)
-                {
-                    player.OnMove();
-                }
-                else
-                {
-                    player.OnStopMove();
-                }*/
                 time = 0;
             }
             time += Time.deltaTime;
         }
-    }//96 64 36
+    }
     public virtual void OnTriggerEnter(Collider other)
     {
         if (GameManager.Ins.gameState != GameState.GamePlay) return;
@@ -85,11 +77,9 @@ public class Magnet : GameUnit
                 {
                     AddToBlackHoleCharacter(_target);
                 }
-
             }
         }
     }
-
     IEnumerator IE_AddToBlackHole(Enemy enemy)
     {
         if (enemy != null)
@@ -150,8 +140,8 @@ public class Magnet : GameUnit
             enemy.HideCollider(false);
             Sequence sequence = DOTween.Sequence();
             sequence.Join(enemy.transform.DOMove(blackHoleCenter.position, pullDuration).SetEase(Ease.InExpo))
-                .Join(enemy.transform.DOScale(enemy.transform.localScale * 0.3f, pullDuration / 2).SetEase(Ease.InExpo))
-                .Append(enemy.transform.DOScale(Vector3.zero, pullDuration / 2).SetEase(Ease.InExpo))
+                .Join(enemy.transform.DOScale(enemy.transform.localScale * 0.3f, pullDuration).SetEase(Ease.InExpo))
+                .Append(enemy.transform.DOScale(Vector3.zero, pullDuration).SetEase(Ease.InExpo))
                 .OnComplete(() =>
                 {
                     enemy.isDead = true;
@@ -162,7 +152,7 @@ public class Magnet : GameUnit
     IEnumerator IE_DelaySpawn()
     {
         yield return new WaitForSeconds(0.1f);
-        EnemyManager.Ins.SpawmIntoMapAfterDeath();
+        EnemyManager.Ins.SpawmAfterDeath();
     }
     private void UpdateUIProgress(Character lv)
     {

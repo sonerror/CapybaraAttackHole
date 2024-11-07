@@ -12,6 +12,9 @@ public class UIHome : UICanvas
     [SerializeField] private TextMeshProUGUI tmpPriceLevelExp;
     [SerializeField] private TextMeshProUGUI tmpLevelTime;
     [SerializeField] private TextMeshProUGUI tmpPriceLevelTime;
+    [SerializeField] private TextMeshProUGUI countTime;
+    [SerializeField] private TextMeshProUGUI tmpStage;
+    [SerializeField] private UIListIconStage uIListIconStage;
     private int maxlvUp = 3;
     private PlayerData data;
     public override void Setup()
@@ -23,6 +26,7 @@ public class UIHome : UICanvas
     {
         UIManager.Ins.CloseAll();
         base.Open();
+        uIListIconStage.OnInit();
         UpdateUI();
     }
     public void BtnPlay()
@@ -31,15 +35,7 @@ public class UIHome : UICanvas
         UIManager.Ins.OpenUI<UIGamePlay>();
         GameManager.Ins.ChangeState(GameState.GamePlay);
         UIManager.Ins.GetUI<UIGamePlay>().ReLoadUIFollow();
-        //EnemyManager.Ins.SpawmIntoMap();
         EnemyManager.Ins.PlayPantrol();
-
-    }
-
-    IEnumerator IE_SpawmBot()
-    {
-        yield return new WaitForEndOfFrame();
-        EnemyManager.Ins.SpawmIntoMap();
     }
     public void BtnUpScale()
     {
@@ -55,7 +51,6 @@ public class UIHome : UICanvas
                     LevelManager.Ins.UpDataScale();
                     UpdateUIBtnScale();
                     DataManager.Ins.ChangeGold(-price);
-
                 }
             }
         }
@@ -85,6 +80,11 @@ public class UIHome : UICanvas
         UpdateUIBtnScale();
         UpdateUIBtnExp();
         UpdateUIBtnTime();
+        SetUITmpStage();
+    }
+    public void SetUITmpStage()
+    {
+        tmpStage.text = $"STAGE {DataManager.Ins.playerData.levelCurrent + 1}";
     }
     public void UpdateUIBtnScale()
     {
@@ -124,5 +124,23 @@ public class UIHome : UICanvas
         {
             tmpPriceLevelTime.text = $"Price: {LevelManager.Ins.levelTime.GetDataWithID(data.lvTime).price}";
         }
+        UpdateCountDownText();
+    }
+    private void UpdateCountDownText()
+    {
+        float currentTime = LevelManager.Ins.SetTime();
+        int minute = (int)currentTime / 60;
+        int second = (int)currentTime % 60;
+        string minuteString = minute.ToString();
+        string secondString = second.ToString();
+        if (minuteString.Length < 2)
+        {
+            minuteString = "0" + minuteString;
+        }
+        if (secondString.Length < 2)
+        {
+            secondString = "0" + secondString;
+        }
+        countTime.text = minuteString + ":" + secondString;
     }
 }

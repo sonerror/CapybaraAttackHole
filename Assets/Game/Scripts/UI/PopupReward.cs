@@ -26,7 +26,6 @@ public class PopupReward : UICanvas
         confesti.gameObject.transform.position = tfStart.position;
         confesti.gameObject.SetActive(false);
         isClick = true;
-        Debug.Log("Open");
     }
     public void BtnHome(float multiplier, int amount)
     {
@@ -66,7 +65,7 @@ public class PopupReward : UICanvas
     }
     public void PlayAnim()
     {
-        animDollSpin.Play("Doll_Spin");
+        animDollSpin.Play(Const.DOLL_SPIN);
         animDollSpin.speed = 1;
     }
     public void BtnNoThanks()
@@ -74,7 +73,6 @@ public class PopupReward : UICanvas
         if (isClick)
         {
             isClick = false;
-            Debug.Log("NoThank");
             StopAnim();
             BtnHome(1, amountBonus);
         }

@@ -16,12 +16,14 @@ public class Const
     public const string ANIM_EAT = "eat";
     public const string ANIM_EAT_FAST = "eatFast";
     public const string ANIM_IDLE = "idle";
+    public const string ANIM_DIE = "grow";
     public const string ANIM_BOSS_DIE = "die";
     public const string ANIM_BOSS_IDLE = "idle";
     public const string ANIM_BOSS_RUN = "run";
     public const string ANIM_BOSS_ATTACK = "attack";
     public const string AREA_ENEMY_MOVE = "EnemyMove";
     public const string AREA_SPAWM_AREA = "SpawnArea";
+    public const string DOLL_SPIN = "Doll_Spin";
     public const float PULLDURATIONMIN = 0.1f;
     public const float PULLDURATIONMAX = 0.15f;
     public const int ROTATETIME = 3;
@@ -32,6 +34,6 @@ public class Const
     public const int BONUSADS = 500;
     public const int RANMIN = 4;
     public const int RANMAX = 9;
-    public const int MAX_BULLETS = 3;//Vector3(-1.42400002,-0.0500000007,29.6569996)
+    public const int MAX_BULLETS = 3;
 
 }
